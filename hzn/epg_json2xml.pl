@@ -97,21 +97,29 @@ foreach my $attributes ( $data->{attributes} ) {
 		my $endTIME   = localtime($end/1000)->strftime('%Y%m%d%H%M%S') . ' +0000';
 		
 		# DEFINE PROGRAM STRINGS
-		my $program  = $item->{program};
-		my $image    = $program->{'images'}[0]{'url'};
-		my $title    = $program->{'title'};
-		my $subtitle = $program->{'secondaryTitle'}; 
-		my $desc     = $program->{'longDescription'};
-		my @cast     = @{ $program->{'cast'} };
-		my @director = @{ $program->{'directors'} };
-		my $date     = $program->{'year'};
-		my $genre1   = $program->{'categories'}[0]{'title'};
-		my $genre2   = $program->{'categories'}[1]{'title'};
-		my $genre3   = $program->{'categories'}[2]{'title'};
-		my $age      = $program->{'parentalRating'};
-		my $series   = $program->{'seriesNumber'};
-		my $episode  = $program->{'seriesEpisodeNumber'};
-		my $star     = $program->{'longDescription'};
+		my $program   = $item->{program};
+		my @image     = @{ $program->{'images'} };
+		my $title     = $program->{'title'};
+		my $subtitle  = $program->{'secondaryTitle'}; 
+		my $desc      = $program->{'longDescription'};
+		my @cast      = @{ $program->{'cast'} };
+		my @director  = @{ $program->{'directors'} };
+		my $date      = $program->{'year'};
+		my $genre1    = $program->{'categories'}[0]{'title'};
+		my $genre2    = $program->{'categories'}[1]{'title'};
+		my $genre3    = $program->{'categories'}[2]{'title'};
+		my $age       = $program->{'parentalRating'};
+		my $series    = $program->{'seriesNumber'};
+		my $episode   = $program->{'seriesEpisodeNumber'};
+		my $star      = $program->{'longDescription'};
+		
+		# DEFINE IMAGE PARAMETERS
+		my $landscape = "HighResLandscape";
+		my $portrait  = "HighResPortrait";
+		my $poster    = "tva-boxcover";
+		my $landscape_location;
+		my $portrait_location;
+		my $poster_location;
 		
 		# DEFINE COUNTRY VERSION
         my $countryVER =  $initdata->{'country'};
@@ -142,10 +150,33 @@ foreach my $attributes ( $data->{attributes} ) {
 			print STDERR "EPG WARNING: Channel ID unknown: " . $cid . "\n";
 		}
 		
-		# IMAGE (condition)
-		if( defined $image) {
-			$image =~ s/\?.*//g;
-			print "  <icon src=\"$image\" />\n";
+		# IMAGE (condition) (loop)
+		if( @image ) {
+			while( my( $landscape_id, $image ) = each( @image ) ) {		# SEARCH FOR LANDSCAPE IMAGE
+				if( $image->{'assetType'} eq $landscape ) {
+					$landscape_location = $landscape_id;
+					last;
+				}
+			}
+			while( my( $portrait_id, $image ) = each( @image ) ) {		# SEARCH FOR PORTRAIT IMAGE
+				if( $image->{'assetType'} eq $portrait ) {
+					$portrait_location = $portrait_id;
+					last;
+				}
+			}
+			while( my( $poster_id, $image ) = each( @image ) ) {		# SEARCH FOR POSTER IMAGE
+				if( $image->{'assetType'} eq $poster ) {
+					$poster_location = $poster_id;
+					last;
+				}
+			}
+			if( defined $landscape_location) {
+				print "  <icon src=\"" . $program->{'images'}[$landscape_location]{'url'} . "\" />\n";
+			} elsif( defined $portrait_location) {
+				print "  <icon src=\"" . $program->{'images'}[$portrait_location]{'url'} . "\" />\n";
+			} elsif( defined $poster_location) {
+				print "  <icon src=\"" . $program->{'images'}[$poster_location]{'url'} . "\" />\n";
+			}
 		}
 		
 		# TITLE (language)
