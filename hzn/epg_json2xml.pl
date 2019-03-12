@@ -44,7 +44,7 @@ my $json;
     close $fh;
 }
 
-# READ JSON INPUT FILE: HZN HARDCODED CHLIST
+# READ JSON INPUT FILE: HORIZON NUMERIC CHANNEL IDs
 my $chidlist;
 {
     local $/; #Enable 'slurp' mode
@@ -53,12 +53,21 @@ my $chidlist;
     close $fh;
 }
 
-# READ JSON INPUT FILE: HZN HARDCODED CHLIST
+# READ JSON INPUT FILE: RYTEC ID LIST
 my $chlist;
 {
     local $/; #Enable 'slurp' mode
     open my $fh, "<", "hzn_channels.json" or die;
     $chlist = <$fh>;
+    close $fh;
+}
+
+# READ JSON INPUT FILE: EIT CATEGORY LIST
+my $genrelist;
+{
+    local $/; #Enable 'slurp' mode
+    open my $fh, "<", "hzn_genres.json" or die;
+    $genrelist = <$fh>;
     close $fh;
 }
 
@@ -72,10 +81,11 @@ my $init;
 }
  
 # CONVERT JSON TO PERL STRUCTURES
-my $data     = decode_json($json);
-my $chdata   = decode_json($chlist);
-my $chiddata = decode_json($chidlist);
-my $initdata = decode_json($init);
+my $data      = decode_json($json);
+my $chdata    = decode_json($chlist);
+my $chiddata  = decode_json($chidlist);
+my $genredata = decode_json($genrelist);
+my $initdata  = decode_json($init);
 
 print "\n<!-- EPG DATA - SOURCE: HORIZON -->\n\n";
  
@@ -132,6 +142,9 @@ foreach my $attributes ( $data->{attributes} ) {
         
         # DEFINE CHANNEL ID
         my $cidEXT = $chiddata->{'cid'};
+        
+        # DEFINE EIT GENRES (language)
+        my $eit = $genredata->{'categories'}{$countryVER};
 		
 		# ##################
 		# PRINT XML OUTPUT #
@@ -143,11 +156,11 @@ foreach my $attributes ( $data->{attributes} ) {
 				print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
 			} else {
 				print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
-				print STDERR "EPG WARNING: Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
+				print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
 			}
 		} else {
 			print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"$cid\">\n";
-			print STDERR "EPG WARNING: Channel ID unknown: " . $cid . "\n";
+			print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 		}
 		
 		# IMAGE (condition) (loop)
@@ -176,7 +189,7 @@ foreach my $attributes ( $data->{attributes} ) {
 			   elsif( defined $poster_location) {
 				print "  <icon src=\"" . $program->{'images'}[$poster_location]{'url'} . "\" />\n";
 			}
-                        if( defined $landscape_location) {
+			if( defined $landscape_location) {
 				print "  <poster src=\"" . $program->{'images'}[$landscape_location]{'url'} . "\" />\n";
 			}
 		}
@@ -193,8 +206,8 @@ foreach my $attributes ( $data->{attributes} ) {
 		
 		# DESCRIPTION (condition) (language)
 		if( defined $desc ) {
-			$desc =~ s/\&/\&amp;/g;			# REQUIRED TO READ XML FILE CORRECTLY
-			$desc =~ s/ IMDb Rating:.*\/10.//g;	# REMOVE IMDB STRING FROM DESCRIPTION
+			$desc =~ s/\&/\&amp;/g;					# REQUIRED TO READ XML FILE CORRECTLY
+			$desc =~ s/ IMDb Rating:.*\/10.//g;		# REMOVE IMDB STRING FROM DESCRIPTION
 			$desc =~ s/ IMDb rating:.*\/10.//g;     # REMOVE IMDB STRING FROM GERMAN DESCRIPTION
 			print "  <desc lang=\"$languageVER\">$desc</desc>\n";
 		}
@@ -225,21 +238,45 @@ foreach my $attributes ( $data->{attributes} ) {
 		}
 		
 		# CATEGORIES (USE MOST DETAILLED CATEGORY) (condition) (language)
-		# if( defined $genre2 ) {
-		# 	print "  <category lang=\"$languageVER\">$genre2</category>\n";
-		# } elsif( defined $genre1 ) {
-		#	print "  <category lang=\"$languageVER\">$genre1</category>\n";
+		# if ( defined $genre2 ) {
+		# 	if ( defined $eit->{ $genre2 } ) {
+		# 		print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
+		# 	} else {
+		# 		print "  <category lang=\"$languageVER\">$genre2</category>\n";
+		#		print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre2 . "\n";;
+		# } elsif ( defined $genre1 ) {
+		# 	if ( defined $eit->{ $genre1 } ) {
+		# 		print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+		# 	} else {
+		#		print "  <category lang=\"$languageVER\">$genre1</category>\n";
+		#		print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre1 . "\n";;
+		#	}
 		# }
 		
 		# CATEGORIES (PRINT ALL CATEGORIES) (condition) (language)
-		if ( defined $genre1) {
-			print "  <category lang=\"$languageVER\">$genre1</category>\n";
+		if ( defined $genre1 ) {
+			if ( defined $eit->{ $genre1 } ) {
+				print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+			} else {
+				print "  <category lang=\"$languageVER\">$genre1</category>\n";
+				print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre1 . "\n";;
+			}
 		}
-		if ( defined $genre2) {
-			print "  <category lang=\"$languageVER\">$genre2</category>\n";
+		if ( defined $genre2 ) {
+			if ( defined $eit->{ $genre2 } ) {
+				print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
+			} else {
+				print "  <category lang=\"$languageVER\">$genre2</category>\n";
+				print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre2 . "\n";;
+			}
 		}
-		if ( defined $genre3) {
-			print "  <category lang=\"$languageVER\">$genre3</category>\n";
+		if ( defined $genre3 ) {
+			if ( defined $eit->{ $genre3 } ) {
+				print "  <category lang=\"$languageVER\">" . $eit->{ $genre3 } . "</category>\n";
+			} else {
+				print "  <category lang=\"$languageVER\">$genre3</category>\n";
+				print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre3 . "\n";;
+			}
 		}
 		
 		# SEASON/EPISODE (XMLTV_NS) (condition)

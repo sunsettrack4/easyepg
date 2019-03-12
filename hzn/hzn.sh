@@ -684,10 +684,11 @@ echo "- FILE CREATION PROCESS -" && echo ""
 rm workfile chlist 2> /dev/null
 
 
-# DOWNLOAD CHANNEL LIST
-printf "\rRetrieving channel lists...                           "
+# DOWNLOAD CHANNEL LIST + RYTEC/EIT CONFIG FILES (JSON)
+printf "\rRetrieving channel list and config files...          "
 curl -s $baseurl/channels > chlist
-curl -s https://gist.githubusercontent.com/sunsettrack4/6016c6228a5450d5fd2fd137a5806351/raw/4bec83a1068cc3e3ee1c95add45792ac77929ca1/hzn_channels.json > hzn_channels.json
+curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/hzn_channels.json > hzn_channels.json
+curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/hzn_genres.json > hzn_genres.json
 
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
@@ -752,10 +753,7 @@ sed -i '/^$/d' warnings.txt
 
 if [ -s warnings.txt ]
 then
-	echo "================= EPG CREATION: WARNING LOG ======================"
-	echo ""
-	echo "It seems that some Channel IDs are not defined by the provider.   "
-	echo "Please send this log to the developer to fix the following issues:"
+	echo "========== EPG CREATION: WARNING/ERROR LOG ============"
 	echo ""
 	
 	input="warnings.txt"
@@ -765,5 +763,5 @@ then
 	done < "$input"
 	
 	echo ""
-	echo "=================================================================="
+	echo "======================================================="
 fi
