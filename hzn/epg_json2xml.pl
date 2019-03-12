@@ -176,7 +176,7 @@ foreach my $attributes ( $data->{attributes} ) {
 			   elsif( defined $poster_location) {
 				print "  <icon src=\"" . $program->{'images'}[$poster_location]{'url'} . "\" />\n";
 			}
-            if( defined $landscape_location) {
+                        if( defined $landscape_location) {
 				print "  <poster src=\"" . $program->{'images'}[$landscape_location]{'url'} . "\" />\n";
 			}
 		}
@@ -193,8 +193,9 @@ foreach my $attributes ( $data->{attributes} ) {
 		
 		# DESCRIPTION (condition) (language)
 		if( defined $desc ) {
-			$desc =~ s/\&/\&amp;/g;				# REQUIRED TO READ XML FILE CORRECTLY
+			$desc =~ s/\&/\&amp;/g;			# REQUIRED TO READ XML FILE CORRECTLY
 			$desc =~ s/ IMDb Rating:.*\/10.//g;	# REMOVE IMDB STRING FROM DESCRIPTION
+			$desc =~ s/ IMDb rating:.*\/10.//g;     # REMOVE IMDB STRING FROM GERMAN DESCRIPTION
 			print "  <desc lang=\"$languageVER\">$desc</desc>\n";
 		}
 		
