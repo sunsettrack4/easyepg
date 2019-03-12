@@ -114,9 +114,9 @@ foreach my $attributes ( $data->{attributes} ) {
 		my $star      = $program->{'longDescription'};
 		
 		# DEFINE IMAGE PARAMETERS
-		my $landscape = "HighResLandscape";
-		my $portrait  = "HighResPortrait";
-		my $poster    = "tva-boxcover";
+		my $landscape    = "HighResLandscape";
+		my $portrait     = "HighResPortrait";
+		my $poster       = "tva-boxcover";
 		my $landscape_location;
 		my $portrait_location;
 		my $poster_location;
@@ -170,12 +170,14 @@ foreach my $attributes ( $data->{attributes} ) {
 					last;
 				}
 			}
-			if( defined $landscape_location) {
-				print "  <icon src=\"" . $program->{'images'}[$landscape_location]{'url'} . "\" />\n";
-			} elsif( defined $portrait_location) {
+			if( defined $portrait_location) {
 				print "  <icon src=\"" . $program->{'images'}[$portrait_location]{'url'} . "\" />\n";
-			} elsif( defined $poster_location) {
+			}  
+			   elsif( defined $poster_location) {
 				print "  <icon src=\"" . $program->{'images'}[$poster_location]{'url'} . "\" />\n";
+			}
+            if( defined $landscape_location) {
+				print "  <poster src=\"" . $program->{'images'}[$landscape_location]{'url'} . "\" />\n";
 			}
 		}
 		
