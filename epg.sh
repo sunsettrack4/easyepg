@@ -163,6 +163,8 @@ then
 	if read -t 5 -n1
 	then
 		echo "M" > /tmp/value
+	else
+		echo "G" > /tmp/value
 	fi
 else
 	echo "M" > /tmp/value
@@ -897,33 +899,7 @@ do
 	
 	elif grep -q "4" /tmp/value
 	then
-		clear
-		
-		#
-		# HORIZON
-		#
-		
-		if ls -l hzn/ | grep -q '^d'
-		then
-			echo ""
-			echo " --------------------------------------------"
-			echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
-			echo "                                             "
-			echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
-			echo " --------------------------------------------"
-			echo ""
-			
-			cd hzn/de 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/at 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/ch 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/nl 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/pl 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/ie 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/sk 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/cz 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/hu 2> /dev/null && bash hzn.sh && cd - > /dev/null
-			cd hzn/ro 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		fi
+		echo "G" > /tmp/value
 	
 	
 	# ############
@@ -947,3 +923,40 @@ do
 		fi
 	fi
 done
+
+
+# ##########################
+# CONTINUE IN GRABBER MODE #
+# ##########################
+
+clear
+		
+#
+# HORIZON
+#
+
+if grep -q "G" /tmp/value	
+then
+	if ls -l hzn/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd hzn/de 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/at 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/ch 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/nl 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/pl 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/ie 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/sk 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/cz 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/hu 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/ro 2> /dev/null && bash hzn.sh && cd - > /dev/null
+	fi
+fi

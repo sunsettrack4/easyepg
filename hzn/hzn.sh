@@ -19,14 +19,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-echo ""
-echo " --------------------------------------------"
-echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
-echo "                                             "
-echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
-echo " --------------------------------------------"
-echo ""
-sleep 2s
 
 # ################
 # INITIALIZATION #
