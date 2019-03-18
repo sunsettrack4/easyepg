@@ -20,10 +20,10 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ##############################
-# HORIZON CHANNEL ID CREATOR   #
+# HORIZON CHANNEL LIST CREATOR #
 # ##############################
 
-# CHANNEL IDs
+# COMPARE STRINGS, CREATE MENU LIST
 
 use strict;
 use warnings;
@@ -33,45 +33,49 @@ use utf8;
  
 use JSON;
 
-# READ JSON INPUT FILE: CHLIST
+# READ JSON INPUT FILE: COMPARISM LIST
 my $json;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "/tmp/chlist" or die;
+    open my $fh, "<", "/tmp/compare.json" or die;
     $json = <$fh>;
     close $fh;
 }
 
 # CONVERT JSON TO PERL STRUCTURES
-my $data   = decode_json($json);
+my $data      = decode_json($json);
 
-print "{ \"cid\":\n  {\n";
 
-my @channels = @{ $data->{'channels'} };
-foreach my $channels ( @channels ) {
-	my @schedule = @{ $channels->{'stationSchedules'} };
+#
+# DEFINE JSON VALUES
+#
+
+my $new_name2id = $data->{'newname2id'};
+my $new_id2name = $data->{'newid2name'};
+my $old_name2id = $data->{'oldname2id'};
+my $old_id2name = $data->{'oldid2name'};
+my @configname  = @{ $data->{'config'} };
+
+
+#
+# COMPARE VALUES + CREATE MENU LIST
+#
+
+foreach my $configname ( @configname ) {
 	
-	foreach my $schedule ( @schedule ) {
-		my $item = $schedule->{'station'};
+	my $old_id = $old_name2id->{$configname};
+	
+	# FIND MATCH - NEW CHANNEL NAME + CONFIG NAME
+	if( defined $new_name2id->{$configname} ) {
+		print "$configname\n";
 		
-		# ####################
-        # DEFINE JSON VALUES #
-        # ####################
-        
-        # DEFINE CHANNEL NAME
-		my $cname   = $item->{'title'};
-		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-		
-		# DEFINE CHANNEL ID
-		my $cid     = $item->{'id'};
-        
-        # ###################
-		# PRINT JSON OUTPUT #
-		# ###################
-        
-		# CHANNEL ID (condition)
-		print "  \"$cid\":\"$cname\",\n";
+	# IF MATCH NOT FOUND: FIND MATCH - OLD CHANNEL NAME + CONFIG NAME
+	} elsif( defined $old_id ) {
+		if( defined $new_id2name->{$old_id} ) {
+			print $new_id2name->{$old_id} . "\n";
+			print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel Name!\n";
+		}
+	} else {
+		print STDERR "[ INFO ] CHANNEL $configname not found in channel lists!\n";
 	}
 }
-
-print "  \"000000000000\":\"DUMMY\"\n  }\n}";

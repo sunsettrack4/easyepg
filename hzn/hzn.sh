@@ -19,19 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-clear
+echo ""
 echo " --------------------------------------------"
 echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
-echo " Release v0.1.0 BETA - 2019/03/10            "
-echo " powered by                                  "
-echo "                                             "
-echo " ==THE======================================="
-echo "   ##### ##### ##### #   # ##### ##### ##### "
-echo "   #     #   # #     #   # #     #   # #     "
-echo "  ##### ##### ##### #####  ##### ##### #  ## "
-echo "  #     #   #     #   #    #     #     #   # " 
-echo " ##### #   # #####   #     ##### #     ##### "
-echo " ===================================PROJECT=="
 echo "                                             "
 echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 echo " --------------------------------------------"
@@ -46,49 +36,8 @@ sleep 2s
 # SETUP ENVIRONMENT
 #
 
-mkdir ~/hzn 2> /dev/null		# main folder
-mkdir ~/hzn/cache 2> /dev/null	# cache
-mkdir ~/hzn/day 2> /dev/null	# download scripts
-
-cd ~/hzn 
-
-#
-# SET VARIABLES
-#
-
-if [ ! -s init.json ]
-then
-	echo "Please choose your country:"
-	echo "[1] DE | 2 [AT] | 3 [CH] | 4 [NL] | 5 [PL]"
-	echo "[6] IE | 7 [SK] | 8 [CZ] | 9 [HU] | 0 [RO]"
-	
-	printf "\n"
-	read -p "Number....: " -n1 n
-	printf "\n"
-	
-	case $n in
-	1) 	echo '{"country":"DE","language":"de"}' > init.json
-		echo "Country selected: DE" && printf "\n";;
-	2) 	echo '{"country":"AT","language":"de"}' > init.json
-		echo "Country selected: AT" && printf "\n";;
-	3) 	echo '{"country":"CH","language":"de"}' > init.json
-		echo "Country selected: CH" && printf "\n";;
-	4) 	echo '{"country":"NL","language":"nl"}' > init.json
-		echo "Country selected: NL" && printf "\n";;
-	5) 	echo '{"country":"PL","language":"pl"}' > init.json
-		echo "Country selected: PL" && printf "\n";;
-	6) 	echo '{"country":"IE","language":"en"}' > init.json
-		echo "Country selected: IE" && printf "\n";;
-	7) 	echo '{"country":"SK","language":"sk"}' > init.json
-		echo "Country selected: SK" && printf "\n";;
-	8) 	echo '{"country":"CZ","language":"cz"}' > init.json
-		echo "Country selected: CZ" && printf "\n";;
-	9) 	echo '{"country":"HU","language":"hu"}' > init.json
-		echo "Country selected: HU" && printf "\n";;
-	0) 	echo '{"country":"RO","language":"ro"}' > init.json
-		echo "Country selected: RO" && printf "\n";;
-	esac
-fi
+mkdir cache 2> /dev/null	# cache
+mkdir day 2> /dev/null		# download scripts
 
 if grep -q "DE" init.json 2> /dev/null
 then
@@ -141,7 +90,7 @@ then
 	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/RO/ron/web'
 	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/RO\/ron\/web'
 else
-	echo "ERROR: WRONG INIT INPUT DETECTED - Stop."
+	echo "[ FATAL ERROR ] WRONG INIT INPUT DETECTED - Stop."
 	rm init.json 2> /dev/null
 	exit 1
 fi
@@ -208,13 +157,13 @@ printf "\rDownloading EPG manifest files...            "
 
 for i in {1..4..1}
 do
-	curl -s $baseurl/programschedules/$date1/${i}	| grep '"updated"' >> day/day1 &
-	curl -s $baseurl/programschedules/$date2/${i} 	| grep '"updated"' >> day/day2 &
-	curl -s $baseurl/programschedules/$date3/${i} 	| grep '"updated"' >> day/day3 &
-	curl -s $baseurl/programschedules/$date4/${i} 	| grep '"updated"' >> day/day4 &
-	curl -s $baseurl/programschedules/$date5/${i} 	| grep '"updated"' >> day/day5 &
-	curl -s $baseurl/programschedules/$date6/${i} 	| grep '"updated"' >> day/day6 &
-	curl -s $baseurl/programschedules/$date7/${i} 	| grep '"updated"' >> day/day7 &
+	if grep -q '"day": "[1-7]"' settings.json; then curl -s $baseurl/programschedules/$date1/${i}	| grep '"updated"' > day/day1_${i}; fi &
+	if grep -q '"day": "[2-7]"' settings.json; then curl -s $baseurl/programschedules/$date2/${i} 	| grep '"updated"' > day/day2_${i}; fi  &
+	if grep -q '"day": "[3-7]"' settings.json; then curl -s $baseurl/programschedules/$date3/${i} 	| grep '"updated"' > day/day3_${i}; fi  &
+	if grep -q '"day": "[4-7]"' settings.json; then curl -s $baseurl/programschedules/$date4/${i} 	| grep '"updated"' > day/day4_${i}; fi  &
+	if grep -q '"day": "[5-7]"' settings.json; then curl -s $baseurl/programschedules/$date5/${i} 	| grep '"updated"' > day/day5_${i}; fi  &
+	if grep -q '"day": "[6-7]"' settings.json; then curl -s $baseurl/programschedules/$date6/${i} 	| grep '"updated"' > day/day6_${i}; fi  &
+	if grep -q '"day": "[7]"'   settings.json; then curl -s $baseurl/programschedules/$date7/${i} 	| grep '"updated"' > day/day7_${i}; fi  &
 done
 wait
 
@@ -225,14 +174,22 @@ wait
 
 printf "\rCreating EPG lists...                      "
 
+curl -s $baseurl/channels > /tmp/chlist
+perl chlist_printer.pl > /tmp/compare.json
+
 for time in {1..7..1}
 do
-	sed -i 's/"i":"/\n/g' day/day${time}
-	sed -i '/{"entryCount/d' day/day${time}
-	sed -i 's/","r":.*//g' day/day${time}
-	cp day/day${time} day/daydlnew_${time}
+	for part in {1..4..1}
+	do
+		sed "s/dayNUMBER/day${time}_${part}/g" compare_crid.pl > /tmp/compare_crid_day${time}_${part}.pl 2> /dev/null
+		perl /tmp/compare_crid_day${time}_${part}.pl > day/daydlnew_${time}_${part} 2> /dev/null
+		cat day/daydlnew_${time}_${part} >> day/daydlnew_${time} 2> /dev/null
+		cp day/daydlnew_${time} day/day${time} 2> /dev/null
+		rm day/daydlnew_${time}_${part} day/day${time}_${part} 2> /dev/null
+		touch day/day${time}
+	done
 done
-	
+
 
 #
 # COPY CACHE FILES TO NEW FOLDER
@@ -701,13 +658,13 @@ perl cid_json.pl > hzn_cid.json && rm chlist
 # COMBINING ALL EPG PARTS TO ONE FILE
 printf "\rCopying JSON files to common file...                 "
 
-cat cache/new_$date1/* > workfile
-cat cache/new_$date2/* >> workfile
-cat cache/new_$date3/* >> workfile
-cat cache/new_$date4/* >> workfile
-cat cache/new_$date5/* >> workfile
-cat cache/new_$date6/* >> workfile
-cat cache/new_$date7/* >> workfile
+cat cache/new_$date1/* > workfile 2> /dev/null
+cat cache/new_$date2/* >> workfile 2> /dev/null
+cat cache/new_$date3/* >> workfile 2> /dev/null
+cat cache/new_$date4/* >> workfile 2> /dev/null
+cat cache/new_$date5/* >> workfile 2> /dev/null
+cat cache/new_$date6/* >> workfile 2> /dev/null
+cat cache/new_$date7/* >> workfile 2> /dev/null
 
 # SORT BY CID AND START TIME
 printf "\rSorting data by channel ID and start time...         "

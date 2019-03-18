@@ -79,6 +79,15 @@ my $init;
     $init = <$fh>;
     close $fh;
 }
+
+# READ SETTINGS FILE
+my $settings;
+{
+	local $/; #Enable 'slurp' mode
+    open my $fh, '<', "settings.json" or die;
+    $settings = <$fh>;
+    close $fh;
+}
  
 # CONVERT JSON TO PERL STRUCTURES
 my $data      = decode_json($json);
@@ -86,6 +95,7 @@ my $chdata    = decode_json($chlist);
 my $chiddata  = decode_json($chidlist);
 my $genredata = decode_json($genrelist);
 my $initdata  = decode_json($init);
+my $setupdata = decode_json($settings);
 
 print "\n<!-- EPG DATA - SOURCE: HORIZON -->\n\n";
  
@@ -145,18 +155,35 @@ foreach my $attributes ( $data->{attributes} ) {
         
         # DEFINE EIT GENRES (language)
         my $eit = $genredata->{'categories'}{$countryVER};
+        
+        # DEFINE SETTINGS
+        my $setup_general  = $setupdata->{'settings'};
+        my $setup_cid      = $setup_general->{'cid'};
+        my $setup_genre    = $setup_general->{'genre'};
+        my $setup_category = $setup_general->{'category'};
+        my $setup_episode  = $setup_general->{'episode'};  
+        
+        # DEFINE SETTINGS VALUES
+        my $enabled  = "enabled";
+        my $disabled = "disabled";
+        my $xmltv_ns = "xmltv_ns";
+        my $onscreen = "onscreen";
 		
 		# ##################
 		# PRINT XML OUTPUT #
 		# ##################
 		
-		# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition)
+		# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition) (settings)
 		if( defined $cidEXT->{$cid} ) {
-			if( defined $rytec->{$cidEXT->{$cid}} ) {
-				print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+			if( $setup_cid eq $enabled ) {
+				if( defined $rytec->{$cidEXT->{$cid}} ) {
+					print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+				} else {
+					print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+					print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
+				}
 			} else {
 				print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
-				print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
 			}
 		} else {
 			print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"$cid\">\n";
@@ -237,92 +264,121 @@ foreach my $attributes ( $data->{attributes} ) {
 			print "  <date>$date</date>\n";
 		}
 		
-		# CATEGORIES (USE MOST DETAILLED CATEGORY) (condition) (language)
-		# if ( defined $genre2 ) {
-		# 	if ( defined $eit->{ $genre2 } ) {
-		# 		print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
-		# 	} else {
-		# 		print "  <category lang=\"$languageVER\">$genre2</category>\n";
-		#		print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre2 . "\n";;
-		# } elsif ( defined $genre1 ) {
-		# 	if ( defined $eit->{ $genre1 } ) {
-		# 		print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
-		# 	} else {
-		#		print "  <category lang=\"$languageVER\">$genre1</category>\n";
-		#		print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre1 . "\n";;
-		#	}
-		# }
-		
-		# CATEGORIES (PRINT ALL CATEGORIES) (condition) (language)
-		if ( defined $genre1 ) {
-			if ( defined $eit->{ $genre1 } ) {
-				print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
-			} else {
-				print "  <category lang=\"$languageVER\">$genre1</category>\n";
-				print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre1 . "\n";;
-			}
-		}
-		if ( defined $genre2 ) {
-			if ( defined $eit->{ $genre2 } ) {
-				print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
-			} else {
-				print "  <category lang=\"$languageVER\">$genre2</category>\n";
-				print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre2 . "\n";;
-			}
-		}
-		if ( defined $genre3 ) {
-			if ( defined $eit->{ $genre3 } ) {
-				print "  <category lang=\"$languageVER\">" . $eit->{ $genre3 } . "</category>\n";
-			} else {
-				print "  <category lang=\"$languageVER\">$genre3</category>\n";
-				print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $genre3 . "\n";;
+		# CATEGORIES (USE MOST DETAILLED CATEGORY) (condition) (language) (settings)
+		if( $setup_category eq $disabled ) {
+			if ( defined $genre2 ) {
+				if ( $setup_genre eq $enabled ) {
+					if ( defined $eit->{ $genre2 } ) {
+						print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
+					} else {
+						print "  <category lang=\"$languageVER\">$genre2</category>\n";
+						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre2" . "\n";;
+					}
+				} else {
+					print "  <category lang=\"$languageVER\">$genre2</category>\n";
+				}
+			} elsif ( defined $genre1 ) {
+				if ( $setup_genre eq $enabled ) {
+					if ( defined $eit->{ $genre1 } ) {
+						print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+					} else {
+						print "  <category lang=\"$languageVER\">$genre1</category>\n";
+						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre1" . "\n";;
+					}
+				} else {
+					print "  <category lang=\"$languageVER\">$genre1</category>\n";
+				}
 			}
 		}
 		
-		# SEASON/EPISODE (XMLTV_NS) (condition)
-		if( defined $series ) {
-			if( $series  =~ m/\d{4}/) {
-				undef $series;				# REMOVE USELESS SERIES STRINGS
+		# CATEGORIES (PRINT ALL CATEGORIES) (condition) (language) (settings)
+		if( $setup_category eq $enabled ) {
+			if ( defined $genre1 ) {
+				if ( $setup_genre eq $enabled ) {
+					if ( defined $eit->{ $genre1 } ) {
+						print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+					} else {
+						print "  <category lang=\"$languageVER\">$genre1</category>\n";
+						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre1" . "\n";;
+					}
+				} else {
+					print "  <category lang=\"$languageVER\">$genre1</category>\n";
+				}
+			}
+			if ( defined $genre2 ) {
+				if ( $setup_genre eq $enabled ) {
+					if ( defined $eit->{ $genre2 } ) {
+						print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
+					} else {
+						print "  <category lang=\"$languageVER\">$genre2</category>\n";
+						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre2" . "\n";;
+					}
+				} else {
+					print "  <category lang=\"$languageVER\">$genre2</category>\n";
+				}
+			}
+			if ( defined $genre3 ) {
+				if ( $setup_genre eq $enabled ) {
+					if ( defined $eit->{ $genre3 } ) {
+						print "  <category lang=\"$languageVER\">" . $eit->{ $genre3 } . "</category>\n";
+					} else {
+						print "  <category lang=\"$languageVER\">$genre3</category>\n";
+						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre3" . "\n";;
+					}
+				} else {
+					print "  <category lang=\"$languageVER\">$genre3</category>\n";
+				}
 			}
 		}
-		if( defined $episode ) {
-			if( $episode =~ m/\d{7}/) {
-				undef $episode;				# REMOVE USELESS EPISODE STRINGS
+		
+		# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
+		if( $setup_episode eq $xmltv_ns ) {
+			if( defined $series ) {
+				if( $series  =~ m/\d{4}/) {
+					undef $series;				# REMOVE USELESS SERIES STRINGS
+				}
 			}
-		}
-		if( defined $series ) {
-			my $XMLseries  = $series - 1;
 			if( defined $episode ) {
-				my $XMLepisode = $episode - 1;
-				print "  <episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>\n";
-			} else {
-				print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
+				if( $episode =~ m/\d{7}/) {
+					undef $episode;				# REMOVE USELESS EPISODE STRINGS
+				}
 			}
-		} elsif( defined $episode ) {
-			my $XMLepisode = $episode - 1;
-			print "  <episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>\n";
+			if( defined $series ) {
+				my $XMLseries  = $series - 1;
+				if( defined $episode ) {
+					my $XMLepisode = $episode - 1;
+					print "  <episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>\n";
+				} else {
+					print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
+				}
+			} elsif( defined $episode ) {
+				my $XMLepisode = $episode - 1;
+				print "  <episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>\n";
+			}
 		}
 		
-		# SEASON/EPISODE (ONSCREEN) (condition)
-		# if( defined $series ) {
-		#	if( $series  =~ m/\d{4}/) {
-		#		undef $series;				# REMOVE USELESS SERIES STRINGS
-		#	}
-		# }
-		# if( defined $episode ) {
-		#	if( $episode =~ m/\d{7}/) {
-		#		undef $episode;				# REMOVE USELESS EPISODE STRINGS
-		#	}
-		# }
-		# if( defined $series ) {
-		#	if( defined $episode ) {
-		#		print "  <episode-num system=\"onscreen\">S$series E$episode</episode-num>\n";
-		#	} else {
-		#		print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
-		#	}
-		# } elsif( defined $episode ) {
-		#	print "  <episode-num system=\"onscreen\">E$episode</episode-num>\n";
-		# }
+		# SEASON/EPISODE (ONSCREEN) (condition) (settings)
+		if( $setup_episode eq $onscreen ) {
+			if( defined $series ) {
+				if( $series  =~ m/\d{4}/) {
+					undef $series;				# REMOVE USELESS SERIES STRINGS
+				}
+			}
+			if( defined $episode ) {
+				if( $episode =~ m/\d{7}/) {
+					undef $episode;				# REMOVE USELESS EPISODE STRINGS
+				}
+			}
+			if( defined $series ) {
+				if( defined $episode ) {
+					print "  <episode-num system=\"onscreen\">S$series E$episode</episode-num>\n";
+				} else {
+					print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
+				}
+			} elsif( defined $episode ) {
+				print "  <episode-num system=\"onscreen\">E$episode</episode-num>\n";
+			}
+		}
 		
 		# AGE RATING (condition)
 		if( defined $age) {
