@@ -48,6 +48,8 @@ echo ""
 printf "Initializing script environment..."
 sleep 0.5s
 
+mkdir xml 2> /dev/null
+
 if [ ! -e hzn/ch_json2xml.pl ]
 then
 	printf "\nMissing file in Horzon folder: ch_json2xml.pl "
@@ -948,15 +950,15 @@ then
 		echo ""
 		sleep 2s
 		
-		cd hzn/de 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/at 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/ch 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/nl 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/pl 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/ie 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/sk 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/cz 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/hu 2> /dev/null && bash hzn.sh && cd - > /dev/null
-		cd hzn/ro 2> /dev/null && bash hzn.sh && cd - > /dev/null
+		cd hzn/de 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/de/horizon.xml xml/horizon_de.xml 2> /dev/null
+		cd hzn/at 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/at/horizon.xml xml/horizon_at.xml 2> /dev/null
+		cd hzn/ch 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/ch/horizon.xml xml/horizon_ch.xml 2> /dev/null
+		cd hzn/nl 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/nl/horizon.xml xml/horizon_nl.xml 2> /dev/null
+		cd hzn/pl 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/pl/horizon.xml xml/horizon_pl.xml 2> /dev/null
+		cd hzn/ie 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/ie/horizon.xml xml/horizon_ie.xml 2> /dev/null
+		cd hzn/sk 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/sk/horizon.xml xml/horizon_sk.xml 2> /dev/null
+		cd hzn/cz 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/cz/horizon.xml xml/horizon_cz.xml 2> /dev/null
+		cd hzn/hu 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/hu/horizon.xml xml/horizon_hu.xml 2> /dev/null
+		cd hzn/ro 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/ro/horizon.xml xml/horizon_ro.xml 2> /dev/null
 	fi
 fi
