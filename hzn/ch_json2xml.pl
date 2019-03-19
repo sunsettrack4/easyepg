@@ -51,6 +51,15 @@ my $chlist;
     close $fh;
 }
 
+# READ JSON INPUT FILE: CHANNEL CONFIG
+my $chlist_config;
+{
+    local $/; #Enable 'slurp' mode
+    open my $fh, "<", "channels.json" or die;
+    $chlist_config = <$fh>;
+    close $fh;
+}
+
 # READ INIT FILE
 my $init;
 {
@@ -61,11 +70,15 @@ my $init;
 }
 
 # CONVERT JSON TO PERL STRUCTURES
-my $data   = decode_json($json);
-my $chdata = decode_json($chlist);
-my $initdata = decode_json($init);
+my $data        = decode_json($json);
+my $chdata      = decode_json($chlist);
+my $configdata  = decode_json($chlist_config);
+my $initdata    = decode_json($init);
 
-print "\n<!-- CHANNEL LIST - SOURCE: HORIZON -->\n\n";
+# DEFINE COUNTRY VERSION
+my $countryVER =  $initdata->{'country'};
+
+print "\n<!-- CHANNEL LIST - SOURCE: HORIZON $countryVER -->\n\n";
 
 my @channels = @{ $data->{'channels'} };
 foreach my $channels ( @channels ) {
@@ -82,28 +95,32 @@ foreach my $channels ( @channels ) {
 		my $cname   = $item->{'title'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
         
-        # DEFINE COUNTRY VERSION
-        my $countryVER =  $initdata->{'country'};
-        
         # DEFINE LANGUAGE VERSION
         my $languageVER =  $initdata->{'language'};
         
         # DEFINE RYTEC CHANNEL ID (language)
 		my $rytec = $chdata->{'channels'}{$countryVER};
+		
+		# DEFINE SELECTED CHANNELS
+		my @configdata = @{ $configdata->{'channels'} };
         
         # ##################
 		# PRINT XML OUTPUT #
 		# ##################
         
 		# CHANNEL ID (condition)
-		if( defined $rytec->{$cname} ) {
-			print "<channel id=\"" . $rytec->{$cname} . "\">\n";
-		} else {
-			print "<channel id=\"" . $cname . "\">\n";
-			print STDERR "[ CHLIST WARNING ] Channel ID unknown: " . $cname . "\n";
+		foreach my $selected_channel ( @configdata ) {
+			if( $cname eq $selected_channel ) { 
+				if( defined $rytec->{$cname} ) {
+					print "<channel id=\"" . $rytec->{$cname} . "\">\n";
+				} else {
+					print "<channel id=\"" . $cname . "\">\n";
+					print STDERR "[ CHLIST WARNING ] Channel ID unknown: " . $cname . "\n";
+				}
+				
+				# CHANNEL NAME (language)
+				print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n</channel>\n";
+			}
 		}
-        
-		# CHANNEL NAME (language)
-		print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n</channel>\n";
 	}
 }

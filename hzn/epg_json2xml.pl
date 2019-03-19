@@ -97,7 +97,13 @@ my $genredata = decode_json($genrelist);
 my $initdata  = decode_json($init);
 my $setupdata = decode_json($settings);
 
-print "\n<!-- EPG DATA - SOURCE: HORIZON -->\n\n";
+# DEFINE COUNTRY VERSION
+my $countryVER =  $initdata->{'country'};
+        
+# DEFINE LANGUAGE VERSION
+my $languageVER =  $initdata->{'language'};
+
+print "\n<!-- EPG DATA - SOURCE: HORIZON $countryVER -->\n\n";
  
 foreach my $attributes ( $data->{attributes} ) {
     
@@ -140,12 +146,6 @@ foreach my $attributes ( $data->{attributes} ) {
 		my $landscape_location;
 		my $portrait_location;
 		my $poster_location;
-		
-		# DEFINE COUNTRY VERSION
-        my $countryVER =  $initdata->{'country'};
-        
-        # DEFINE LANGUAGE VERSION
-        my $languageVER =  $initdata->{'language'};
         
         # DEFINE RYTEC CHANNEL ID (language)
 		my $rytec = $chdata->{'channels'}{$countryVER};
