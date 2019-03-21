@@ -685,16 +685,16 @@ printf "\rValidating EPG XMLTV file..."
 xmllint --noout horizon.xml > errorlog 2>&1
 
 if grep -q "parser error" errorlog
-	then
-		printf " DONE!\n\n"
-		mv horizon.xml horizon_ERROR.xml
-		echo "[ EPG ERROR ] XMLTV FILE VALIDATION FAILED DUE TO THE FOLLOWING ERRORS:" >> warnings.txt
-		cat errorlog >> warnings.txt
-	else
-		printf " DONE!\n\n"
-		rm horizon_ERROR.xml 2> /dev/null
-		rm errorlog 2> /dev/null
-	fi
+then
+	printf " DONE!\n\n"
+	mv horizon.xml horizon_ERROR.xml
+	echo "[ EPG ERROR ] XMLTV FILE VALIDATION FAILED DUE TO THE FOLLOWING ERRORS:" >> warnings.txt
+	cat errorlog >> warnings.txt
+else
+	printf " DONE!\n\n"
+	rm horizon_ERROR.xml 2> /dev/null
+	rm errorlog 2> /dev/null
+fi
 
 # MAP CATEGORIES
 # perl genremapper.pl < horizon.xml > workfile && mv workfile horizon.xml
@@ -723,4 +723,5 @@ then
 	
 	echo ""
 	echo "======================================================="
+	echo ""
 fi
