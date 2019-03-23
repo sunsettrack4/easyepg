@@ -127,6 +127,7 @@ command -v xmllint >/dev/null 2>&1 || { printf "\nlibxml2-utils is required but 
 command -v perl >/dev/null 2>&1 || { printf "\nperl is required but it's not installed!" >&2; ERROR2="true"; }
 command -v cpan >/dev/null 2>&1 || { printf "\ncpan is required but it's not installed!" >&2; ERROR2="true"; }
 command -v jq >/dev/null 2>&1 || { printf "\nperl is required but it's not installed!" >&2; ERROR2="true"; }
+command -v php >/dev/null 2>&1 || { printf "\nphp is required but it's not installed!" >&2; ERROR2="true"; }
 
 if command -v perldoc >/dev/null
 then
@@ -1018,7 +1019,7 @@ while [ -s /tmp/combinefolders ]
 do
 	folder=$(sed -n "1p" /tmp/combinefolders)
 
-	printf "Creating combined file: $folder ..."
+	printf "Creating XML file: $folder.xml ..."
 	rm /tmp/file /tmp/combined_channels /tmp/combined_programmes 2> /dev/null
 	
 	# HORIZON DE
@@ -1209,9 +1210,23 @@ do
 			bash combine/$folder/setup.sh
 		fi
 		
-		printf "\rCreating combined file: $folder ... DONE!\n"
+		if [ -s combine/$folder/imdbmapper.pl ]
+		then
+			printf "\n\n --------------------------------------\n\nRunning addon: IMDB MAPPER for $folder.xml ...\n\n"
+			perl combine/$folder/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+			printf "\n\nDONE!\n\n"
+		fi
+		
+		if [ -s combine/$folder/ratingmapper.pl ]
+		then
+			printf "\n\n --------------------------------------\n\nRunning addon: RATING MAPPER for $folder.xml ...\n\n"
+			perl combine/$folder/ratingmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+			printf "\n\nDONE!\n\n"
+		fi
+		
+		printf "\rXML file $folder.xml created!\n"
 	else
-		printf "\rCreating combined file: $folder ... ERROR!\nNo XML or setup file available! Please check your setup!\n"
+		printf "\rCreation of XML file $folder.xml failed!\nNo XML or setup file available! Please check your setup!\n"
 		sed -i '1d' /tmp/combinefolders
 	fi
 done

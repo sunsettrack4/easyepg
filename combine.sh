@@ -314,6 +314,7 @@ then
 			echo '	1 "MODIFY CHANNEL LIST" \' >> /tmp/menu
 			
 			# M1322 ADDON SCRIPTS
+			echo '	2 "USE ADDON SCRIPTS" \' >> /tmp/menu
 			
 			# M1323 POST SCRIPTS
 			echo '	3 "ADD/MODIFY POST SHELL SCRIPT" \' >> /tmp/menu
@@ -695,8 +696,78 @@ then
 					
 					echo "B" > /tmp/value
 				done
+			elif grep -q "2" /tmp/setupvalue
+			then
+				# #####################
+				# M1322 ADDON SCRIPTS #
+				# #####################
+				
+				echo "ADDON" > /tmp/addonvalue
+				
+				while [ -s /tmp/addonvalue ]
+				do
+				
+					echo 'dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --menu "Please choose the following options:\n[1] RATING MAPPER: Add additional data to description line\n[2] IMDB MAPPER: Insert additional data from IMDb source" 12 70 10 \' > /tmp/addonmenu
+					
+					if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ratingmapper.pl ]
+					then
+						echo '	1 "Remove: RATING MAPPER" \' >> /tmp/addonmenu
+					else
+						echo '	1 "Insert: RATING MAPPER" \' >> /tmp/addonmenu
+					fi
+					
+					if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl ]
+					then
+						echo '	2 "Remove: IMDB MAPPER" \' >> /tmp/addonmenu
+					else
+						echo '	2 "Insert: IMDB MAPPER" \' >> /tmp/addonmenu
+					fi
+					
+					echo "2>/tmp/addonvalue" >> /tmp/addonmenu
+					
+					bash /tmp/addonmenu
+					
+					if grep -q "1" /tmp/addonvalue
+					then
+						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ratingmapper.pl ]
+						then
+							rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ratingmapper.pl
+							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon RATING MAPPER deleted!" 5 35
+						else
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/ratingmapper/ratingmapper.pl > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ratingmapper.pl
+							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon RATING MAPPER added!" 5 35
+						fi
+					elif grep -q "2" /tmp/addonvalue
+					then
+						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl ]
+						then
+							cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+							rm Readme age.php country.php imdb.class.php imdbmapper.pl poster.php rating.php url.php year.php
+							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER deleted!" 5 35
+							cd - > /dev/null
+						else
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/Readme > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/Readme
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/age.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/age.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/country.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/country.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdb.class.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdb.class.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdbmapper.pl > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/poster.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/poster.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/rating.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/url.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/url.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/year.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/year.php
+							
+							sed -i "17s/\/my\/path\/to\/php\/helperscripts/combine\/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/g" combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl
+							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER added!" 5 35
+						fi
+					fi
+				done
+				echo "B" > /tmp/value
 			elif grep -q "3" /tmp/setupvalue
 			then
+				# #####################
+				# M1323 SHELL SCRIPT  #
+				# #####################
+				
 				nano combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/setup.sh
 				echo "B" > /tmp/value
 			elif grep -q "4" /tmp/setupvalue
