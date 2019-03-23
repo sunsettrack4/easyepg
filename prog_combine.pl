@@ -43,7 +43,7 @@ my $json;
     close $fh;
 }
 
-# DEFINE XML PARSER
+# DEFINE XML/JSON PARSER
 use XML::Rules;
 use JSON;
 
@@ -51,7 +51,7 @@ use JSON;
 my @rules = (
 			'actor,director' => 'content array',
 			'date,value' => 'content',
-			'desc,display-name,episode-num,sub-title,title' => 'as is',
+			'desc,episode-num,sub-title,title' => 'as is',
 			'credits,icon,poster,rating,star-rating,tv' => 'no content',
 			'category' => 'as array',
 			'programme' => 'as array no content'

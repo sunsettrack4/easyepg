@@ -21,8 +21,6 @@
 
 use strict;
 use warnings;
-use XML::Bare;
-use JSON;
 
 binmode STDOUT, ":utf8";
 use utf8;
@@ -45,17 +43,24 @@ my $json;
     close $fh;
 }
 
-# DEFINE PARSER
-my $parser = new XML::Bare( text => $xml );
+# DEFINE XML/JSON PARSER
+use XML::Rules;
+use JSON;
+
+# DEFINE XML RULES
+my @rules = (
+			'display-name' => 'as is',
+			'channel' => 'as array no content'
+			);
 
 # CONVERT XML/JSON TO PERL STRUCTURES
-my $root = $parser->parse();
+my $parser = XML::Rules->new(rules => \@rules );
+my $ref = $parser->parse( $xml);
 my $init = decode_json($json);
 
 # DEFINE VALUES
-my $tv        = $root->{tv};
+my $tv        = $ref->{tv};
 my @channel   = @{ $tv->{channel} };
-my @programme = @{ $tv->{programme} };
 
 # DEFINE SELECTED CHANNELS
 my @configdata = @{ $init->{'channels'} };
@@ -73,9 +78,9 @@ foreach my $configdata ( @configdata ) {
 		# ###################
 		
 		# DEFINE CHANNEL STRINGS
-		my $channel_id = $channel->{id}->{value};
-		my $ch_lang    = $channel->{'display-name'}->{lang}->{value};
-		my $ch_name    = $channel->{'display-name'}->{value};
+		my $channel_id = $channel->{id};
+		my $ch_lang    = $channel->{'display-name'}->{lang};
+		my $ch_name    = $channel->{'display-name'}->{_content};
 		
 		# ##################
 		# PRINT XML VALUES #

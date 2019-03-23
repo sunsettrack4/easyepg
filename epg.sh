@@ -213,7 +213,7 @@ do
 	# M1300 CREATE SINGLE-/MULTI-SOURCE XML FILE
 	if ls xml/ | grep -q ".xml"
 	then
-		echo '	3 "MODIFY XML FILE CREATION PROCESS" \' >> /tmp/menu
+		echo '	3 "MODIFY XML FILES" \' >> /tmp/menu
 	fi
 	
 	# M1400 CONTINUE IN GRABBER MODE
@@ -1193,10 +1193,10 @@ do
 	fi
 	
 	cat /tmp/combined_programmes >> /tmp/combined_channels && mv /tmp/combined_channels /tmp/file
+	sed -i 's/\&/\&amp;/g' /tmp/file
 	
 	sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
 	sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>' /tmp/file
-	sed -i 's/\&/\&amp;/g' /tmp/file
 	sed '$s/.*/&\n<\/tv>/g' /tmp/file > combine/$folder/$folder.xml
 	rm /tmp/combined_programmes
 	sed -i '1d' /tmp/combinefolders

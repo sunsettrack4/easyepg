@@ -214,52 +214,52 @@ then
 			then
 				if [ -e xml/horizon_de.xml ]
 				then
-					grep "HORIZON DE" /tmp/channels | sed '/HORIZON DE/s/\[HORIZON DE\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_de_channels.json
+					grep "HORIZON DE" /tmp/channels | sed '/HORIZON DE/s/\[HORIZON DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_de_channels.json
 				fi
 				
 				if [ -e xml/horizon_at.xml ]
 				then
-					grep "HORIZON AT" /tmp/channels | sed '/HORIZON AT/s/\[HORIZON AT\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_at_channels.json
+					grep "HORIZON AT" /tmp/channels | sed '/HORIZON AT/s/\[HORIZON AT\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_at_channels.json
 				fi
 				
 				if [ -e xml/horizon_ch.xml ]
 				then
-					grep "HORIZON CH" /tmp/channels | sed '/HORIZON CH/s/\[HORIZON CH\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_ch_channels.json
+					grep "HORIZON CH" /tmp/channels | sed '/HORIZON CH/s/\[HORIZON CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_ch_channels.json
 				fi
 				
 				if [ -e xml/horizon_nl.xml ]
 				then
-					grep "HORIZON NL" /tmp/channels | sed '/HORIZON NL/s/\[HORIZON NL\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_nl_channels.json
+					grep "HORIZON NL" /tmp/channels | sed '/HORIZON NL/s/\[HORIZON NL\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_nl_channels.json
 				fi
 				
 				if [ -e xml/horizon_pl.xml ]
 				then
-					grep "HORIZON PL" /tmp/channels | sed '/HORIZON PL/s/\[HORIZON PL\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_pl_channels.json
+					grep "HORIZON PL" /tmp/channels | sed '/HORIZON PL/s/\[HORIZON PL\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_pl_channels.json
 				fi
 				
 				if [ -e xml/horizon_ie.xml ]
 				then
-					grep "HORIZON IE" /tmp/channels | sed '/HORIZON IE/s/\[HORIZON IE\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_ie_channels.json
+					grep "HORIZON IE" /tmp/channels | sed '/HORIZON IE/s/\[HORIZON IE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_ie_channels.json
 				fi
 				
 				if [ -e xml/horizon_sk.xml ]
 				then
-					grep "HORIZON SK" /tmp/channels | sed '/HORIZON SK/s/\[HORIZON SK\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_sk_channels.json
+					grep "HORIZON SK" /tmp/channels | sed '/HORIZON SK/s/\[HORIZON SK\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_sk_channels.json
 				fi
 				
 				if [ -e xml/horizon_cz.xml ]
 				then
-					grep "HORIZON CZ" /tmp/channels | sed '/HORIZON CZ/s/\[HORIZON CZ\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_cz_channels.json
+					grep "HORIZON CZ" /tmp/channels | sed '/HORIZON CZ/s/\[HORIZON CZ\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_cz_channels.json
 				fi
 				
 				if [ -e xml/horizon_hu.xml ]
 				then
-					grep "HORIZON HU" /tmp/channels | sed '/HORIZON HU/s/\[HORIZON HU\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_hu_channels.json
+					grep "HORIZON HU" /tmp/channels | sed '/HORIZON HU/s/\[HORIZON HU\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_hu_channels.json
 				fi
 				
 				if [ -e xml/horizon_ro.xml ]
 				then
-					grep "HORIZON RO" /tmp/channels | sed '/HORIZON RO/s/\[HORIZON RO\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_ro_channels.json
+					grep "HORIZON RO" /tmp/channels | sed '/HORIZON RO/s/\[HORIZON RO\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_ro_channels.json
 				fi
 			fi
 		fi
@@ -314,7 +314,7 @@ then
 				if [ -e xml/horizon_de.xml ]
 				then
 					grep 'channel id=' xml/horizon_de.xml > /tmp/xmlch_de
-					sed -i 's/<channel id="/[HORIZON DE] /g;s/">//g' /tmp/xmlch_de
+					sed -i 's/<channel id="/[HORIZON DE] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_de
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_de_channels.json 2> /dev/null
 				fi
@@ -328,8 +328,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_de) <(sort -u /tmp/channels_de) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_de) <(sort -u /tmp/channels_de) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -338,7 +338,7 @@ then
 				if [ -e xml/horizon_at.xml ]
 				then
 					grep 'channel id=' xml/horizon_at.xml > /tmp/xmlch_at
-					sed -i 's/<channel id="/[HORIZON AT] /g;s/">//g' /tmp/xmlch_at
+					sed -i 's/<channel id="/[HORIZON AT] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_at
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_at_channels.json 2> /dev/null
 				fi
@@ -352,8 +352,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_at) <(sort -u /tmp/channels_at) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_at) <(sort -u /tmp/channels_at) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -362,7 +362,7 @@ then
 				if [ -e xml/horizon_ch.xml ]
 				then
 					grep 'channel id=' xml/horizon_ch.xml > /tmp/xmlch_ch
-					sed -i 's/<channel id="/[HORIZON CH] /g;s/">//g' /tmp/xmlch_ch
+					sed -i 's/<channel id="/[HORIZON CH] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_ch
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ch_channels.json 2> /dev/null
 				fi
@@ -376,8 +376,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_ch) <(sort -u /tmp/channels_ch) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_ch) <(sort -u /tmp/channels_ch) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -386,7 +386,7 @@ then
 				if [ -e xml/horizon_nl.xml ]
 				then
 					grep 'channel id=' xml/horizon_nl.xml > /tmp/xmlch_nl
-					sed -i 's/<channel id="/[HORIZON NL] /g;s/">//g' /tmp/xmlch_nl
+					sed -i 's/<channel id="/[HORIZON NL] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_nl
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_nl_channels.json 2> /dev/null
 				fi
@@ -400,8 +400,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_nl) <(sort -u /tmp/channels_nl) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_nl) <(sort -u /tmp/channels_nl) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 					
 				cd - > /dev/null
@@ -410,7 +410,7 @@ then
 				if [ -e xml/horizon_pl.xml ]
 				then
 					grep 'channel id=' xml/horizon_pl.xml > /tmp/xmlch_pl
-					sed -i 's/<channel id="/[HORIZON PL] /g;s/">//g' /tmp/xmlch_pl
+					sed -i 's/<channel id="/[HORIZON PL] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_pl
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_pl_channels.json 2> /dev/null
 				fi
@@ -424,8 +424,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_pl) <(sort -u /tmp/channels_pl) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_pl) <(sort -u /tmp/channels_pl) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -434,7 +434,7 @@ then
 				if [ -e xml/horizon_ie.xml ]
 				then
 					grep 'channel id=' xml/horizon_ie.xml > /tmp/xmlch_ie
-					sed -i 's/<channel id="/[HORIZON IE] /g;s/">//g' /tmp/xmlch_ie
+					sed -i 's/<channel id="/[HORIZON IE] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_ie
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ie_channels.json 2> /dev/null
 				fi
@@ -448,8 +448,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_ie) <(sort -u /tmp/channels_ie) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_ie) <(sort -u /tmp/channels_ie) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -458,7 +458,7 @@ then
 				if [ -e xml/horizon_sk.xml ]
 				then
 					grep 'channel id=' xml/horizon_sk.xml > /tmp/xmlch_sk
-					sed -i 's/<channel id="/[HORIZON SK] /g;s/">//g' /tmp/xmlch_sk
+					sed -i 's/<channel id="/[HORIZON SK] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_sk
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_sk_channels.json 2> /dev/null
 				fi
@@ -472,8 +472,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_sk) <(sort -u /tmp/channels_sk) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_sk) <(sort -u /tmp/channels_sk) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -482,7 +482,7 @@ then
 				if [ -e xml/horizon_cz.xml ]
 				then
 					grep 'channel id=' xml/horizon_cz.xml > /tmp/xmlch_cz
-					sed -i 's/<channel id="/[HORIZON CZ] /g;s/">//g' /tmp/xmlch_cz
+					sed -i 's/<channel id="/[HORIZON CZ] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_cz
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_cz_channels.json 2> /dev/null
 				fi
@@ -496,8 +496,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_cz) <(sort -u /tmp/channels_cz) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_cz) <(sort -u /tmp/channels_cz) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -506,7 +506,7 @@ then
 				if [ -e xml/horizon_hu.xml ]
 				then
 					grep 'channel id=' xml/horizon_hu.xml > /tmp/xmlch_hu
-					sed -i 's/<channel id="/[HORIZON HU] /g;s/">//g' /tmp/xmlch_hu
+					sed -i 's/<channel id="/[HORIZON HU] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_hu
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_hu_channels.json 2> /dev/null
 				fi
@@ -520,8 +520,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_hu) <(sort -u /tmp/channels_hu) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_hu) <(sort -u /tmp/channels_hu) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -530,7 +530,7 @@ then
 				if [ -e xml/horizon_ro.xml ]
 				then
 					grep 'channel id=' xml/horizon_ro.xml > /tmp/xmlch_ro
-					sed -i 's/<channel id="/[HORIZON RO] /g;s/">//g' /tmp/xmlch_ro
+					sed -i 's/<channel id="/[HORIZON RO] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_ro
 				else
 					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ro_channels.json 2> /dev/null
 				fi
@@ -544,8 +544,8 @@ then
 					
 					comm -12 <(sort -u /tmp/xmlch_ro) <(sort -u /tmp/channels_ro) > /tmp/comm_menu_enabled
 					comm -2 -3 <(sort -u /tmp/xmlch_ro) <(sort -u /tmp/channels_ro) > /tmp/comm_menu_disabled
-					sed 's/.*/"&" "" on \\/g;s/\&amp;/\&/g' /tmp/comm_menu_enabled >> /tmp/chmenu
-					sed 's/.*/"&" "" off \\/g;s/\&amp;/\&/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+					sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
 				fi
 				
 				cd - > /dev/null
@@ -567,52 +567,52 @@ then
 					then
 						if [ -e xml/horizon_de.xml ]
 						then
-							grep "HORIZON DE" /tmp/channels | sed '/HORIZON DE/s/\[HORIZON DE\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_de_channels.json
+							grep "HORIZON DE" /tmp/channels | sed '/HORIZON DE/s/\[HORIZON DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_de_channels.json
 						fi
 						
 						if [ -e xml/horizon_at.xml ]
 						then
-							grep "HORIZON AT" /tmp/channels | sed '/HORIZON AT/s/\[HORIZON AT\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_at_channels.json
+							grep "HORIZON AT" /tmp/channels | sed '/HORIZON AT/s/\[HORIZON AT\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_at_channels.json
 						fi
 						
 						if [ -e xml/horizon_ch.xml ]
 						then
-							grep "HORIZON CH" /tmp/channels | sed '/HORIZON CH/s/\[HORIZON CH\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ch_channels.json
+							grep "HORIZON CH" /tmp/channels | sed '/HORIZON CH/s/\[HORIZON CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ch_channels.json
 						fi
 						
 						if [ -e xml/horizon_nl.xml ]
 						then
-							grep "HORIZON NL" /tmp/channels | sed '/HORIZON NL/s/\[HORIZON NL\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_nl_channels.json
+							grep "HORIZON NL" /tmp/channels | sed '/HORIZON NL/s/\[HORIZON NL\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_nl_channels.json
 						fi
 						
 						if [ -e xml/horizon_pl.xml ]
 						then
-							grep "HORIZON PL" /tmp/channels | sed '/HORIZON PL/s/\[HORIZON PL\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_pl_channels.json
+							grep "HORIZON PL" /tmp/channels | sed '/HORIZON PL/s/\[HORIZON PL\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_pl_channels.json
 						fi
 						
 						if [ -e xml/horizon_ie.xml ]
 						then
-							grep "HORIZON IE" /tmp/channels | sed '/HORIZON IE/s/\[HORIZON IE\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ie_channels.json
+							grep "HORIZON IE" /tmp/channels | sed '/HORIZON IE/s/\[HORIZON IE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ie_channels.json
 						fi
 						
 						if [ -e xml/horizon_sk.xml ]
 						then
-							grep "HORIZON SK" /tmp/channels | sed '/HORIZON SK/s/\[HORIZON SK\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_sk_channels.json
+							grep "HORIZON SK" /tmp/channels | sed '/HORIZON SK/s/\[HORIZON SK\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_sk_channels.json
 						fi
 						
 						if [ -e xml/horizon_cz.xml ]
 						then
-							grep "HORIZON CZ" /tmp/channels | sed '/HORIZON CZ/s/\[HORIZON CZ\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_cz_channels.json
+							grep "HORIZON CZ" /tmp/channels | sed '/HORIZON CZ/s/\[HORIZON CZ\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_cz_channels.json
 						fi
 						
 						if [ -e xml/horizon_hu.xml ]
 						then
-							grep "HORIZON HU" /tmp/channels | sed '/HORIZON HU/s/\[HORIZON HU\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_hu_channels.json
+							grep "HORIZON HU" /tmp/channels | sed '/HORIZON HU/s/\[HORIZON HU\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_hu_channels.json
 						fi
 						
 						if [ -e xml/horizon_ro.xml ]
 						then
-							grep "HORIZON RO" /tmp/channels | sed '/HORIZON RO/s/\[HORIZON RO\] //g;s/.*/&,/g;$s/,/]\n}/g;s/\&/\&amp;/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ro_channels.json
+							grep "HORIZON RO" /tmp/channels | sed '/HORIZON RO/s/\[HORIZON RO\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ro_channels.json
 						fi
 					fi
 				fi
