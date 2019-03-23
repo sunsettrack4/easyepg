@@ -131,7 +131,6 @@ command -v jq >/dev/null 2>&1 || { printf "\nperl is required but it's not insta
 if command -v perldoc >/dev/null
 then
 	perldoc -l JSON >/dev/null 2>&1 || { printf "\nJSON module for perl is requried but not installed!" >&2; ERROR2="true"; }
-	perldoc -l XML::Bare >/dev/null 2>&1 || { printf "\nXML::Bare module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l XML::Rules >/dev/null 2>&1 || { printf "\nXML::Rules module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Data::Dumper >/dev/null 2>&1 || { printf "\nData::Dumper module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Time::Piece >/dev/null 2>&1 || { printf "\nTime::Piece module for perl is requried but not installed!" >&2; ERROR2="true"; }
@@ -732,7 +731,7 @@ do
 				
 				if [ ! -e hzn/de/channels.json ]
 				then
-					rm -rf hzn/de
+					rm -rf hzn/de xml/horizon_de.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -750,7 +749,7 @@ do
 				
 				if [ ! -e hzn/at/channels.json ]
 				then
-					rm -rf hzn/at
+					rm -rf hzn/at xml/horizon_at.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -768,7 +767,7 @@ do
 				
 				if [ ! -e hzn/ch/channels.json ]
 				then
-					rm -rf hzn/ch
+					rm -rf hzn/ch xml/horizon_ch.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -786,7 +785,7 @@ do
 				
 				if [ ! -e hzn/nl/channels.json ]
 				then
-					rm -rf hzn/nl
+					rm -rf hzn/nl xml/horizon_nl.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -804,7 +803,7 @@ do
 				
 				if [ ! -e hzn/pl/channels.json ]
 				then
-					rm -rf hzn/pl
+					rm -rf hzn/pl xml/horizon_pl.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -822,7 +821,7 @@ do
 				
 				if [ ! -e hzn/ie/channels.json ]
 				then
-					rm -rf hzn/ie
+					rm -rf hzn/ie xml/horizon_ie.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -840,7 +839,7 @@ do
 				
 				if [ ! -e hzn/sk/channels.json ]
 				then
-					rm -rf hzn/sk
+					rm -rf hzn/sk xml/horizon_sk.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -858,7 +857,7 @@ do
 				
 				if [ ! -e hzn/cz/channels.json ]
 				then
-					rm -rf hzn/cz
+					rm -rf hzn/cz xml/horizon_cz.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -876,7 +875,7 @@ do
 				
 				if [ ! -e hzn/hu/channels.json ]
 				then
-					rm -rf hzn/hu
+					rm -rf hzn/hu xml/horizon_hu.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -894,7 +893,7 @@ do
 				
 				if [ ! -e hzn/ro/channels.json ]
 				then
-					rm -rf hzn/ro
+					rm -rf hzn/ro xml/horizon_ro.xml
 				fi
 				
 				echo "M" > /tmp/value
@@ -1020,6 +1019,7 @@ do
 	folder=$(sed -n "1p" /tmp/combinefolders)
 
 	printf "Creating combined file: $folder ..."
+	rm /tmp/file /tmp/combined_channels /tmp/combined_programmes 2> /dev/null
 	
 	# HORIZON DE
 	if [ -s combine/$folder/hzn_de_channels.json ]
@@ -1192,19 +1192,26 @@ do
 		fi
 	fi
 	
-	cat /tmp/combined_programmes >> /tmp/combined_channels && mv /tmp/combined_channels /tmp/file
-	sed -i 's/\&/\&amp;/g' /tmp/file
+	cat /tmp/combined_programmes >> /tmp/combined_channels 2> /dev/null && mv /tmp/combined_channels /tmp/file 2> /dev/null
 	
-	sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
-	sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>' /tmp/file
-	sed '$s/.*/&\n<\/tv>/g' /tmp/file > combine/$folder/$folder.xml
-	rm /tmp/combined_programmes
-	sed -i '1d' /tmp/combinefolders
-	
-	if [ -s combine/$folder/setup.sh ]
+	if [ -s /tmp/file ]
 	then
-		bash combine/$folder/setup.sh
-	fi
+		sed -i 's/\&/\&amp;/g' /tmp/file
 	
-	printf "\rCreating combined file: $folder ... DONE!\n"
+		sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
+		sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>' /tmp/file
+		sed '$s/.*/&\n<\/tv>/g' /tmp/file > combine/$folder/$folder.xml
+		rm /tmp/combined_programmes
+		sed -i '1d' /tmp/combinefolders
+		
+		if [ -s combine/$folder/setup.sh ]
+		then
+			bash combine/$folder/setup.sh
+		fi
+		
+		printf "\rCreating combined file: $folder ... DONE!\n"
+	else
+		printf "\rCreating combined file: $folder ... ERROR!\nNo XML or setup file available! Please check your setup!\n"
+		sed -i '1d' /tmp/combinefolders
+	fi
 done
