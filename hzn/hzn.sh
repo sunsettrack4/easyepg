@@ -696,15 +696,6 @@ else
 	rm errorlog 2> /dev/null
 fi
 
-# MAP CATEGORIES
-# perl genremapper.pl < horizon.xml > workfile && mv workfile horizon.xml
-
-# APPEND RATINGS TO 1st DESCRIPTION LINE
-if [ -e ratingmapper.pl ]
-then
-	perl ratingmapper.pl horizon.xml > workfile && mv workfile horizon.xml
-fi
-
 # SHOW WARNINGS
 cat epg_warnings.txt >> warnings.txt && rm epg_warnings.txt
 sort -u warnings.txt > sorted_warnings.txt && mv sorted_warnings.txt warnings.txt

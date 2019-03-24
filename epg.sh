@@ -1224,6 +1224,7 @@ do
 			printf "\n\nDONE!\n\n"
 		fi
 		
+		cp combine/$folder/$folder.xml xml/$folder.xml
 		printf "\rXML file $folder.xml created!\n"
 	else
 		printf "\rCreation of XML file $folder.xml failed!\nNo XML or setup file available! Please check your setup!\n"
