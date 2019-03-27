@@ -203,13 +203,13 @@ else
 	rm -rf cache/new_$date1 cache/new_$date2 cache/new_$date3 cache/new_$date4 cache/new_$date5 cache/new_$date6 cache/new_$date7 2> /dev/null
 fi
 
-	mkdir cache/new_$date1
-	mkdir cache/new_$date2
-	mkdir cache/new_$date3
-	mkdir cache/new_$date4
-	mkdir cache/new_$date5
-	mkdir cache/new_$date6
-	mkdir cache/new_$date7
+	mkdir cache/new_$date1 2> /dev/null
+	mkdir cache/new_$date2 2> /dev/null
+	mkdir cache/new_$date3 2> /dev/null
+	mkdir cache/new_$date4 2> /dev/null
+	mkdir cache/new_$date5 2> /dev/null
+	mkdir cache/new_$date6 2> /dev/null
+	mkdir cache/new_$date7 2> /dev/null
 
 
 #
@@ -217,6 +217,14 @@ fi
 #
 
 printf "\rPreparing database transmission...             "
+
+find cache/old_$date1 -size 0 -delete 2> /dev/null
+find cache/old_$date2 -size 0 -delete 2> /dev/null
+find cache/old_$date3 -size 0 -delete 2> /dev/null
+find cache/old_$date4 -size 0 -delete 2> /dev/null
+find cache/old_$date5 -size 0 -delete 2> /dev/null
+find cache/old_$date6 -size 0 -delete 2> /dev/null
+find cache/old_$date7 -size 0 -delete 2> /dev/null
 
 ls cache/old_$date1 > compare 2> /dev/null
 comm -12 <(sort -u day/day1 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daydpl_1
@@ -383,9 +391,9 @@ fi
 # CREATE COPY/PASTE SCRIPTS
 #
 
-for time in {0..7..1}
+for time in {0..8..1}
 do	
-	sed -i '1s/.*/#\!\/bin\/bash/g' day/day0${time} 2> /dev/null
+	sed -i '1s/.*/#\!\/bin\/bash\n&/g' day/day0${time} 2> /dev/null
 	sed -i 's/; then /\nthen\n  /g;s/; fi/\nfi/g' day/day0${time} 2> /dev/null
 
 	sed -i "s/new_day1/new_$date1/g;s/old_day1/old_$date1/g" day/day0${time} 2> /dev/null
@@ -405,7 +413,7 @@ done
 printf "\rLoading cached data files into new database..."
 echo ""
 
-for a in {0..7..1}
+for a in {0..8..1}
 do
 	bash day/day0${a} 2> /dev/null &
 done
@@ -587,9 +595,9 @@ fi
 # CREATE DOWNLOAD SCRIPTS
 #
 
-for time in {0..7..1}
+for time in {0..8..1}
 do	
-	sed -i '1s/.*/#\!\/bin\/bash/g' day/day0${time} 2> /dev/null
+	sed -i '1s/.*/#\!\/bin\/bash\n&/g' day/day0${time} 2> /dev/null
 	sed -i '/curl/s/ > / \\\n  > /g' day/day0${time} 2> /dev/null
 	sed -i '/curl/s/:/%3A/g' day/day0${time} 2> /dev/null
 	sed -i 's/web-api/https:\/\/&/g' day/day0${time} 2> /dev/null
@@ -611,7 +619,7 @@ done
 printf "\rDownloading EPG details...                 "
 echo ""
 
-for a in {0..7..1}
+for a in {0..8..1}
 do
 	bash day/day0${a} 2> /dev/null &
 done

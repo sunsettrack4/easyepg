@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ##############################
-# HORIZON JSON > XML CONVERTER #
+# ZATTOO JSON > XML CONVERTER  #
 # ##############################
 
 # CHANNELS
@@ -46,7 +46,7 @@ my $json;
 my $chlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "hzn_channels.json" or die;
+    open my $fh, "<", "ztt_channels.json" or die;
     $chlist = <$fh>;
     close $fh;
 }
@@ -88,21 +88,20 @@ my $setupdata   = decode_json($settings);
 # DEFINE COUNTRY VERSION
 my $countryVER =  $initdata->{'country'};
 
-print "\n<!-- CHANNEL LIST - SOURCE: HORIZON $countryVER -->\n\n";
+print "\n<!-- CHANNEL LIST - SOURCE: ZATTOO $countryVER -->\n\n";
 
-my @channels = @{ $data->{'channels'} };
+my @channels = @{ $data->{'channel_groups'} };
 foreach my $channels ( @channels ) {
-	my @schedule = @{ $channels->{'stationSchedules'} };
+	my @schedule = @{ $channels->{'channels'} };
 	
 	foreach my $schedule ( @schedule ) {
-		my $item = $schedule->{'station'};
 		
 		# ####################
         # DEFINE JSON VALUES #
         # ####################
         
         # DEFINE CHANNEL ID + NAME
-		my $cname   = $item->{'title'};
+		my $cname   = $schedule->{'title'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
         
         # DEFINE LANGUAGE VERSION

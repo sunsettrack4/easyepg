@@ -177,7 +177,9 @@ fi
 # M1W00 CRONJOB #
 # ###############
 
-if ls -l hzn/ | grep -q '^d'
+ls -l hzn/ >  /tmp/providerlist
+ls -l ztt/ >> /tmp/providerlist
+if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
 	dialog --backtitle "[M1W00] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --infobox "Please press any button to enter the main menu.\n\nThe script will proceed in 5 seconds." 7 50
 			
@@ -205,7 +207,9 @@ do
 	echo '	1 "ADD GRABBER INSTANCE" \' >> /tmp/menu
 
 	# M1200 GRABBER SETTINGS
-	if ls -l hzn/ | grep -q '^d'
+	ls -l hzn/ >  /tmp/providerlist
+	ls -l ztt/ >> /tmp/providerlist
+	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	2 "OPEN GRABBER SETTINGS" \' >> /tmp/menu
 	fi
@@ -217,7 +221,9 @@ do
 	fi
 	
 	# M1400 CONTINUE IN GRABBER MODE
-	if ls -l hzn/ | grep -q '^d'
+	ls -l hzn/ >  /tmp/providerlist
+	ls -l ztt/ >> /tmp/providerlist
+	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	4 "CONTINUE IN GRABBER MODE" \' >> /tmp/menu
 	fi
@@ -235,10 +241,13 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# M1100 MENU OVERLAY
-		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 9 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 10 40 10 \' > /tmp/menu
 
 		# M1110 HORIZON
 		echo '	1 "HORIZON" \' >> /tmp/menu
+		
+		# M1120 ZATTOO
+		echo '	2 "ZATTOO" \' >> /tmp/menu
 
 		echo "2> /tmp/value" >> /tmp/menu
 
@@ -610,6 +619,101 @@ do
 			fi
 		
 		
+		# ###############
+		# M1120 ZATTOO  #
+		# ###############
+
+		elif grep -q "2" /tmp/value
+		then
+			# M1120 MENU OVERLAY
+			echo 'dialog --backtitle "[M1120] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > ZATTOO" --title "COUNTRY" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1121 GERMANY
+			if [ ! -d ztt/de ]
+			then
+				echo '	1 "[DE] Zattoo Germany" \' >> /tmp/menu
+			fi
+			
+			# M1122 SWITZERLAND
+			if [ ! -d ztt/at ]
+			then
+				echo '	2 "[CH] Zattoo Switzerland" \' >> /tmp/menu
+			fi
+			
+			
+			echo "2> /tmp/value" >> /tmp/menu
+
+			bash /tmp/menu
+			input="$(cat /tmp/value)"
+		
+		
+			# ##################
+			# M1121 ZATTOO DE  #
+			# ##################
+			
+			if grep -q "1" /tmp/value
+			then
+				mkdir ztt/de
+				chmod 0777 ztt/de
+				echo '{"country":"DE","language":"de"}' > ztt/de/init.json
+				sed '138s/XX/DE/g' ztt/settings.sh > ztt/de/settings.sh
+				cp ztt/ztt.sh ztt/de/ztt.sh
+				cp ztt/compare_crid.pl ztt/de/
+				cp ztt/save_page.js ztt/de/
+				cp ztt/epg_json2xml.pl ztt/de/
+				cp ztt/ch_json2xml.pl ztt/de/
+				cp ztt/cid_json.pl ztt/de/
+				cp ztt/chlist_printer.pl ztt/de/
+				cp ztt/compare_menu.pl ztt/de/
+				cd ztt/de && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ztt/de/channels.json ]
+				then
+					rm -rf ztt/de
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ##################
+			# M1122 ZATTOO CH  #
+			# ##################
+			
+			elif grep -q "2" /tmp/value
+			then
+				mkdir ztt/ch
+				chmod 0777 ztt/ch
+				echo '{"country":"CH","language":"de"}' > ztt/ch/init.json
+				sed '138s/XX/CH/g' ztt/settings.sh > ztt/ch/settings.sh
+				cp ztt/ztt.sh ztt/ch/ztt.sh
+				cp ztt/compare_crid.pl ztt/ch/
+				cp ztt/save_page.js ztt/ch/
+				cp ztt/epg_json2xml.pl ztt/ch/
+				cp ztt/ch_json2xml.pl ztt/ch/
+				cp ztt/cid_json.pl ztt/ch
+				cp ztt/chlist_printer.pl ztt/ch/
+				cp ztt/compare_menu.pl ztt/ch/
+				cd ztt/ch && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ztt/ch/channels.json ]
+				then
+					rm -rf ztt/ch
+				fi
+				
+				echo "M" > /tmp/value
+				
+			
+			# ############
+			# M112X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+			
+		
 		# ############
 		# M1X00 EXIT #
 		# ############
@@ -626,10 +730,19 @@ do
 	elif grep -q "2" /tmp/value
 	then
 		# M1200 MENU OVERLAY
-		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 9 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 10 40 10 \' > /tmp/menu
 		
 		# M1210 HORIZON
-		echo '	1 "HORIZON" \' >> /tmp/menu
+		if ls -l hzn/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	1 "HORIZON" \' >> /tmp/menu
+		fi
+		
+		# M1220 ZATTOO
+		if ls -l ztt/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	2 "ZATTOO" \' >> /tmp/menu
+		fi
 		
 		echo "2> /tmp/value" >> /tmp/menu
 
@@ -908,6 +1021,86 @@ do
 			fi
 		
 		
+		# ###############
+		# M1220 ZATTOO  #
+		# ###############
+		
+		elif grep -q "2" /tmp/value
+		then
+			# M1220 MENU OVERLAY
+			echo 'dialog --backtitle "[M1220] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > ZATTOO" --title "COUNTRY" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1221 GERMANY
+			if [ -d ztt/de ]
+			then
+				echo '	1 "[DE] Zattoo Germany" \' >> /tmp/menu
+			fi
+			
+			# M1222 SWITZERLAND
+			if [ -d ztt/ch ]
+			then
+				echo '	2 "[CH] Zattoo Switzerland" \' >> /tmp/menu
+			fi
+			
+			# M122E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M122E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > ZATTOO" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ##################
+			# M1221 ZATTOO DE  #
+			# ##################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd ztt/de
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ztt/de/channels.json ]
+				then
+					rm -rf ztt/de xml/zattoo_de.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ##################
+			# M1222 ZATTOO CH  #
+			# ##################
+			
+			elif grep -q "2" /tmp/value
+			then
+				cd ztt/ch
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ztt/ch/channels.json ]
+				then
+					rm -rf ztt/ch xml/zattoo_ch.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M122X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+			
+		
 		# ############
 		# M12X0 EXIT #
 		# ############
@@ -968,10 +1161,6 @@ done
 # ##########################
 
 clear
-		
-#
-# HORIZON
-#
 
 if grep -q "G" /tmp/value	
 then
@@ -996,6 +1185,21 @@ then
 		cd hzn/cz 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/cz/horizon.xml xml/horizon_cz.xml 2> /dev/null
 		cd hzn/hu 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/hu/horizon.xml xml/horizon_hu.xml 2> /dev/null
 		cd hzn/ro 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/ro/horizon.xml xml/horizon_ro.xml 2> /dev/null
+	fi
+	
+	if ls -l ztt/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " ZATTOO EPG SIMPLE XMLTV GRABBER             "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd ztt/de 2> /dev/null && bash ztt.sh && cd - > /dev/null && cp ztt/de/zattoo.xml xml/zattoo_de.xml 2> /dev/null
+		cd ztt/ch 2> /dev/null && bash ztt.sh && cd - > /dev/null && cp ztt/ch/zattoo.xml xml/zattoo_ch.xml 2> /dev/null
 	fi
 fi
 
@@ -1189,6 +1393,40 @@ do
 			sed 's/fileNAME/horizon_ro.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 			sed -i "s/channelsFILE/$folder\/hzn_ro_channels.json/g" /tmp/prog_combine.pl
 			printf "\n<!-- PROGRAMMES: HORIZON ROMANIA -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# ZATTOO DE
+	if [ -s combine/$folder/ztt_de_channels.json ]
+	then
+		if [ -s xml/zattoo_de.xml ]
+		then
+			sed 's/fileNAME/zattoo_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/ztt_de_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: ZATTOO GERMANY -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/zattoo_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/ztt_de_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: ZATTOO GERMANY -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# ZATTOO CH
+	if [ -s combine/$folder/ztt_ch_channels.json ]
+	then
+		if [ -s xml/zattoo_ch.xml ]
+		then
+			sed 's/fileNAME/zattoo_ch.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/ztt_ch_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: ZATTOO SWITZERLAND -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/zattoo_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/ztt_ch_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: ZATTOO SWITZERLAND -->\n\n" >> /tmp/combined_programmes
 			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 		fi
 	fi

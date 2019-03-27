@@ -185,6 +185,18 @@ then
 				sed 's/<channel id="/"[HORIZON RO] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 			
+			if [ -e xml/zattoo_de.xml ]
+			then
+				grep 'channel id=' xml/zattoo_de.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[ZATTOO DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+			
+			if [ -e xml/zattoo_ch.xml ]
+			then
+				grep 'channel id=' xml/zattoo_ch.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[ZATTOO CH] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+			
 			echo "2>/tmp/channels" >> /tmp/chmenu
 			
 			sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
@@ -206,7 +218,7 @@ then
 				rm /tmp/setupname
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
-				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/"//g' /tmp/xmlch2
+				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/"//g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;' /tmp/xmlch2
 				sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
 				
 				if [ -s /tmp/chduplicates ]
@@ -226,7 +238,7 @@ then
 		if [ -s /tmp/channels ]
 		then
 			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g' /tmp/channels
+			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
 			then
@@ -278,6 +290,16 @@ then
 				if [ -e xml/horizon_ro.xml ]
 				then
 					grep "HORIZON RO" /tmp/channels | sed '/HORIZON RO/s/\[HORIZON RO\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/hzn_ro_channels.json
+				fi
+				
+				if [ -e xml/zattoo_de.xml ]
+				then
+					grep "ZATTOO DE" /tmp/channels | sed '/ZATTOO DE/s/\[ZATTOO DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/ztt_de_channels.json
+				fi
+				
+				if [ -e xml/zattoo_ch.xml ]
+				then
+					grep "ZATTOO CH" /tmp/channels | sed '/ZATTOO CH/s/\[ZATTOO CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/ztt_ch_channels.json
 				fi
 			fi
 			
@@ -589,6 +611,56 @@ then
 					
 					cd - > /dev/null
 					
+					# ZATTOO DE
+					if [ -e xml/zattoo_de.xml ]
+					then
+						grep 'channel id=' xml/zattoo_de.xml > /tmp/xmlch_zde
+						sed -i 's/<channel id="/[ZATTOO DE] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_zde
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ztt_de_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ztt_de_channels.json /tmp/xmlch_zde
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e ztt_de_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' ztt_de_channels.json > /tmp/channels_zde && cat /tmp/channels_zde >> /tmp/xmlch2
+						sed -i 's/.*/[ZATTOO DE] &/g' /tmp/channels_zde
+						
+						comm -12 <(sort -u /tmp/xmlch_zde) <(sort -u /tmp/channels_zde) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_zde) <(sort -u /tmp/channels_zde) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
+					# ZATTOO CH
+					if [ -e xml/zattoo_ch.xml ]
+					then
+						grep 'channel id=' xml/zattoo_ch.xml > /tmp/xmlch_zch
+						sed -i 's/<channel id="/[ZATTOO CH] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_zch
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ztt_ch_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ztt_ch_channels.json /tmp/xmlch_zch
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e ztt_ch_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' ztt_ch_channels.json > /tmp/channels_zch && cat /tmp/channels_zch >> /tmp/xmlch2
+						sed -i 's/.*/[ZATTOO CH] &/g' /tmp/channels_zch
+						
+						comm -12 <(sort -u /tmp/xmlch_zch) <(sort -u /tmp/channels_zch) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_zch) <(sort -u /tmp/channels_zch) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
 					# END
 					echo "2>/tmp/channels" >> /tmp/chmenu
 					
@@ -603,7 +675,7 @@ then
 					
 					if [ -e /tmp/menu ]
 					then
-						if grep -q -E "\[HORIZON [A-Z][A-Z]\] " /tmp/chmenu
+						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
 							rm /tmp/menu
@@ -622,9 +694,9 @@ then
 					if [ -s /tmp/channels ]
 					then
 						sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
+						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/"//g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g' /tmp/channels > /tmp/xmlch2
 							
-						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g' /tmp/channels
+						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g' /tmp/channels
 						
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) ]
 						then
@@ -676,6 +748,16 @@ then
 							if [ -e xml/horizon_ro.xml ]
 							then
 								grep "HORIZON RO" /tmp/channels | sed '/HORIZON RO/s/\[HORIZON RO\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/hzn_ro_channels.json
+							fi
+							
+							if [ -e xml/zattoo_de.xml ]
+							then
+								grep "ZATTOO DE" /tmp/channels | sed '/ZATTOO DE/s/\[ZATTOO DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ztt_de_channels.json
+							fi
+							
+							if [ -e xml/zattoo_ch.xml ]
+							then
+								grep "ZATTOO CH" /tmp/channels | sed '/ZATTOO CH/s/\[ZATTOO CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ztt_ch_channels.json
 							fi
 						fi
 						
