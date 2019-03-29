@@ -36,6 +36,12 @@ then
 	printf "+++ COUNTRY: SWITZERLAND +++\n\n"
 fi
 
+if grep -q '"day": "0"' settings.json
+then
+	printf "EPG Grabber disabled!\n\n"
+	exit 0
+fi
+
 
 # ######################################
 # LOADING COOKIE DATA / GET SESSION ID #

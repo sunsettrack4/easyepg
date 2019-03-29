@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##############################
-# HORIZON CHANNEL LIST CREATOR #
-# ##############################
+# ###############################
+# SWISSCOM CHANNEL LIST CREATOR #
+# ###############################
 
 # COMPARE STRINGS, CREATE MENU LIST
 

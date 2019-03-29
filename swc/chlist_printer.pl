@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##############################
-# ZATTOO CHANNEL LIST CREATOR  #
-# ##############################
+# ################################
+# SWISSCOM CHANNEL LIST CREATOR  #
+# ################################
 
 # CREATE JSON FILE FOR COMPARISM
 
@@ -74,52 +74,44 @@ my $configdata   = decode_json($chlist_config);
 
 print "{ \"newname2id\": {\n";
 
-my @newchannels_name2id = @{ $newdata->{'channel_groups'} };
+my @newchannels_name2id = @{ $newdata->{'attributes'} };
 foreach my $newchannels ( @newchannels_name2id ) {
-	my @newschedule = @{ $newchannels->{'channels'} };
-	
-	foreach my $newschedule ( @newschedule ) {
-		
-		#
-		# DEFINE JSON VALUES
-		#
+
+	#
+	# DEFINE JSON VALUES
+	#
         
-		# DEFINE NEW CHANNEL NAME
-		my $newcname   = $newschedule->{'title'};
-		$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	# DEFINE NEW CHANNEL NAME
+	my $newcname   = $newchannels->{'Title'};
+	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
-		# DEFINE NEW CHANNEL ID
-		my $newcid     = $newschedule->{'cid'};
+	# DEFINE NEW CHANNEL ID
+	my $newcid     = $newchannels->{'Identifier'};
 		
-		# PRINT NEW CHANNEL NAMES
-		print "\"$newcname\": \"$newcid\",\n";
-	}
+	# PRINT NEW CHANNEL NAMES
+	print "\"$newcname\": \"$newcid\",\n";
 }
 
 # TOOL: ID ==> NAME
 
 print "\"DUMMY\": \"DUMMY\" },\n\"newid2name\": {\n";
 
-my @newchannels_id2name = @{ $newdata->{'channel_groups'} };
+my @newchannels_id2name = @{ $newdata->{'attributes'} };
 foreach my $newchannels ( @newchannels_id2name ) {
-	my @newschedule = @{ $newchannels->{'channels'} };
-	
-	foreach my $newschedule ( @newschedule ) {
 		
-		#
-		# DEFINE JSON VALUES
-		#
+	#
+	# DEFINE JSON VALUES
+	#
         
-		# DEFINE NEW CHANNEL NAME
-		my $newcname   = $newschedule->{'title'};
-		$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	# DEFINE NEW CHANNEL NAME
+	my $newcname   = $newchannels->{'Title'};
+	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
-		# DEFINE NEW CHANNEL ID
-		my $newcid     = $newschedule->{'cid'};
+	# DEFINE NEW CHANNEL ID
+	my $newcid     = $newchannels->{'Identifier'};
 		
-		# PRINT NEW CHANNEL NAMES newcid
-		print "\"$newcid\": \"$newcname\",\n";
-	}
+	# PRINT NEW CHANNEL NAMES newcid
+	print "\"$newcid\": \"$newcname\",\n";
 }
 
 				
@@ -131,52 +123,44 @@ foreach my $newchannels ( @newchannels_id2name ) {
 
 print "\"DUMMY\": \"DUMMY\" },\n\"oldname2id\": {\n";
 						
-my @oldchannels_name2id = @{ $olddata->{'channel_groups'} };
+my @oldchannels_name2id = @{ $olddata->{'attributes'} };
 foreach my $oldchannels ( @oldchannels_name2id ) {
-	my @oldschedule = @{ $oldchannels->{'channels'} };
-
-	foreach my $oldschedule ( @oldschedule ) {
 						
-		#
-		# DEFINE JSON VALUES
-		#
+	#
+	# DEFINE JSON VALUES
+	#
 								
-		# DEFINE OLD CHANNEL NAME
-		my $oldcname   = $oldschedule->{'title'};
-		$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	# DEFINE OLD CHANNEL NAME
+	my $oldcname   = $oldchannels->{'Title'};
+	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
-		# DEFINE OLD CHANNEL ID
-		my $oldcid     = $oldschedule->{'cid'};
+	# DEFINE OLD CHANNEL ID
+	my $oldcid     = $oldchannels->{'Identifier'};
 							
-		# PRINT OLD CHANNEL NAMES
-		print "\"$oldcname\": \"$oldcid\",\n";
-	}
+	# PRINT OLD CHANNEL NAMES
+	print "\"$oldcname\": \"$oldcid\",\n";
 }
 
 # TOOL: ID ==> NAME
 
 print "\"DUMMY\": \"DUMMY\" },\n\"oldid2name\": {\n";
 						
-my @oldchannels_id2name = @{ $olddata->{'channel_groups'} };
+my @oldchannels_id2name = @{ $olddata->{'attributes'} };
 foreach my $oldchannels ( @oldchannels_id2name ) {
-	my @oldschedule = @{ $oldchannels->{'channels'} };
-
-	foreach my $oldschedule ( @oldschedule ) {
 						
-		#
-		# DEFINE JSON VALUES
-		#
+	#
+	# DEFINE JSON VALUES
+	#
 								
-		# DEFINE OLD CHANNEL NAME
-		my $oldcname   = $oldschedule->{'title'};
-		$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	# DEFINE OLD CHANNEL NAME
+	my $oldcname   = $oldchannels->{'Title'};
+	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
-		# DEFINE OLD CHANNEL ID
-		my $oldcid     = $oldschedule->{'cid'};
+	# DEFINE OLD CHANNEL ID
+	my $oldcid     = $oldchannels->{'Identifier'};
 							
-		# PRINT OLD CHANNEL NAMES
-		print "\"$oldcid\": \"$oldcname\",\n";
-	}
+	# PRINT OLD CHANNEL NAMES
+	print "\"$oldcid\": \"$oldcname\",\n";
 }	
 
 							

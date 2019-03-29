@@ -325,8 +325,8 @@ do
 	
 	elif grep -q "3" /tmp/value
 	then
-		# H1400 MENU OVERLAY
-		dialog --backtitle "[H1400] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > CONVERT CHANNEL IDs" --title "CHANNEL IDs" --yesno "Do you want to use the Rytec ID format?\n\nRytec ID example: ChannelNameHD.de\nUsual ID example: Channel Name HD" 8 55
+		# H1300 MENU OVERLAY
+		dialog --backtitle "[H1300] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > CONVERT CHANNEL IDs" --title "CHANNEL IDs" --yesno "Do you want to use the Rytec ID format?\n\nRytec ID example: ChannelNameHD.de\nUsual ID example: Channel Name HD" 8 55
 						
 		response=$?
 						
@@ -395,7 +395,7 @@ do
 	
 	elif grep -q "5" /tmp/value
 	then
-		# H1400 MENU OVERLAY
+		# H1500 MENU OVERLAY
 		dialog --backtitle "[H1500] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > MULTIPLE CATEGORIES" --title "MULTIPLE CATEGORIES" --yesno "Do you want to use multiple categories for tvHeadend?" 5 60
 						
 		response=$?

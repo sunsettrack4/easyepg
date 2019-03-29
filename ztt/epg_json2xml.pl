@@ -44,7 +44,7 @@ my $json;
     close $fh;
 }
 
-# READ JSON INPUT FILE: HORIZON NUMERIC CHANNEL IDs
+# READ JSON INPUT FILE: ZATTOO NUMERIC CHANNEL IDs
 my $chidlist;
 {
     local $/; #Enable 'slurp' mode

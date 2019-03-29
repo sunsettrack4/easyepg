@@ -300,14 +300,13 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# Z3100 MENU OVERLAY
-		echo 'dialog --backtitle "[Z3100] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST [X]" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
+		echo 'dialog --backtitle "[Z3100] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
 		
 		printf "\rFetching channel list...               "
 		sed 's/, "/\n/g' /tmp/login.txt | grep "power_guide_hash" > /tmp/powerid
 		sed -i 's/.*: "//g' /tmp/powerid && sed -i 's/.$//g' /tmp/powerid
 		powerid=$(</tmp/powerid)
 		curl -X GET --cookie "$session" https://zattoo.com/zapi/v2/cached/channels/$powerid?details=False > /tmp/chlist 2> /dev/null
-		perl cid_json.pl > /tmp/chvalues
 		
 		printf "\rLoading channel configuration..."
 		perl cid_json.pl > /tmp/chvalues
@@ -330,10 +329,10 @@ do
 			then
 				sed 's/" "/","/g;s/\\\[[^ ]* //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g' /tmp/chconf > channels.json
 				cp /tmp/chlist chlist_old
-				dialog --backtitle "[H1110] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list added!\nPlease run the grabber to add the channels to the setup modules!" 7 50
+				dialog --backtitle "[Z3110] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list added!\nPlease run the grabber to add the channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
 			else
-				dialog --backtitle "[H1120] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
+				dialog --backtitle "[Z3120] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
 				echo "M" > /tmp/value
 				exit 1
 			fi
@@ -359,10 +358,10 @@ do
 			if [ -s /tmp/chconf ]
 			then
 				sed 's/" "/","/g;s/\\\[[^ ]* //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g' /tmp/chconf > channels.json
-				dialog --backtitle "[H1130] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
+				dialog --backtitle "[Z3130] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
 			else
-				dialog --backtitle "[H1140] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
+				dialog --backtitle "[Z3140] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
 				echo "H" > /tmp/value
 			fi
 		fi
@@ -379,7 +378,7 @@ do
 		while grep -q "X" /tmp/value
 		do
 			# Z3200 MENU OVERLAY
-			dialog --backtitle "[Z3200] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-7=enable)" 10 46 2>/tmp/value
+			dialog --backtitle "[Z3200] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
 							
 			sed -i 's/.*/epg&-/g' /tmp/value
 			
@@ -388,7 +387,7 @@ do
 			then
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=0" >> /tmp/settings_new
-				dialog --backtitle "[H1210] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber disabled!" 5 26 
+				dialog --backtitle "[Z3210] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber disabled!" 5 26 
 				echo "H" > /tmp/value
 			
 			# Z3220 INPUT: 1 DAY
@@ -396,7 +395,7 @@ do
 			then
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=1" >> /tmp/settings_new
-				dialog --backtitle "[H1220] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for 1 day!" 5 42
+				dialog --backtitle "[Z3220] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for 1 day!" 5 42
 				echo "H" > /tmp/value
 				
 			# Z3230 INPUT: 2-9 DAYS
@@ -405,7 +404,7 @@ do
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=$(</tmp/value)" >> /tmp/settings_new
-				dialog --backtitle "[H1230] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
+				dialog --backtitle "[Z3230] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
 			# Z3240 INPUT: 10-14 DAYS
@@ -414,13 +413,13 @@ do
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=$(</tmp/value)" >> /tmp/settings_new
-				dialog --backtitle "[H1230] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
+				dialog --backtitle "[Z3240] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
 			# Z3250 WRONG INPUT
 			elif [ -s /tmp/value ]
 			then
-				dialog --backtitle "[H1240] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "ERROR" --msgbox "Wrong input detected!" 5 30 
+				dialog --backtitle "[Z3250] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > TIME PERIOD" --title "ERROR" --msgbox "Wrong input detected!" 5 30 
 				echo "X" > /tmp/value
 			
 			# Z32X0 EXIT
@@ -501,7 +500,7 @@ do
 	
 	
 	# ###########################
-	# H1500 MULTIPLE CATEGORIES #
+	# Z3500 MULTIPLE CATEGORIES #
 	# ###########################
 	
 	elif grep -q "5" /tmp/value
@@ -570,7 +569,7 @@ do
 	
 	
 	# #######################
-	# H1700 DELETE INSTANCE #
+	# Z3700 DELETE INSTANCE #
 	# #######################
 	
 	elif grep -q "7" /tmp/value

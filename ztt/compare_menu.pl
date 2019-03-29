@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ##############################
-# HORIZON CHANNEL LIST CREATOR #
+# ZATTOO CHANNEL LIST CREATOR  #
 # ##############################
 
 # COMPARE STRINGS, CREATE MENU LIST

@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##############################
-# HORIZON CHANNEL ID CREATOR   #
-# ##############################
+# ################################
+# SWISSCOM CHANNEL ID CREATOR    #
+# ################################
 
 # CHANNEL IDs
 
@@ -47,31 +47,26 @@ my $data   = decode_json($json);
 
 print "{ \"cid\":\n  {\n";
 
-my @channels = @{ $data->{'channels'} };
-foreach my $channels ( @channels ) {
-	my @schedule = @{ $channels->{'stationSchedules'} };
+my @attributes = @{ $data->{'attributes'} };
+foreach my $attributes ( @attributes ) {
 	
-	foreach my $schedule ( @schedule ) {
-		my $item = $schedule->{'station'};
+	# ####################
+    # DEFINE JSON VALUES #
+    # ####################
+        
+    # DEFINE CHANNEL NAME
+	my $cname   = $attributes->{'Title'};
+	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
-		# ####################
-        # DEFINE JSON VALUES #
-        # ####################
+	# DEFINE CHANNEL ID
+	my $cid     = $attributes->{'Identifier'};
         
-        # DEFINE CHANNEL NAME
-		my $cname   = $item->{'title'};
-		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-		
-		# DEFINE CHANNEL ID
-		my $cid     = $item->{'id'};
+    # ###################
+	# PRINT JSON OUTPUT #
+	# ###################
         
-        # ###################
-		# PRINT JSON OUTPUT #
-		# ###################
-        
-		# CHANNEL ID (condition)
-		print "  \"$cid\":\"$cname\",\n";
-	}
+	# CHANNEL ID (condition)
+	print "  \"$cid\":\"$cname\",\n";
 }
 
 print "  \"000000000000\":\"DUMMY\"\n  }\n}";

@@ -197,6 +197,12 @@ then
 				sed 's/<channel id="/"[ZATTOO CH] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 			
+			if [ -e xml/swisscom_ch.xml ]
+			then
+				grep 'channel id=' xml/swisscom_ch.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[SWISSCOM CH] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+			
 			echo "2>/tmp/channels" >> /tmp/chmenu
 			
 			sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
@@ -218,7 +224,7 @@ then
 				rm /tmp/setupname
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
-				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/"//g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;' /tmp/xmlch2
+				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/"//g' /tmp/xmlch2
 				sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
 				
 				if [ -s /tmp/chduplicates ]
@@ -238,7 +244,7 @@ then
 		if [ -s /tmp/channels ]
 		then
 			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g' /tmp/channels
+			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
 			then
@@ -300,6 +306,11 @@ then
 				if [ -e xml/zattoo_ch.xml ]
 				then
 					grep "ZATTOO CH" /tmp/channels | sed '/ZATTOO CH/s/\[ZATTOO CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/ztt_ch_channels.json
+				fi
+				
+				if [ -e xml/swisscom_ch.xml ]
+				then
+					grep "SWISSCOM CH" /tmp/channels | sed '/SWISSCOM CH/s/\[SWISSCOM CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/swc_ch_channels.json
 				fi
 			fi
 			
@@ -661,6 +672,31 @@ then
 					
 					cd - > /dev/null
 					
+					# SWISSCOM CH
+					if [ -e xml/swisscom_ch.xml ]
+					then
+						grep 'channel id=' xml/swisscom_ch.xml > /tmp/xmlch_swc
+						sed -i 's/<channel id="/[SWISSCOM CH] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_swc
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/swc_ch_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/swc_ch_channels.json /tmp/xmlch_swc
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e swc_ch_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' swc_ch_channels.json > /tmp/channels_swc && cat /tmp/channels_swc >> /tmp/xmlch2
+						sed -i 's/.*/[SWISSCOM CH] &/g' /tmp/channels_swc
+						
+						comm -12 <(sort -u /tmp/xmlch_swc) <(sort -u /tmp/channels_swc) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_swc) <(sort -u /tmp/channels_swc) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
 					# END
 					echo "2>/tmp/channels" >> /tmp/chmenu
 					
@@ -675,7 +711,7 @@ then
 					
 					if [ -e /tmp/menu ]
 					then
-						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]" /tmp/chmenu
+						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
 							rm /tmp/menu
@@ -694,9 +730,9 @@ then
 					if [ -s /tmp/channels ]
 					then
 						sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/"//g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g' /tmp/channels > /tmp/xmlch2
+						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
 							
-						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g' /tmp/channels
+						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g' /tmp/channels
 						
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) ]
 						then
@@ -758,6 +794,11 @@ then
 							if [ -e xml/zattoo_ch.xml ]
 							then
 								grep "ZATTOO CH" /tmp/channels | sed '/ZATTOO CH/s/\[ZATTOO CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ztt_ch_channels.json
+							fi
+							
+							if [ -e xml/swisscom_ch.xml ]
+							then
+								grep "SWISSCOM CH" /tmp/channels | sed '/SWISSCOM CH/s/\[SWISSCOM CH\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/swc_ch_channels.json
 							fi
 						fi
 						

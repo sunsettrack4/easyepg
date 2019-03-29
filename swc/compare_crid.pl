@@ -19,11 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##############################
-# HORIZON CHANNEL ID CREATOR   #
-# ##############################
-
-# CHANNEL IDs
+# ###############################
+# SWISSCOM CHANNEL LIST CREATOR #
+# ###############################
 
 use strict;
 use warnings;
@@ -33,45 +31,41 @@ use utf8;
  
 use JSON;
 
-# READ JSON INPUT FILE: CHLIST
-my $json;
+# READ JSON INPUT FILE: MANIFEST
+my $programme;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "/tmp/chlist" or die;
-    $json = <$fh>;
+    open my $fh, "<", "/tmp/workfile" or die;
+    $programme = <$fh>;
     close $fh;
 }
 
+
 # CONVERT JSON TO PERL STRUCTURES
-my $data   = decode_json($json);
+my $programmedata    = decode_json($programme);
 
-print "{ \"cid\":\n  {\n";
+#
+# DEFINE JSON VALUES
+#
 
-my @channels = @{ $data->{'channels'} };
-foreach my $channels ( @channels ) {
-	my @schedule = @{ $channels->{'stationSchedules'} };
+# DEFINE PROGRAMME STRINGS
+my @attributes = @{ $programmedata->{'attributes'} };
+
+foreach my $attributes ( @attributes ) {
+	my $channelnodes = $attributes->{'Nodes'};
 	
-	foreach my $schedule ( @schedule ) {
-		my $item = $schedule->{'station'};
+	my @channelitems = @{ $channelnodes->{'Items'} };
+	
+	foreach my $channelitems ( @channelitems ) {
+		my $channelcontents = $channelitems->{'Content'};
+		my $broadcastnodes = $channelcontents->{'Nodes'};
 		
-		# ####################
-        # DEFINE JSON VALUES #
-        # ####################
-        
-        # DEFINE CHANNEL NAME
-		my $cname   = $item->{'title'};
-		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+		my @broadcastitems = @{ $broadcastnodes->{'Items'} };
 		
-		# DEFINE CHANNEL ID
-		my $cid     = $item->{'id'};
-        
-        # ###################
-		# PRINT JSON OUTPUT #
-		# ###################
-        
-		# CHANNEL ID (condition)
-		print "  \"$cid\":\"$cname\",\n";
+		foreach my $broadcastitems ( @broadcastitems ) {
+			my $crid = $broadcastitems->{'Identifier'};
+			
+			print $crid . "\n";
+		}
 	}
 }
-
-print "  \"000000000000\":\"DUMMY\"\n  }\n}";

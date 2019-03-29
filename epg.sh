@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.1.3 BETA - 2019/03/24            "
+echo " Release v0.1.4 BETA - 2019/03/29            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -49,6 +49,10 @@ printf "Initializing script environment..."
 sleep 0.5s
 
 mkdir xml 2> /dev/null
+
+chmod 0777 hzn 2> /dev/null && chmod 0777 hzn/* 2> /dev/null
+chmod 0777 ztt 2> /dev/null && chmod 0777 ztt/* 2> /dev/null
+chmod 0777 swc 2> /dev/null && chmod 0777 swc/* 2> /dev/null
 
 if [ ! -e hzn/ch_json2xml.pl ]
 then
@@ -98,6 +102,114 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e ztt/ch_json2xml.pl ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/chlist_printer.pl ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/cid_json.pl ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/compare_crid.pl ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/compare_crid.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/compare_menu.pl ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/epg_json2xml.pl ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/save_page.js ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/save_page.js"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/settings.sh ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e ztt/ztt.sh ]
+then
+	printf "\nMissing file in Zattoo folder: ztt/ztt.sh"
+	ERROR="true"
+fi
+
+if [ ! -e swc/ch_json2xml.pl ]
+then
+	printf "\nMissing file in Swisscom folder: swc/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e swc/chlist_printer.pl ]
+then
+	printf "\nMissing file in Swisscom folder: swc/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e swc/cid_json.pl ]
+then
+	printf "\nMissing file in Swisscom folder: swc/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e swc/compare_crid.pl ]
+then
+	printf "\nMissing file in Swisscom folder: swc/compare_crid.pl"
+	ERROR="true"
+fi
+
+if [ ! -e swc/compare_menu.pl ]
+then
+	printf "\nMissing file in Swisscom folder: swc/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e swc/epg_json2xml.pl ]
+then
+	printf "\nMissing file in Swisscom folder: swc/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e swc/settings.sh ]
+then
+	printf "\nMissing file in Swisscom folder: swc/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e swc/swc.sh ]
+then
+	printf "\nMissing file in Swisscom folder: swc/swc.sh"
+	ERROR="true"
+fi
+
+if [ ! -e swc/url_printer.pl ]
+then
+	printf "\nMissing file in Swisscom folder: swc/url_printer.pl"
+	ERROR="true"
+fi
+
 if [ ! -e combine.sh ]
 then
 	printf "\nMissing file in main folder: combine.sh       "
@@ -116,13 +228,15 @@ then
 	ERROR="true"
 fi
 
+
 #
 # CHECK IF ALL APPLICATIONS ARE INSTALLED
 #
 
 command -v dialog >/dev/null 2>&1 || { printf "\ndialog is required but it's not installed!" >&2; ERROR2="true"; }
 command -v curl >/dev/null 2>&1 || { printf "\ncurl is required but it's not installed!" >&2; ERROR2="true"; }
-command -v wget >/dev/null 2>&1 || { printf "\nPhantomJS is required but it's not installed!" >&2; ERROR2="true"; }
+command -v wget >/dev/null 2>&1 || { printf "\nwget is required but it's not installed!" >&2; ERROR2="true"; }
+command -v phantomjs >/dev/null 2>&1 || { printf "\nPhantomJS is required but it's not installed!" >&2; ERROR2="true"; }
 command -v xmllint >/dev/null 2>&1 || { printf "\nlibxml2-utils is required but it's not installed!" >&2; ERROR2="true"; }
 command -v perl >/dev/null 2>&1 || { printf "\nperl is required but it's not installed!" >&2; ERROR2="true"; }
 command -v cpan >/dev/null 2>&1 || { printf "\ncpan is required but it's not installed!" >&2; ERROR2="true"; }
@@ -135,6 +249,7 @@ then
 	perldoc -l XML::Rules >/dev/null 2>&1 || { printf "\nXML::Rules module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Data::Dumper >/dev/null 2>&1 || { printf "\nData::Dumper module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Time::Piece >/dev/null 2>&1 || { printf "\nTime::Piece module for perl is requried but not installed!" >&2; ERROR2="true"; }
+	perldoc -l Time::Seconds >/dev/null 2>&1 || { printf "\nTime::Seconds module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l utf8 >/dev/null 2>&1 || { printf "\nuft8 module for perl is requried but not installed!" >&2; ERROR2="true"; }
 else
 	printf "\nperl-doc is required but it's not installed!"
@@ -178,7 +293,8 @@ fi
 # ###############
 
 ls -l hzn/ >  /tmp/providerlist
-ls -l ztt/ >> /tmp/providerlist
+ls -l ztt/ >>  /tmp/providerlist
+ls -l swc/ >>  /tmp/providerlist
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
 	dialog --backtitle "[M1W00] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --infobox "Please press any button to enter the main menu.\n\nThe script will proceed in 5 seconds." 7 50
@@ -209,6 +325,7 @@ do
 	# M1200 GRABBER SETTINGS
 	ls -l hzn/ >  /tmp/providerlist
 	ls -l ztt/ >> /tmp/providerlist
+	ls -l swc/ >> /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	2 "OPEN GRABBER SETTINGS" \' >> /tmp/menu
@@ -223,6 +340,7 @@ do
 	# M1400 CONTINUE IN GRABBER MODE
 	ls -l hzn/ >  /tmp/providerlist
 	ls -l ztt/ >> /tmp/providerlist
+	ls -l swc/ >> /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	4 "CONTINUE IN GRABBER MODE" \' >> /tmp/menu
@@ -241,13 +359,16 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# M1100 MENU OVERLAY
-		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 10 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 11 40 10 \' > /tmp/menu
 
 		# M1110 HORIZON
 		echo '	1 "HORIZON" \' >> /tmp/menu
 		
 		# M1120 ZATTOO
 		echo '	2 "ZATTOO" \' >> /tmp/menu
+		
+		# M1130 SWISSCOM
+		echo '	3 "SWISSCOM" \' >> /tmp/menu
 
 		echo "2> /tmp/value" >> /tmp/menu
 
@@ -262,7 +383,7 @@ do
 		if grep -q "1" /tmp/value
 		then
 			# M1110 MENU OVERLAY
-			echo 'dialog --backtitle "[M1110] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > HORIZON" --title "COUNTRY" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			echo 'dialog --backtitle "[M1110] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > HORIZON" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
 			
 			# M1111 GERMANY
 			if [ ! -d hzn/de ]
@@ -324,10 +445,18 @@ do
 				echo '	0 "[RO] Horizon Romania" \' >> /tmp/menu
 			fi
 			
-			echo "2> /tmp/value" >> /tmp/menu
+			# M111E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M111E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > HORIZON" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
 
-			bash /tmp/menu
-			input="$(cat /tmp/value)"
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
 		
 		
 			# ##################
@@ -626,7 +755,7 @@ do
 		elif grep -q "2" /tmp/value
 		then
 			# M1120 MENU OVERLAY
-			echo 'dialog --backtitle "[M1120] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > ZATTOO" --title "COUNTRY" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			echo 'dialog --backtitle "[M1120] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > ZATTOO" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
 			
 			# M1121 GERMANY
 			if [ ! -d ztt/de ]
@@ -640,12 +769,19 @@ do
 				echo '	2 "[CH] Zattoo Switzerland" \' >> /tmp/menu
 			fi
 			
-			
-			echo "2> /tmp/value" >> /tmp/menu
+			# M112E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M112E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > ZATTOO" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
 
-			bash /tmp/menu
-			input="$(cat /tmp/value)"
-		
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
 		
 			# ##################
 			# M1121 ZATTOO DE  #
@@ -712,6 +848,73 @@ do
 			else
 				echo "M" > /tmp/value
 			fi
+		
+		
+		# #################
+		# M1130 SWISSCOM  #
+		# #################
+
+		elif grep -q "3" /tmp/value
+		then
+			# M1130 MENU OVERLAY
+			echo 'dialog --backtitle "[M1130] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > SWISSCOM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1131 SWITZERLAND
+			if [ ! -d swc/ch ]
+			then
+				echo '	1 "[CH] SWISSCOM" \' >> /tmp/menu
+			fi
+			
+			# M113E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M131E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > SWISSCOM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ####################
+			# M1131 SWISSCOM CH  #
+			# ####################
+			
+			if grep -q "1" /tmp/value
+			then
+				mkdir swc/ch
+				chmod 0777 swc/ch
+				echo '{"country":"CH","language":"de"}' > swc/ch/init.json
+				cp swc/settings.sh swc/ch/settings.sh
+				cp swc/swc.sh swc/ch/swc.sh
+				cp swc/compare_crid.pl swc/ch/
+				cp swc/epg_json2xml.pl swc/ch/
+				cp swc/ch_json2xml.pl swc/ch/
+				cp swc/cid_json.pl swc/ch/
+				cp swc/chlist_printer.pl swc/ch/
+				cp swc/compare_menu.pl swc/ch/
+				cp swc/url_printer.pl swc/ch/
+				cd swc/ch && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e swc/ch/channels.json ]
+				then
+					rm -rf swc/ch
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M113X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
 			
 		
 		# ############
@@ -730,7 +933,7 @@ do
 	elif grep -q "2" /tmp/value
 	then
 		# M1200 MENU OVERLAY
-		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 10 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 11 40 10 \' > /tmp/menu
 		
 		# M1210 HORIZON
 		if ls -l hzn/ | grep -q '^d' 2> /dev/null
@@ -742,6 +945,12 @@ do
 		if ls -l ztt/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	2 "ZATTOO" \' >> /tmp/menu
+		fi
+		
+		# M1230 SWISSCOM
+		if ls -l swc/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	3 "SWISSCOM" \' >> /tmp/menu
 		fi
 		
 		echo "2> /tmp/value" >> /tmp/menu
@@ -757,7 +966,7 @@ do
 		if grep -q "1" /tmp/value
 		then
 			# M1210 MENU OVERLAY
-			echo 'dialog --backtitle "[M1210] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > HORIZON" --title "COUNTRY" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			echo 'dialog --backtitle "[M1210] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > HORIZON" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
 			
 			# M1211 GERMANY
 			if [ -d hzn/de ]
@@ -1028,7 +1237,7 @@ do
 		elif grep -q "2" /tmp/value
 		then
 			# M1220 MENU OVERLAY
-			echo 'dialog --backtitle "[M1220] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > ZATTOO" --title "COUNTRY" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			echo 'dialog --backtitle "[M1220] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > ZATTOO" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
 			
 			# M1221 GERMANY
 			if [ -d ztt/de ]
@@ -1100,6 +1309,62 @@ do
 				echo "M" > /tmp/value
 			fi
 			
+		
+		# #################
+		# M1230 SWISSCOM  #
+		# #################
+		
+		elif grep -q "3" /tmp/value
+		then
+			# M1230 MENU OVERLAY
+			echo 'dialog --backtitle "[M1230] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > SWISSCOM" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1231 SWISSCOM CH
+			if [ -d swc/ch ]
+			then
+				echo '	1 "[CH] SWISSCOM" \' >> /tmp/menu
+			fi
+			
+			# M123E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M123E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > SWISSCOM" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ####################
+			# M1231 SWISSCOM CH  #
+			# ####################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd swc/ch
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e swc/ch/channels.json ]
+				then
+					rm -rf swc/ch xml/swisscom_ch.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M123X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
 		
 		# ############
 		# M12X0 EXIT #
@@ -1200,6 +1465,20 @@ then
 		
 		cd ztt/de 2> /dev/null && bash ztt.sh && cd - > /dev/null && cp ztt/de/zattoo.xml xml/zattoo_de.xml 2> /dev/null
 		cd ztt/ch 2> /dev/null && bash ztt.sh && cd - > /dev/null && cp ztt/ch/zattoo.xml xml/zattoo_ch.xml 2> /dev/null
+	fi
+	
+	if ls -l swc/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " SWISSCOM EPG SIMPLE XMLTV GRABBER           "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd swc/ch 2> /dev/null && bash swc.sh && cd - > /dev/null && cp swc/ch/swisscom.xml xml/swisscom_ch.xml 2> /dev/null
 	fi
 fi
 
@@ -1431,6 +1710,23 @@ do
 		fi
 	fi
 	
+	# SWISSCOM CH
+	if [ -s combine/$folder/swc_ch_channels.json ]
+	then
+		if [ -s xml/swisscom_ch.xml ]
+		then
+			sed 's/fileNAME/swisscom_ch.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/swc_ch_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: SWISSCOM SWITZERLAND -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/swisscom_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/swc_ch_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: SWISSCOM SWITZERLAND -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
 	cat /tmp/combined_programmes >> /tmp/combined_channels 2> /dev/null && mv /tmp/combined_channels /tmp/file 2> /dev/null
 	
 	if [ -s /tmp/file ]
@@ -1463,7 +1759,7 @@ do
 		fi
 		
 		cp combine/$folder/$folder.xml xml/$folder.xml
-		printf "\rXML file $folder.xml created!\n"
+		printf "\rXML file $folder.xml created!                            \n"
 	else
 		printf "\rCreation of XML file $folder.xml failed!\nNo XML or setup file available! Please check your setup!\n"
 		sed -i '1d' /tmp/combinefolders

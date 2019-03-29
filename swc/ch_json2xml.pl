@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##############################
-# ZATTOO JSON > XML CONVERTER  #
-# ##############################
+# ###############################
+# SWISSCOM JSON > XML CONVERTER #
+# ###############################
 
 # CHANNELS
 
@@ -42,11 +42,11 @@ my $json;
     close $fh;
 }
 
-# READ JSON INPUT FILE: ZTT HARDCODED CHLIST
+# READ JSON INPUT FILE: SWC HARDCODED CHLIST
 my $chlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "ztt_channels.json" or die;
+    open my $fh, "<", "swc_channels.json" or die;
     $chlist = <$fh>;
     close $fh;
 }
@@ -88,61 +88,57 @@ my $setupdata   = decode_json($settings);
 # DEFINE COUNTRY VERSION
 my $countryVER =  $initdata->{'country'};
 
-print "\n<!-- CHANNEL LIST - SOURCE: ZATTOO $countryVER -->\n\n";
+print "\n<!-- CHANNEL LIST - SOURCE: SWISSCOM $countryVER -->\n\n";
 
-my @channels = @{ $data->{'channel_groups'} };
-foreach my $channels ( @channels ) {
-	my @schedule = @{ $channels->{'channels'} };
+my @attributes = @{ $data->{'attributes'} };
+foreach my $attributes ( @attributes ) {
+		
+	# ####################
+    # DEFINE JSON VALUES #
+    # ####################
+        
+    # DEFINE CHANNEL ID + NAME
+	my $cname   = $attributes->{'Title'};
+	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+        
+    # DEFINE LANGUAGE VERSION
+    my $languageVER =  $initdata->{'language'};
+        
+    # DEFINE RYTEC CHANNEL ID (language)
+	my $rytec = $chdata->{'channels'}{$countryVER};
 	
-	foreach my $schedule ( @schedule ) {
+	# DEFINE SELECTED CHANNELS
+	my @configdata = @{ $configdata->{'channels'} };
 		
-		# ####################
-        # DEFINE JSON VALUES #
-        # ####################
+	# DEFINE SETTINGS
+    my $setup_general  = $setupdata->{'settings'};
+    my $setup_cid      = $setup_general->{'cid'};
         
-        # DEFINE CHANNEL ID + NAME
-		my $cname   = $schedule->{'title'};
-		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-        
-        # DEFINE LANGUAGE VERSION
-        my $languageVER =  $initdata->{'language'};
-        
-        # DEFINE RYTEC CHANNEL ID (language)
-		my $rytec = $chdata->{'channels'}{$countryVER};
-		
-		# DEFINE SELECTED CHANNELS
-		my @configdata = @{ $configdata->{'channels'} };
-		
-		# DEFINE SETTINGS
-        my $setup_general  = $setupdata->{'settings'};
-        my $setup_cid      = $setup_general->{'cid'};
-        
-        # DEFINE SETTINGS VALUES
-        my $enabled  = "enabled";
-        my $disabled = "disabled";
+    # DEFINE SETTINGS VALUES
+    my $enabled  = "enabled";
+    my $disabled = "disabled";
         
         
-        # ##################
-		# PRINT XML OUTPUT #
-		# ##################
+    # ##################
+	# PRINT XML OUTPUT #
+	# ##################
         
-		# CHANNEL ID (condition) (settings)
-		foreach my $selected_channel ( @configdata ) {
-			if( $cname eq $selected_channel ) { 
-				if( $setup_cid eq $enabled ) {
-					if( defined $rytec->{$cname} ) {
-						print "<channel id=\"" . $rytec->{$cname} . "\">\n";
-					} else {
-						print "<channel id=\"" . $cname . "\">\n";
-						print STDERR "[ CHLIST WARNING ] Channel ID unknown: " . $cname . "\n";
-					}
+	# CHANNEL ID (condition) (settings)
+	foreach my $selected_channel ( @configdata ) {
+		if( $cname eq $selected_channel ) { 
+			if( $setup_cid eq $enabled ) {
+				if( defined $rytec->{$cname} ) {
+					print "<channel id=\"" . $rytec->{$cname} . "\">\n";
 				} else {
 					print "<channel id=\"" . $cname . "\">\n";
+					print STDERR "[ CHLIST WARNING ] Channel ID unknown: " . $cname . "\n";
 				}
-				
-				# CHANNEL NAME (language)
-				print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n</channel>\n";
+			} else {
+				print "<channel id=\"" . $cname . "\">\n";
 			}
+			
+			# CHANNEL NAME (language)
+			print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n</channel>\n";
 		}
 	}
 }
