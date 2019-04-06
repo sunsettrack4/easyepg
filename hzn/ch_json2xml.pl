@@ -132,17 +132,17 @@ foreach my $channels ( @channels ) {
 			if( $cname eq $selected_channel ) { 
 				if( $setup_cid eq $enabled ) {
 					if( defined $rytec->{$cname} ) {
-						print "<channel id=\"" . $rytec->{$cname} . "\">\n";
+						print "<channel id=\"" . $rytec->{$cname} . "\">";
 					} else {
-						print "<channel id=\"" . $cname . "\">\n";
+						print "<channel id=\"" . $cname . "\">";
 						print STDERR "[ CHLIST WARNING ] Channel ID unknown: " . $cname . "\n";
 					}
 				} else {
-					print "<channel id=\"" . $cname . "\">\n";
+					print "<channel id=\"" . $cname . "\">";
 				}
 				
 				# CHANNEL NAME (language)
-				print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n</channel>\n";
+				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
 			}
 		}
 	}

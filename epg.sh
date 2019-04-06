@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.1.4 BETA - 2019/03/29            "
+echo " Release v0.1.6 BETA - 2019/04/06            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -48,7 +48,8 @@ echo ""
 printf "Initializing script environment..."
 sleep 0.5s
 
-mkdir xml 2> /dev/null
+mkdir xml 2> /dev/null && chmod 0777 xml 2> /dev/null
+mkdir combine 2> /dev/null && chmod 0777 combine 2> /dev/null
 
 chmod 0777 hzn 2> /dev/null && chmod 0777 hzn/* 2> /dev/null
 chmod 0777 ztt 2> /dev/null && chmod 0777 ztt/* 2> /dev/null
@@ -764,7 +765,7 @@ do
 			fi
 			
 			# M1122 SWITZERLAND
-			if [ ! -d ztt/at ]
+			if [ ! -d ztt/ch ]
 			then
 				echo '	2 "[CH] Zattoo Switzerland" \' >> /tmp/menu
 			fi

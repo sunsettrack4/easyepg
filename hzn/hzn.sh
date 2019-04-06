@@ -656,6 +656,8 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/hzn_g
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > horizon_channels
+uniq horizon_channels > /tmp/horizon_channels && mv /tmp/horizon_channels horizon_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g' horizon_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                            "

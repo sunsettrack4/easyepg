@@ -903,7 +903,13 @@ fi
 
 printf "\rCreating EPG lists...                      "
 
-curl -X GET --cookie "$session" https://zattoo.com/zapi/v2/cached/channels/$powerid?details=False > /tmp/chlist 2> /dev/null
+rm /tmp/chlist 2> /dev/null
+
+until grep -q '"channel_groups"' /tmp/chlist 2> /dev/null
+do
+	curl -X GET --cookie "$session" https://zattoo.com/zapi/v2/cached/channels/$powerid?details=False > /tmp/chlist 2> /dev/null
+done
+
 perl chlist_printer.pl > /tmp/compare.json
 
 for time in {1..14..1}
@@ -1257,7 +1263,7 @@ rm compare
 
 for x in {1..14..1}
 do
-	sed -i "s/.*/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=&+ | grep '+success+: true' > cache\/new_day${x}\/&/g" day/daynew_${x}
+	sed -i "s/.*/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=&+ | grep '+t+: +' > cache\/new_day${x}\/&/g" day/daynew_${x}
 	sed -i 's/+/"/g' day/daynew_${x}
 done
 
@@ -1430,6 +1436,265 @@ rm day/* 2> /dev/null
 echo  "DONE!" && printf "\n"
 
 
+# ###############
+# LOOP DOWNLOAD #
+# ###############
+
+# DAY 1
+if grep -q -E '"day": "[1-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date1 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date1\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 1 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 2
+if grep -q -E '"day": "[2-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date2 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date2\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 2 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 3
+if grep -q -E '"day": "[3-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date3 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date3\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 3 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 4
+if grep -q -E '"day": "[4-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date4 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date4\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 4 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 5
+if grep -q -E '"day": "[5-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date5 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date5\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 5 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 6
+if grep -q -E '"day": "[6-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date6 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date6\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 6 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 7
+if grep -q -E '"day": "[7-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date7 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date7\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 7 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 8
+if grep -q -E '"day": "[8-9]"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date8 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date8\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 8 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 9
+if grep -q -E '"day": "9"|"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date9 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date9\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY 9 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 10
+if grep -q '"day": "1[0-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date_10 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date_10\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY10 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 11
+if grep -q '"day": "1[1-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date_11 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date_11\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY11 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 12
+if grep -q '"day": "1[2-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date_12 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date_12\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY12 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 13
+if grep -q '"day": "1[3-4]"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date_13 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date_13\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY13 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+# DAY 14
+if grep -q '"day": "14"' settings.json
+then
+	i=1
+
+	while [ $i -le 5 ]
+	do
+	  find cache/new_$date_14 -size 0 -print > /tmp/missings 2> /dev/null
+	  sed -i "s/\(cache\/new_$date_14\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
+	  sed -i 's/+/"/g' /tmp/missings
+	  files=$(echo $(wc -l < /tmp/missings))
+	  printf "\rDownloading missing files... [ DAY14 LOOP $i FILES: $files ]"
+	  sed -i "1s/.*/#\!\/bin\/bash\npowerid=\$(<\/tmp\/powerid)\nsession=\$(<user\/session)\n&/g" /tmp/missings 2> /dev/null
+	  bash /tmp/missings 2> /dev/null
+	  ((i++))
+	done
+fi
+
+printf "\rDownloading missing files... OK!                            \n\n"
+
+
 # ###################
 # CREATE XMLTV FILE #
 # ###################
@@ -1442,13 +1707,19 @@ rm workfile chlist 2> /dev/null
 
 # DOWNLOAD CHANNEL LIST + RYTEC/EIT CONFIG FILES (JSON)
 printf "\rRetrieving channel list and config files...          "
-curl -X GET --cookie "$session" https://zattoo.com/zapi/v2/cached/channels/$powerid?details=False > chlist 2> /dev/null
+
+until grep -q '"channel_groups"' chlist 2> /dev/null
+do
+	curl -X GET --cookie "$session" https://zattoo.com/zapi/v2/cached/channels/$powerid?details=False > chlist 2> /dev/null
+done
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/ztt_channels.json > ztt_channels.json
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/ztt_genres.json > ztt_genres.json
 
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > zattoo_channels
+uniq zattoo_channels > /tmp/zattoo_channels && mv /tmp/zattoo_channels zattoo_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g' zattoo_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                            "

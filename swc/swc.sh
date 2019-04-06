@@ -656,6 +656,8 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/swc_g
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > swisscom_channels
+uniq swisscom_channels > /tmp/swisscom_channels && mv /tmp/swisscom_channels swisscom_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g' swisscom_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                            "

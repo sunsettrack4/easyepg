@@ -119,6 +119,8 @@ then
 		
 		while [ -e /tmp/chduplicates ]
 		do
+			rm /tmp/xmlch2 2> /dev/null
+			
 			# ###############
 			# COLLECT FILES #
 			# ###############
@@ -220,8 +222,8 @@ then
 			
 			if [ ! -s /tmp/channels ]
 			then
-				rm -rf combine/$(</tmp/setupname)
-				rm /tmp/setupname
+				rm -rf combine/$(</tmp/setupname) 2> /dev/null
+				rm /tmp/setupname /tmp/chduplicates 2> /dev/null
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
 				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/"//g' /tmp/xmlch2
