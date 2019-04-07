@@ -388,7 +388,7 @@ then
 					
 					if [ -e hzn_de_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_de_channels.json > /tmp/channels_de && cat /tmp/channels_de >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_de_channels.json > /tmp/channels_de && cat /tmp/channels_de >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON DE] &/g' /tmp/channels_de
 						
 						comm -12 <(sort -u /tmp/xmlch_de) <(sort -u /tmp/channels_de) > /tmp/comm_menu_enabled
@@ -413,7 +413,7 @@ then
 					
 					if [ -e hzn_at_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_at_channels.json > /tmp/channels_at && cat /tmp/channels_at >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_at_channels.json > /tmp/channels_at && cat /tmp/channels_at >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON AT] &/g' /tmp/channels_at
 						
 						comm -12 <(sort -u /tmp/xmlch_at) <(sort -u /tmp/channels_at) > /tmp/comm_menu_enabled
@@ -438,7 +438,7 @@ then
 					
 					if [ -e hzn_ch_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_ch_channels.json > /tmp/channels_ch && cat /tmp/channels_ch >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_ch_channels.json > /tmp/channels_ch && cat /tmp/channels_ch >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON CH] &/g' /tmp/channels_ch
 						
 						comm -12 <(sort -u /tmp/xmlch_ch) <(sort -u /tmp/channels_ch) > /tmp/comm_menu_enabled
@@ -463,7 +463,7 @@ then
 						
 					if [ -e hzn_nl_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_nl_channels.json > /tmp/channels_nl && cat /tmp/channels_nl >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_nl_channels.json > /tmp/channels_nl && cat /tmp/channels_nl >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON NL] &/g' /tmp/channels_nl
 						
 						comm -12 <(sort -u /tmp/xmlch_nl) <(sort -u /tmp/channels_nl) > /tmp/comm_menu_enabled
@@ -488,7 +488,7 @@ then
 					
 					if [ -e hzn_pl_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_pl_channels.json > /tmp/channels_pl && cat /tmp/channels_pl >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_pl_channels.json > /tmp/channels_pl && cat /tmp/channels_pl >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON PL] &/g' /tmp/channels_pl
 						
 						comm -12 <(sort -u /tmp/xmlch_pl) <(sort -u /tmp/channels_pl) > /tmp/comm_menu_enabled
@@ -513,7 +513,7 @@ then
 					
 					if [ -e hzn_ie_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_ie_channels.json > /tmp/channels_ie && cat /tmp/channels_ie >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_ie_channels.json > /tmp/channels_ie && cat /tmp/channels_ie >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON IE] &/g' /tmp/channels_ie
 						
 						comm -12 <(sort -u /tmp/xmlch_ie) <(sort -u /tmp/channels_ie) > /tmp/comm_menu_enabled
@@ -538,7 +538,7 @@ then
 					
 					if [ -e hzn_sk_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_sk_channels.json > /tmp/channels_sk && cat /tmp/channels_sk >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_sk_channels.json > /tmp/channels_sk && cat /tmp/channels_sk >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON SK] &/g' /tmp/channels_sk
 						
 						comm -12 <(sort -u /tmp/xmlch_sk) <(sort -u /tmp/channels_sk) > /tmp/comm_menu_enabled
@@ -563,7 +563,7 @@ then
 					
 					if [ -e hzn_cz_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_cz_channels.json > /tmp/channels_cz && cat /tmp/channels_cz >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_cz_channels.json > /tmp/channels_cz && cat /tmp/channels_cz >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON CZ] &/g' /tmp/channels_cz
 						
 						comm -12 <(sort -u /tmp/xmlch_cz) <(sort -u /tmp/channels_cz) > /tmp/comm_menu_enabled
@@ -588,7 +588,7 @@ then
 					
 					if [ -e hzn_hu_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_hu_channels.json > /tmp/channels_hu && cat /tmp/channels_hu >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_hu_channels.json > /tmp/channels_hu && cat /tmp/channels_hu >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON HU] &/g' /tmp/channels_hu
 						
 						comm -12 <(sort -u /tmp/xmlch_hu) <(sort -u /tmp/channels_hu) > /tmp/comm_menu_enabled
@@ -613,7 +613,7 @@ then
 					
 					if [ -e hzn_ro_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' hzn_ro_channels.json > /tmp/channels_ro && cat /tmp/channels_ro >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' hzn_ro_channels.json > /tmp/channels_ro && cat /tmp/channels_ro >> /tmp/xmlch2
 						sed -i 's/.*/[HORIZON RO] &/g' /tmp/channels_ro
 						
 						comm -12 <(sort -u /tmp/xmlch_ro) <(sort -u /tmp/channels_ro) > /tmp/comm_menu_enabled
@@ -638,7 +638,7 @@ then
 					
 					if [ -e ztt_de_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' ztt_de_channels.json > /tmp/channels_zde && cat /tmp/channels_zde >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' ztt_de_channels.json > /tmp/channels_zde && cat /tmp/channels_zde >> /tmp/xmlch2
 						sed -i 's/.*/[ZATTOO DE] &/g' /tmp/channels_zde
 						
 						comm -12 <(sort -u /tmp/xmlch_zde) <(sort -u /tmp/channels_zde) > /tmp/comm_menu_enabled
@@ -663,7 +663,7 @@ then
 					
 					if [ -e ztt_ch_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' ztt_ch_channels.json > /tmp/channels_zch && cat /tmp/channels_zch >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' ztt_ch_channels.json > /tmp/channels_zch && cat /tmp/channels_zch >> /tmp/xmlch2
 						sed -i 's/.*/[ZATTOO CH] &/g' /tmp/channels_zch
 						
 						comm -12 <(sort -u /tmp/xmlch_zch) <(sort -u /tmp/channels_zch) > /tmp/comm_menu_enabled
@@ -688,7 +688,7 @@ then
 					
 					if [ -e swc_ch_channels.json ]
 					then
-						sed '/{"channels":\[/d;/}/d;s/",//g;s/\]//g;s/"//g' swc_ch_channels.json > /tmp/channels_swc && cat /tmp/channels_swc >> /tmp/xmlch2
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' swc_ch_channels.json > /tmp/channels_swc && cat /tmp/channels_swc >> /tmp/xmlch2
 						sed -i 's/.*/[SWISSCOM CH] &/g' /tmp/channels_swc
 						
 						comm -12 <(sort -u /tmp/xmlch_swc) <(sort -u /tmp/channels_swc) > /tmp/comm_menu_enabled

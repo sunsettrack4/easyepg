@@ -185,7 +185,7 @@ do
 				
 			if [ -s /tmp/chconf ]
 			then
-				sed 's/" "/","/g;s/\\\[[^ ]* //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g' /tmp/chconf > channels.json
+				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				cp /tmp/chlist chlist_old
 				dialog --backtitle "[S1110] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list added!\nPlease run the grabber to add the channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
@@ -215,7 +215,7 @@ do
 				
 			if [ -s /tmp/chconf ]
 			then
-				sed 's/" "/","/g;s/\\\[[^ ]* //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g' /tmp/chconf > channels.json
+				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				dialog --backtitle "[S1130] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
 			else

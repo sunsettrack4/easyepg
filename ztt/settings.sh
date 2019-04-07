@@ -169,7 +169,7 @@ echo "H" > /tmp/value
 while grep -q "H" /tmp/value
 do
 	# Z3000 MENU OVERLAY
-	echo 'dialog --backtitle "[Z3000] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS [X]" --title "SETTINGS" --menu "Please select the option you want to change:" 14 60 10 \' > /tmp/menu 
+	echo 'dialog --backtitle "[Z3000] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS [XX]" --title "SETTINGS" --menu "Please select the option you want to change:" 14 60 10 \' > /tmp/menu 
 
 	if [ ! -e settings.json ]
 	then
@@ -327,7 +327,7 @@ do
 			
 			if [ -s /tmp/chconf ]
 			then
-				sed 's/" "/","/g;s/\\\[[^ ]* //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g' /tmp/chconf > channels.json
+				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				cp /tmp/chlist chlist_old
 				dialog --backtitle "[Z3110] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list added!\nPlease run the grabber to add the channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
@@ -357,7 +357,7 @@ do
 			
 			if [ -s /tmp/chconf ]
 			then
-				sed 's/" "/","/g;s/\\\[[^ ]* //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g' /tmp/chconf > channels.json
+				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				dialog --backtitle "[Z3130] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
 			else

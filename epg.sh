@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.1.6 BETA - 2019/04/06            "
+echo " Release v0.1.7 BETA - 2019/04/07            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -793,7 +793,7 @@ do
 				mkdir ztt/de
 				chmod 0777 ztt/de
 				echo '{"country":"DE","language":"de"}' > ztt/de/init.json
-				sed '138s/XX/DE/g' ztt/settings.sh > ztt/de/settings.sh
+				sed '138,172s/XX/DE/g' ztt/settings.sh > ztt/de/settings.sh
 				cp ztt/ztt.sh ztt/de/ztt.sh
 				cp ztt/compare_crid.pl ztt/de/
 				cp ztt/save_page.js ztt/de/
@@ -822,7 +822,7 @@ do
 				mkdir ztt/ch
 				chmod 0777 ztt/ch
 				echo '{"country":"CH","language":"de"}' > ztt/ch/init.json
-				sed '138s/XX/CH/g' ztt/settings.sh > ztt/ch/settings.sh
+				sed '138,172s/XX/CH/g' ztt/settings.sh > ztt/ch/settings.sh
 				cp ztt/ztt.sh ztt/ch/ztt.sh
 				cp ztt/compare_crid.pl ztt/ch/
 				cp ztt/save_page.js ztt/ch/
