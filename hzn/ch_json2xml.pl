@@ -135,7 +135,7 @@ foreach my $channels ( @channels ) {
 						print "<channel id=\"" . $rytec->{$cname} . "\">";
 					} else {
 						print "<channel id=\"" . $cname . "\">";
-						print STDERR "[ CHLIST WARNING ] Channel ID unknown: " . $cname . "\n";
+						print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $cname . "\n";
 					}
 				} else {
 					print "<channel id=\"" . $cname . "\">";

@@ -119,8 +119,8 @@ foreach my $attributes ( $data->{attributes} ) {
         my $cid   = $item->{'stationId'};
         
         # CONVERT FROM MICROSOFT TIMESTAMP TO XMLTV DATE FORMAT
-		my $startTIME = localtime($start/1000)->strftime('%Y%m%d%H%M%S') . ' +0000';
-		my $endTIME   = localtime($end/1000)->strftime('%Y%m%d%H%M%S') . ' +0000';
+		my $startTIME = gmtime($start/1000)->strftime('%Y%m%d%H%M%S') . ' +0000';
+		my $endTIME   = gmtime($end/1000)->strftime('%Y%m%d%H%M%S') . ' +0000';
 		
 		# DEFINE PROGRAM STRINGS
 		my $program   = $item->{program};
