@@ -162,6 +162,14 @@ do
 		echo 'dialog --backtitle "[S1100] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
 		
 		printf "\rFetching channel list... "
+		
+		if ! curl --write-out %{http_code} --silent --output /dev/null https://tvair.swisscom.ch/tv-guide | grep -q "200"
+		then
+			printf "\rService provider unavailable!"
+			sleep 2s
+			exit 0
+		fi
+
 		curl -s https://services.sg2.etvp01.sctv.ch/portfolio/tv/channels > /tmp/chlist
 		jq '.' /tmp/chlist > /tmp/workfile
 		sed '1s/\[/{"attributes":[/g;$s/\]/]}/g' /tmp/workfile > /tmp/chlist

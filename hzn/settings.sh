@@ -205,6 +205,16 @@ do
 		echo 'dialog --backtitle "[H1100] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > CHANNEL LIST [X]" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
 		
 		printf "\rLoading channel list..."
+		
+		date=$(date '+%Y%m%d')
+		
+		if ! curl --write-out %{http_code} --silent --output /dev/null $baseurl/programschedules/$date/1 | grep -q "200"
+		then
+			printf "\rService provider unavailable!"
+			sleep 2s
+			exit 0
+		fi
+		
 		curl -s $baseurl/channels > /tmp/chlist
 		
 		printf "\rLoading channel configuration..."

@@ -42,6 +42,12 @@ then
 	exit 0
 fi
 
+if ! curl --write-out %{http_code} --silent --output /dev/null https://zattoo.com | grep -q "200"
+then
+	printf "Service provider unavailable!\n\n"
+	exit 0
+fi
+
 
 # ######################################
 # LOADING COOKIE DATA / GET SESSION ID #
@@ -1825,6 +1831,24 @@ else
 	printf " DONE!\n\n"
 	rm zattoo_ERROR.xml 2> /dev/null
 	rm errorlog 2> /dev/null
+	
+	if ! grep -q "<programme start=" zattoo.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY PROGRAMME DATA!" >> errorlog
+	fi
+	
+	if ! grep -q "<channel id=" zattoo.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY CHANNEL DATA!" >> errorlog
+	fi
+	
+	if [ -e errorlog ]
+	then
+		mv zattoo.xml zattoo_ERROR.xml
+		cat errorlog >> warnings.txt
+	else
+		rm errorlog 2> /dev/null
+	fi
 fi
 
 # SHOW WARNINGS

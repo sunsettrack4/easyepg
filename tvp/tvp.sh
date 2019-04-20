@@ -37,6 +37,12 @@ then
 	exit 0
 fi
 
+if ! curl --write-out %{http_code} --silent --output /dev/null https://tvplayer.com | grep -q "200"
+then
+	printf "Service provider unavailable!\n\n"
+	exit 0
+fi
+
 date1=$(date '+%Y%m%d')
 date2=$(date -d '1 day' '+%Y%m%d')
 date3=$(date -d '2 days' '+%Y%m%d')
@@ -181,6 +187,24 @@ else
 	printf " DONE!\n\n"
 	rm tvp_ERROR.xml 2> /dev/null
 	rm errorlog 2> /dev/null
+	
+	if ! grep -q "<programme start=" tvp.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY PROGRAMME DATA!" >> errorlog
+	fi
+	
+	if ! grep -q "<channel id=" tvp.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY CHANNEL DATA!" >> errorlog
+	fi
+	
+	if [ -e errorlog ]
+	then
+		mv tvp.xml tvp_ERROR.xml
+		cat errorlog >> warnings.txt
+	else
+		rm errorlog 2> /dev/null
+	fi
 fi
 
 # SHOW WARNINGS

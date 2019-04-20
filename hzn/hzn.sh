@@ -93,6 +93,12 @@ then
 	exit 0
 fi
 
+if ! curl --write-out %{http_code} --silent --output /dev/null $baseurl/programschedules/$date1/1 | grep -q "200"
+then
+	printf "Service provider unavailable!\n\n"
+	exit 0
+fi
+
 printf "\n"
 
 date1=$(date '+%Y%m%d')
@@ -742,6 +748,24 @@ else
 	printf " DONE!\n\n"
 	rm horizon_ERROR.xml 2> /dev/null
 	rm errorlog 2> /dev/null
+	
+	if ! grep -q "<programme start=" horizon.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY PROGRAMME DATA!" >> errorlog
+	fi
+	
+	if ! grep -q "<channel id=" horizon.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY CHANNEL DATA!" >> errorlog
+	fi
+	
+	if [ -e errorlog ]
+	then
+		mv horizon.xml horizon_ERROR.xml
+		cat errorlog >> warnings.txt
+	else
+		rm errorlog 2> /dev/null
+	fi
 fi
 
 # SHOW WARNINGS

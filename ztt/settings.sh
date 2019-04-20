@@ -27,6 +27,13 @@ printf "\rLoading cookie data..."
 
 export QT_QPA_PLATFORM=offscreen
 
+if ! curl --write-out %{http_code} --silent --output /dev/null https://zattoo.com | grep -q "200"
+then
+	printf "\rService provider unavailable!"
+	sleep 2s
+	exit 0
+fi
+
 if phantomjs -platform offscreen save_page.js https://zattoo.com/login 2>&1 >/tmp/cookie_list | grep -q "This application failed to start"
 then
 	if phantomjs save_page.js https://zattoo.com/login 2>&1 >/tmp/cookie_list | grep -q "This application failed to start"

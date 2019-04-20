@@ -43,6 +43,12 @@ then
 	exit 0
 fi
 
+if ! curl --write-out %{http_code} --silent --output /dev/null https://tvair.swisscom.ch/tv-guide | grep -q "200"
+then
+	printf "Service provider unavailable!\n\n"
+	exit 0
+fi
+
 
 # ##################
 # DOWNLOAD PROCESS #
@@ -742,6 +748,24 @@ else
 	printf " DONE!\n\n"
 	rm swisscom_ERROR.xml 2> /dev/null
 	rm errorlog 2> /dev/null
+	
+	if ! grep -q "<programme start=" swisscom.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY PROGRAMME DATA!" >> errorlog
+	fi
+	
+	if ! grep -q "<channel id=" swisscom.xml
+	then
+		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY CHANNEL DATA!" >> errorlog
+	fi
+	
+	if [ -e errorlog ]
+	then
+		mv swisscom.xml swisscom_ERROR.xml
+		cat errorlog >> warnings.txt
+	else
+		rm errorlog 2> /dev/null
+	fi
 fi
 
 # SHOW WARNINGS

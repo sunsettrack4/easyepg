@@ -148,6 +148,14 @@ do
 		echo 'dialog --backtitle "[T1100] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
 		
 		printf "\rLoading channel list..."
+		
+		if ! curl --write-out %{http_code} --silent --output /dev/null https://tvplayer.com | grep -q "200"
+		then
+			printf "\rService provider unavailable!"
+			sleep 2s
+			exit 0
+		fi
+
 		curl -s https://tvplayer.com/tvguide?date=$(date '+%Y-%m-%d') | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' > /tmp/chlist
 		
 		printf "\rLoading channel configuration..."
