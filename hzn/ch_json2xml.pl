@@ -88,8 +88,6 @@ my $setupdata   = decode_json($settings);
 # DEFINE COUNTRY VERSION
 my $countryVER =  $initdata->{'country'};
 
-print "\n<!-- CHANNEL LIST - SOURCE: HORIZON $countryVER -->\n\n";
-
 my @channels = @{ $data->{'channels'} };
 foreach my $channels ( @channels ) {
 	my @schedule = @{ $channels->{'stationSchedules'} };

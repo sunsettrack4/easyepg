@@ -338,7 +338,7 @@ do
 			fi
 		else
 			perl chlist_printer.pl > /tmp/compare.json
-			perl compare_menu.pl > /tmp/enabled_chvalues
+			perl compare_menu.pl > /tmp/enabled_chvalues 2> /dev/null
 			comm -12 <(sort -u /tmp/enabled_chvalues) <(sort -u /tmp/chvalues) > /tmp/comm_menu_enabled
 			comm -2 -3 <(sort -u /tmp/chvalues) <(sort -u /tmp/enabled_chvalues) > /tmp/comm_menu_disabled
 			sed -i 's/.*/&" [ON]/g' /tmp/comm_menu_enabled
@@ -359,6 +359,7 @@ do
 			then
 				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				dialog --backtitle "[Z3130] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
+				cp /tmp/chlist chlist_old
 				echo "H" > /tmp/value
 			else
 				dialog --backtitle "[Z3140] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
@@ -549,7 +550,7 @@ do
 		# Z3610 ONSCREEN
 		if grep -q "1" /tmp/value
 		then
-			dialog --backtitle "[Z3610] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'onscreen' enabled!" 5 30
+			dialog --backtitle "[Z3610] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'onscreen' enabled!" 5 40
 			sed -i '/episode=/d' /tmp/settings_new
 			echo "episode=onscreen" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -557,7 +558,7 @@ do
 		# Z3620 XMLTV_NS
 		elif grep -q "2" /tmp/value
 		then
-			dialog --backtitle "[Z3620] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'xmltv_ns' enabled!" 5 30
+			dialog --backtitle "[Z3620] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'xmltv_ns' enabled!" 5 40
 			sed -i '/episode=/d' /tmp/settings_new
 			echo "episode=xmltv_ns" >> /tmp/settings_new
 			echo "H" > /tmp/value

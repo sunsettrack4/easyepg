@@ -81,7 +81,7 @@ sed '1s/\[/{"attributes":[/g;$s/\]/]}/g' /tmp/workfile > /tmp/chlist
 
 printf "\rChecking manifest files... "
 perl chlist_printer.pl > /tmp/compare.json
-perl url_printer.pl | sed '/DUMMY/d' > mani/common
+perl url_printer.pl 2>/tmp/errors.txt | sed '/DUMMY/d' > mani/common
 
 printf "\n$(echo $(wc -l < mani/common)) manifest to be downloaded!\n\n"
 
@@ -255,10 +255,16 @@ echo "DONE!" && printf "\n"
 printf "\rCreating EPG lists...                      "
 
 rm /tmp/manifile.json 2> /dev/null
+cat mani/UPD_* > /tmp/manifile.json
+sed -i 's/.*/{"attributes":&}/g' /tmp/manifile.json
+jq -s '{ attributes: map(.attributes) }' /tmp/manifile.json > /tmp/workfile 
+perl compare_crid.pl > day/common 
+
+rm /tmp/manifile.json 2> /dev/null
 cat mani/* > /tmp/manifile.json
 sed -i 's/.*/{"attributes":&}/g' /tmp/manifile.json
 jq -s '{ attributes: map(.attributes) }' /tmp/manifile.json > /tmp/workfile 
-perl compare_crid.pl > day/common && cp day/common day/daydlnew
+perl compare_crid.pl > day/daydlnew
 
 #
 # COPY CACHE FILES TO NEW FOLDER
@@ -455,6 +461,37 @@ wait
 rm day/day0* init.txt 2> /dev/null
 	
 echo "DONE!" && printf "\n"
+
+
+#
+# SHOW ERROR MESSAGE + ABORT PROCESS IF CHANNEL IDs WERE CHANGED
+#
+
+sed -i '/Died at \/tmp\/compare_crid_day/d' /tmp/errors.txt
+sort -u /tmp/errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt /tmp/errors.txt
+
+if [ -s /tmp/errors.txt ]
+then
+	echo "================= CHANNEL LIST: LOG ==================="
+	echo ""
+	
+	input="/tmp/errors.txt"
+	while IFS= read -r var
+	do
+		echo "$var"
+	done < "$input"
+	
+	echo ""
+	echo "Channel IDs updated, affected EPG cache data removed."
+	echo ""
+	echo "======================================================="
+	echo ""
+	
+	rm /tmp/errors.txt 2> /dev/null
+	cp /tmp/chlist chlist_old
+else
+	rm /tmp/errors.txt 2> /dev/null
+fi
 
 
 #
@@ -656,7 +693,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/swc_g
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > swisscom_channels
-uniq swisscom_channels > /tmp/swisscom_channels && mv /tmp/swisscom_channels swisscom_channels
+sort -u swisscom_channels > /tmp/swisscom_channels && mv /tmp/swisscom_channels swisscom_channels
 sed -i 's/></>\n</g;s/<display-name/  &/g' swisscom_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
@@ -687,7 +724,7 @@ perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt && rm workfile
 printf "\rCreating EPG XMLTV file...                           "
 cat swisscom_epg >> swisscom_channels && mv swisscom_channels swisscom && rm swisscom_epg
 sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' swisscom
-sed -i "s/<tv>/<\!-- created on $(date) -->\n&/g" swisscom
+sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" swisscom
 sed -i '$s/.*/&\n\n<\/tv>/g' swisscom
 mv swisscom swisscom.xml
 

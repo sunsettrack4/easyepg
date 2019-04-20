@@ -180,11 +180,13 @@ do
 	for part in {1..4..1}
 	do
 		sed "s/dayNUMBER/day${time}_${part}/g" compare_crid.pl > /tmp/compare_crid_day${time}_${part}.pl 2> /dev/null
-		perl /tmp/compare_crid_day${time}_${part}.pl > day/daydlnew_${time}_${part} 2> /dev/null
+		perl /tmp/compare_crid_day${time}_${part}.pl 2>/tmp/errors_${time}_${part}.txt > day/daydlnew_${time}_${part}
 		cat day/daydlnew_${time}_${part} >> day/daydlnew_${time} 2> /dev/null
 		cp day/daydlnew_${time} day/day${time} 2> /dev/null
 		rm day/daydlnew_${time}_${part} day/day${time}_${part} 2> /dev/null
 		touch day/day${time}
+		
+		cat /tmp/errors_${time}_${part}.txt >> /tmp/errors.txt 2> /dev/null
 	done
 done
 
@@ -416,8 +418,7 @@ done
 # COPY/PASTE EPG DETAILS
 #
 
-printf "\rLoading cached data files into new database..."
-echo ""
+printf "\rLoading cached data files into new database...\n"
 
 for a in {0..8..1}
 do
@@ -426,8 +427,39 @@ done
 wait
 
 rm day/day0* init.txt 2> /dev/null
-	
+
 echo "DONE!" && printf "\n"
+
+
+#
+# SHOW ERROR MESSAGE + ABORT PROCESS IF CHANNEL IDs WERE CHANGED
+#
+
+sed -i '/Died at \/tmp\/compare_crid_day/d' /tmp/errors.txt
+sort -u /tmp/errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt /tmp/errors.txt
+
+if [ -s /tmp/errors.txt ]
+then
+	echo "================= CHANNEL LIST: LOG ==================="
+	echo ""
+	
+	input="/tmp/errors.txt"
+	while IFS= read -r var
+	do
+		echo "$var"
+	done < "$input"
+	
+	echo ""
+	echo "Channel IDs updated, affected EPG cache data removed."
+	echo ""
+	echo "======================================================="
+	echo ""
+	
+	rm /tmp/errors.txt 2> /dev/null
+	cp /tmp/chlist chlist_old
+else
+	rm /tmp/errors.txt 2> /dev/null
+fi
 
 
 #
@@ -436,19 +468,19 @@ echo "DONE!" && printf "\n"
 
 printf "\rPreparing multithreaded download...                   "
 
-ls cache/new_$date1 > compare 2> /dev/null
+ls cache/new_$date1 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_1 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_1 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_1
-ls cache/new_$date2 > compare 2> /dev/null
+ls cache/new_$date2 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_2 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_2 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_2
-ls cache/new_$date3 > compare 2> /dev/null
+ls cache/new_$date3 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_3 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_3 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_3
-ls cache/new_$date4 > compare 2> /dev/null
+ls cache/new_$date4 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_4 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_4 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_4
-ls cache/new_$date5 > compare 2> /dev/null
+ls cache/new_$date5 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_5 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_5 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_5
-ls cache/new_$date6 > compare 2> /dev/null
+ls cache/new_$date6 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_6 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_6 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_6
-ls cache/new_$date7 > compare 2> /dev/null
+ls cache/new_$date7 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_7 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_7 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_7
 rm compare
 
@@ -656,7 +688,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/hzn_g
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > horizon_channels
-uniq horizon_channels > /tmp/horizon_channels && mv /tmp/horizon_channels horizon_channels
+sort -u horizon_channels > /tmp/horizon_channels && mv /tmp/horizon_channels horizon_channels
 sed -i 's/></>\n</g;s/<display-name/  &/g' horizon_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
@@ -692,7 +724,7 @@ perl epg_json2xml.pl > horizon_epg 2>epg_warnings.txt && rm workfile
 printf "\rCreating EPG XMLTV file...                           "
 cat horizon_epg >> horizon_channels && mv horizon_channels horizon && rm horizon_epg
 sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' horizon
-sed -i "s/<tv>/<\!-- created on $(date) -->\n&/g" horizon
+sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" horizon
 sed -i '$s/.*/&\n\n<\/tv>/g' horizon
 mv horizon horizon.xml
 

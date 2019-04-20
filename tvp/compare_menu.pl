@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ##############################
-# ZATTOO CHANNEL LIST CREATOR  #
+# TVPLAYER CHANNEL LIST CREATOR #
 # ##############################
 
 # COMPARE STRINGS, CREATE MENU LIST

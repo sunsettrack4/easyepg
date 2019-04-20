@@ -88,8 +88,6 @@ my $setupdata   = decode_json($settings);
 # DEFINE COUNTRY VERSION
 my $countryVER =  $initdata->{'country'};
 
-print "\n<!-- CHANNEL LIST - SOURCE: ZATTOO $countryVER -->\n\n";
-
 my @channels = @{ $data->{'channel_groups'} };
 foreach my $channels ( @channels ) {
 	my @schedule = @{ $channels->{'channels'} };
@@ -131,17 +129,17 @@ foreach my $channels ( @channels ) {
 			if( $cname eq $selected_channel ) { 
 				if( $setup_cid eq $enabled ) {
 					if( defined $rytec->{$cname} ) {
-						print "<channel id=\"" . $rytec->{$cname} . "\">\n";
+						print "<channel id=\"" . $rytec->{$cname} . "\">";
 					} else {
-						print "<channel id=\"" . $cname . "\">\n";
+						print "<channel id=\"" . $cname . "\">";
 						print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $cname . "\n";
 					}
 				} else {
-					print "<channel id=\"" . $cname . "\">\n";
+					print "<channel id=\"" . $cname . "\">";
 				}
 				
 				# CHANNEL NAME (language)
-				print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n</channel>\n";
+				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
 			}
 		}
 	}

@@ -78,27 +78,27 @@ foreach my $channels ( @channels )  {
 
 		foreach my $configname ( @configname ) {
 		
+			# DEFINE IDs
 			my $old_id = $old_name2id->{$configname};
+			my $new_id = $new_name2id->{$configname};
 			
-			# FIND MATCH VIA NEW CHANNEL NAME + CONFIG NAME
-			if( defined $new_name2id->{$configname} ) {
-				my $matched_id = $new_name2id->{$configname};
+			# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
+			if( $new_id eq $old_id ) {
 				
-				if( $oid eq $matched_id ) {
+				if( $oid eq $new_id ) {
 					print $id . "\n";
 				}
 			
-			# IF MATCH NOT FOUND FOR NEW CHANNEL NAME: FIND MATCH VIA OLD CHANNEL NAME + CONFIG NAME
-			} elsif( defined $old_id ) {
-				if( defined $new_id2name->{$old_id} ) {
-					print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel Name!\n";
-					
-					if ( $oid eq $old_id ) {
-						print $id . "\n";
-					}
+			# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
+			} elsif( defined $new_id ) {
+				print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel Name!\n";
+				
+				if ( $oid eq $new_id ) {
+					print $id . "_NEW_ID\n";
 				}
+				
 			} else {
-				print STDERR "[ INFO ] CHANNEL $configname not found in channel lists!\n";
+				print STDERR "[ WARNING ] CHANNEL $configname not found in channel list!\n";
 			}
 		}
 	}

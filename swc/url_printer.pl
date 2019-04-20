@@ -105,110 +105,110 @@ my @configname  = @{ $channels_data->{'config'} };
 
 foreach my $configname ( @configname ) {
 	
+	# DEFINE IDs
 	my $old_id = $old_name2id->{$configname};
+	my $new_id = $new_name2id->{$configname};
 		
 	# FIND MATCH VIA NEW CHANNEL NAME + CONFIG NAME
-	if( defined $new_name2id->{$configname} ) {
-		my $matched_id = $new_name2id->{$configname};
+	if( $new_id eq $old_id ) {
+		
+		my $matched_id = "UPD_" . $new_id;
 				
-			# DAY 1
-			if( $day_setting == 1 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date2" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-2
-			} elsif( $day_setting == 2 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date3" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-3
-			} elsif( $day_setting == 3 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date4" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-4
-			} elsif( $day_setting == 4 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date5" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-5
-			} elsif( $day_setting == 5 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date6" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-6
-			} elsif( $day_setting == 6 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date7" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-7
-			} elsif( $day_setting == 7 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date8" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-8
-			} elsif( $day_setting == 8 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date9" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-9
-			} elsif( $day_setting == 9 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_10" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-10
-			} elsif( $day_setting == 10 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_11" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-11
-			} elsif( $day_setting == 11 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_12" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-12
-			} elsif( $day_setting == 12 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_13" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-13
-			} elsif( $day_setting == 13 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_14" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-14
-			} elsif( $day_setting == 14 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_15" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			}			
+		# DAY 1
+		if( $day_setting == 1 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date2" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-2
+		} elsif( $day_setting == 2 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date3" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-3
+		} elsif( $day_setting == 3 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date4" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-4
+		} elsif( $day_setting == 4 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date5" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-5
+		} elsif( $day_setting == 5 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date6" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-6
+		} elsif( $day_setting == 6 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date7" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-7
+		} elsif( $day_setting == 7 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date8" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-8
+		} elsif( $day_setting == 8 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date9" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-9
+		} elsif( $day_setting == 9 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_10" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-10
+		} elsif( $day_setting == 10 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_11" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-11
+		} elsif( $day_setting == 11 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_12" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-12
+		} elsif( $day_setting == 12 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_13" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-13
+		} elsif( $day_setting == 13 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_14" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		# DAYS 1-14
+		} elsif( $day_setting == 14 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_15" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
+		}			
 			
 		
-	# IF MATCH NOT FOUND FOR NEW CHANNEL NAME: FIND MATCH VIA OLD CHANNEL NAME + CONFIG NAME
-	} elsif( defined $old_id ) {
-		if( defined $new_id2name->{$old_id} ) {
-			my $matched_id = $new_id2name->{$old_id};
+	# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
+	} elsif( defined $new_id ) {
 				
-			print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel Name!\n";
+		print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
 			
-			# DAY 1
-			if( $day_setting == 1 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date2" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-2
-			} elsif( $day_setting == 2 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date3" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-3
-			} elsif( $day_setting == 3 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date4" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-4
-			} elsif( $day_setting == 4 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date5" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-5
-			} elsif( $day_setting == 5 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date6" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-6
-			} elsif( $day_setting == 6 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date7" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-7
-			} elsif( $day_setting == 7 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date8" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-8
-			} elsif( $day_setting == 8 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date9" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-9
-			} elsif( $day_setting == 9 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_10" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-10
-			} elsif( $day_setting == 10 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_11" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-11
-			} elsif( $day_setting == 11 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_12" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-12
-			} elsif( $day_setting == 12 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_13" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-13
-			} elsif( $day_setting == 13 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_14" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			# DAYS 1-14
-			} elsif( $day_setting == 14 ) {
-				print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_15" . "0600;" . "ids=$matched_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$matched_id\n";
-			}
-			
+		# DAY 1
+		if( $day_setting == 1 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date2" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-2
+		} elsif( $day_setting == 2 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date3" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-3
+		} elsif( $day_setting == 3 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date4" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-4
+		} elsif( $day_setting == 4 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date5" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-5
+		} elsif( $day_setting == 5 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date6" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-6
+		} elsif( $day_setting == 6 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date7" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-7
+		} elsif( $day_setting == 7 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date8" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-8
+		} elsif( $day_setting == 8 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date9" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-9
+		} elsif( $day_setting == 9 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_10" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-10
+		} elsif( $day_setting == 10 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_11" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-11
+		} elsif( $day_setting == 11 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_12" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-12
+		} elsif( $day_setting == 12 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_13" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-13
+		} elsif( $day_setting == 13 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_14" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
+		# DAYS 1-14
+		} elsif( $day_setting == 14 ) {
+			print "curl -s 'https://services.sg1.etvp01.sctv.ch/catalog/tv/channels/list/" . "(" . "end=$date_15" . "0600;" . "ids=$new_id;" . "start=$date1" . "0600" . ")'" . " | grep '\"Status\":\"OK\"' > mani/$new_id\n";
 		}
+
 	} else {
-		print STDERR "[ INFO ] CHANNEL $configname not found in channel lists!\n";
+		print STDERR "[ WARNING ] CHANNEL $configname not found in channel list!\n";
 	}
 }

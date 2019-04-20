@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.1.7 BETA - 2019/04/07            "
+echo " Release v0.1.8 BETA - 2019/04/19            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -54,6 +54,7 @@ mkdir combine 2> /dev/null && chmod 0777 combine 2> /dev/null
 chmod 0777 hzn 2> /dev/null && chmod 0777 hzn/* 2> /dev/null
 chmod 0777 ztt 2> /dev/null && chmod 0777 ztt/* 2> /dev/null
 chmod 0777 swc 2> /dev/null && chmod 0777 swc/* 2> /dev/null
+chmod 0777 swc 2> /dev/null && chmod 0777 tvp/* 2> /dev/null
 
 if [ ! -e hzn/ch_json2xml.pl ]
 then
@@ -211,6 +212,48 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e tvp/ch_json2xml.pl ]
+then
+	printf "\nMissing file in tvPlayer folder: tvp/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvp/chlist_printer.pl ]
+then
+	printf "\nMissing file in tvPlayer folder: tvp/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvp/cid_json.pl ]
+then
+	printf "\nMissing file in tvPlayer folder: tvp/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvp/compare_menu.pl ]
+then
+	printf "\nMissing file in tvPlayer folder: tvp/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvp/epg_json2xml.pl ]
+then
+	printf "\nMissing file in tvPlayer folder: tvp/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvp/settings.sh ]
+then
+	printf "\nMissing file in tvPlayer folder: tvp/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e tvp/tvp.sh ]
+then
+	printf "\nMissing file in tvPlayer folder: tvp/tvp.sh"
+	ERROR="true"
+fi
+
 if [ ! -e combine.sh ]
 then
 	printf "\nMissing file in main folder: combine.sh       "
@@ -296,6 +339,7 @@ fi
 ls -l hzn/ >  /tmp/providerlist
 ls -l ztt/ >>  /tmp/providerlist
 ls -l swc/ >>  /tmp/providerlist
+ls -l tvp/ >>  /tmp/providerlist
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
 	dialog --backtitle "[M1W00] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --infobox "Please press any button to enter the main menu.\n\nThe script will proceed in 5 seconds." 7 50
@@ -327,6 +371,7 @@ do
 	ls -l hzn/ >  /tmp/providerlist
 	ls -l ztt/ >> /tmp/providerlist
 	ls -l swc/ >> /tmp/providerlist
+	ls -l tvp/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	2 "OPEN GRABBER SETTINGS" \' >> /tmp/menu
@@ -342,6 +387,7 @@ do
 	ls -l hzn/ >  /tmp/providerlist
 	ls -l ztt/ >> /tmp/providerlist
 	ls -l swc/ >> /tmp/providerlist
+	ls -l tvp/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	4 "CONTINUE IN GRABBER MODE" \' >> /tmp/menu
@@ -360,7 +406,7 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# M1100 MENU OVERLAY
-		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 11 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 12 40 10 \' > /tmp/menu
 
 		# M1110 HORIZON
 		echo '	1 "HORIZON" \' >> /tmp/menu
@@ -370,6 +416,9 @@ do
 		
 		# M1130 SWISSCOM
 		echo '	3 "SWISSCOM" \' >> /tmp/menu
+		
+		# M1140 TVPLAYER
+		echo '	4 "TVPLAYER" \' >> /tmp/menu
 
 		echo "2> /tmp/value" >> /tmp/menu
 
@@ -917,6 +966,71 @@ do
 				echo "M" > /tmp/value
 			fi
 			
+
+		# #################
+		# M1140 TVPLAYER  #
+		# #################
+
+		elif grep -q "4" /tmp/value
+		then
+			# M1140 MENU OVERLAY
+			echo 'dialog --backtitle "[M1140] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVPLAYER" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1141 UK
+			if [ ! -d tvp/uk ]
+			then
+				echo '	1 "[UK] TVPLAYER" \' >> /tmp/menu
+			fi
+			
+			# M114E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M141E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVPLAYER" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+				
+				
+			# ####################
+			# M1141 TVPLAYER UK  #
+			# ####################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir tvp/uk
+				chmod 0777 tvp/uk
+				echo '{"country":"UK","language":"en"}' > tvp/uk/init.json
+				cp tvp/settings.sh tvp/uk/settings.sh
+				cp tvp/tvp.sh tvp/uk/tvp.sh
+				cp tvp/epg_json2xml.pl tvp/uk/
+				cp tvp/ch_json2xml.pl tvp/uk/
+				cp tvp/cid_json.pl tvp/uk/
+				cp tvp/chlist_printer.pl tvp/uk/
+				cp tvp/compare_menu.pl tvp/uk/
+				cd tvp/uk && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tvp/uk/channels.json ]
+				then
+					rm -rf tvp/uk
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M114X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+				
 		
 		# ############
 		# M1X00 EXIT #
@@ -934,7 +1048,7 @@ do
 	elif grep -q "2" /tmp/value
 	then
 		# M1200 MENU OVERLAY
-		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 11 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 12 40 10 \' > /tmp/menu
 		
 		# M1210 HORIZON
 		if ls -l hzn/ | grep -q '^d' 2> /dev/null
@@ -952,6 +1066,12 @@ do
 		if ls -l swc/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	3 "SWISSCOM" \' >> /tmp/menu
+		fi
+		
+		# M1240 TVPLAYER
+		if ls -l tvp/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	4 "TVPLAYER" \' >> /tmp/menu
 		fi
 		
 		echo "2> /tmp/value" >> /tmp/menu
@@ -1367,6 +1487,62 @@ do
 			fi
 		
 		
+		# #################
+		# M1240 TVPLAYER  #
+		# #################
+		
+		elif grep -q "4" /tmp/value
+		then
+			# M1230 MENU OVERLAY
+			echo 'dialog --backtitle "[M1240] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVPLAYER" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1241 TVPLAYER UK
+			if [ -d tvp/uk ]
+			then
+				echo '	1 "[UK] TVPLAYER" \' >> /tmp/menu
+			fi
+			
+			# M124E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M124E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVPLAYER" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ####################
+			# M1241 TVPLAYER CH  #
+			# ####################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd tvp/uk
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tvp/uk/channels.json ]
+				then
+					rm -rf tvp/uk xml/tvplayer_uk.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M124X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+			
+		
 		# ############
 		# M12X0 EXIT #
 		# ############
@@ -1452,7 +1628,7 @@ then
 		cd hzn/hu 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/hu/horizon.xml xml/horizon_hu.xml 2> /dev/null
 		cd hzn/ro 2> /dev/null && bash hzn.sh && cd - > /dev/null && cp hzn/ro/horizon.xml xml/horizon_ro.xml 2> /dev/null
 	fi
-	
+
 	if ls -l ztt/ | grep -q '^d'
 	then
 		echo ""
@@ -1480,6 +1656,20 @@ then
 		sleep 2s
 		
 		cd swc/ch 2> /dev/null && bash swc.sh && cd - > /dev/null && cp swc/ch/swisscom.xml xml/swisscom_ch.xml 2> /dev/null
+	fi
+	
+	if ls -l tvp/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " TVPLAYER EPG SIMPLE XMLTV GRABBER           "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd tvp/uk 2> /dev/null && bash tvp.sh && cd - > /dev/null && cp tvp/uk/tvp.xml xml/tvplayer_uk.xml 2> /dev/null
 	fi
 fi
 
@@ -1724,6 +1914,23 @@ do
 			sed 's/fileNAME/swisscom_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 			sed -i "s/channelsFILE/$folder\/swc_ch_channels.json/g" /tmp/prog_combine.pl
 			printf "\n<!-- PROGRAMMES: SWISSCOM SWITZERLAND -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# TVPLAYER UK
+	if [ -s combine/$folder/tvp_uk_channels.json ]
+	then
+		if [ -s xml/tvplayer_uk.xml ]
+		then
+			sed 's/fileNAME/tvplayer_uk.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/tvp_uk_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: TVPLAYER UK -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/tvplayer_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/tvp_uk_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: TVPLAYER UK -->\n\n" >> /tmp/combined_programmes
 			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 		fi
 	fi

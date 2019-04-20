@@ -917,11 +917,13 @@ do
 	for part in {1..4..1}
 	do
 		sed "s/dayNUMBER/datafile_${time}_${part}/g" compare_crid.pl > /tmp/compare_crid_day${time}_${part}.pl 2> /dev/null
-		perl /tmp/compare_crid_day${time}_${part}.pl > day/daydlnew_${time}_${part} 2> /dev/null
+		perl /tmp/compare_crid_day${time}_${part}.pl 2>/tmp/errors_${time}_${part}.txt > day/daydlnew_${time}_${part}
 		cat day/daydlnew_${time}_${part} >> day/daydlnew_${time} 2> /dev/null
 		cp day/daydlnew_${time} day/day${time} 2> /dev/null
 		rm day/daydlnew_${time}_${part} day/datafile_${time}_${part} 2> /dev/null
 		touch day/day${time}
+		
+		cat /tmp/errors_${time}_${part}.txt >> /tmp/errors.txt 2> /dev/null
 	done
 done
 
@@ -1226,38 +1228,69 @@ echo "DONE!" && printf "\n"
 
 
 #
+# SHOW ERROR MESSAGE + ABORT PROCESS IF CHANNEL IDs WERE CHANGED
+#
+
+sed -i '/Died at \/tmp\/compare_crid_day/d' /tmp/errors.txt
+sort -u /tmp/errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt /tmp/errors.txt
+
+if [ -s /tmp/errors.txt ]
+then
+	echo "================= CHANNEL LIST: LOG ==================="
+	echo ""
+	
+	input="/tmp/errors.txt"
+	while IFS= read -r var
+	do
+		echo "$var"
+	done < "$input"
+	
+	echo ""
+	echo "Channel IDs updated, affected EPG cache data removed."
+	echo ""
+	echo "======================================================="
+	echo ""
+	
+	rm /tmp/errors.txt 2> /dev/null
+	cp /tmp/chlist chlist_old
+else
+	rm /tmp/errors.txt 2> /dev/null
+fi
+
+
+#
 # COMPARING: DATABASE <==> MANIFEST TO FIND NEW FILES
 #
 
-printf "\rPreparing multithreaded download...                   "
+printf "\rPreparing download...                              "
 
-ls cache/new_$date1 > compare 2> /dev/null
+ls cache/new_$date1 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_1 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_1 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_1
-ls cache/new_$date2 > compare 2> /dev/null
+ls cache/new_$date2 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_2 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_2 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_2
-ls cache/new_$date3 > compare 2> /dev/null
+ls cache/new_$date3 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_3 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_3 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_3
-ls cache/new_$date4 > compare 2> /dev/null
+ls cache/new_$date4 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_4 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_4 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_4
-ls cache/new_$date5 > compare 2> /dev/null
+ls cache/new_$date5 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_5 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_5 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_5
-ls cache/new_$date6 > compare 2> /dev/null
+ls cache/new_$date6 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_6 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_6 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_6
-ls cache/new_$date7 > compare 2> /dev/null
+ls cache/new_$date7 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_7 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_7 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_7
-ls cache/new_$date8 > compare 2> /dev/null
+ls cache/new_$date8 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_8 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_8 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_8
-ls cache/new_$date9 > compare 2> /dev/null
+ls cache/new_$date9 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_9 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_9 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_9
-ls cache/new_$date_10 > compare 2> /dev/null
+ls cache/new_$date_10 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_10 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_10 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_10
-ls cache/new_$date_11 > compare 2> /dev/null
+ls cache/new_$date_11 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_11 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_11 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_11
-ls cache/new_$date_12 > compare 2> /dev/null
+ls cache/new_$date_12 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_12 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_12 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_12
-ls cache/new_$date_13 > compare 2> /dev/null
+ls cache/new_$date_13 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_13 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_13 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_13
-ls cache/new_$date_14 > compare 2> /dev/null
+ls cache/new_$date_14 > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_14 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_14 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew_14
 rm compare
 
@@ -1447,6 +1480,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date1 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date1\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1465,6 +1499,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date2 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date2\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1483,6 +1518,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date3 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date3\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1501,6 +1537,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date4 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date4\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1519,6 +1556,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date5 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date5\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1537,6 +1575,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date6 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date6\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1555,6 +1594,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date7 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date7\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1573,6 +1613,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date8 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date8\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1591,6 +1632,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date9 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date9\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1609,6 +1651,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date_10 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date_10\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1627,6 +1670,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date_11 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date_11\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1645,6 +1689,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date_12 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date_12\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1663,6 +1708,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date_13 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date_13\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1681,6 +1727,7 @@ then
 
 	while [ $i -le 5 ]
 	do
+	  sleep 0.4s
 	  find cache/new_$date_14 -size 0 -print > /tmp/missings 2> /dev/null
 	  sed -i "s/\(cache\/new_$date_14\/\)\(.*\)/curl -X GET --cookie +\$session+ +https:\/\/\zattoo.com\/zapi\/v2\/cached\/program\/power_details\/$powerid?program_ids=\2+ | grep '+t+: +' > \1\2/g" /tmp/missings
 	  sed -i 's/+/"/g' /tmp/missings
@@ -1718,7 +1765,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/ztt_g
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > zattoo_channels
-uniq zattoo_channels > /tmp/zattoo_channels && mv /tmp/zattoo_channels zattoo_channels
+sort -u zattoo_channels > /tmp/zattoo_channels && mv /tmp/zattoo_channels zattoo_channels
 sed -i 's/></>\n</g;s/<display-name/  &/g' zattoo_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
@@ -1760,7 +1807,7 @@ perl epg_json2xml.pl > zattoo_epg 2>epg_warnings.txt && rm workfile
 printf "\rCreating EPG XMLTV file...                           "
 cat zattoo_epg >> zattoo_channels && mv zattoo_channels zattoo && rm zattoo_epg
 sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' zattoo
-sed -i "s/<tv>/<\!-- created on $(date) -->\n&/g" zattoo
+sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" zattoo
 sed -i '$s/.*/&\n\n<\/tv>/g' zattoo
 mv zattoo zattoo.xml
 

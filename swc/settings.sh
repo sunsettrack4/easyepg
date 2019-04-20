@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ########################
-# S1000 ZATTOO SETTINGS  #
-# ########################
+# ##########################
+# S1000 SWISSCOM SETTINGS  #
+# ##########################
 
 echo "H" > /tmp/value
 
@@ -196,7 +196,7 @@ do
 			fi
 		else
 			perl chlist_printer.pl > /tmp/compare.json
-			perl compare_menu.pl > /tmp/enabled_chvalues
+			perl compare_menu.pl > /tmp/enabled_chvalues 2> /dev/null
 			comm -12 <(sort -u /tmp/enabled_chvalues) <(sort -u /tmp/chvalues) > /tmp/comm_menu_enabled
 			comm -2 -3 <(sort -u /tmp/chvalues) <(sort -u /tmp/enabled_chvalues) > /tmp/comm_menu_disabled
 			sed -i 's/.*/&" [ON]/g' /tmp/comm_menu_enabled
@@ -217,6 +217,7 @@ do
 			then
 				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				dialog --backtitle "[S1130] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
+				cp /tmp/chlist chlist_old
 				echo "H" > /tmp/value
 			else
 				dialog --backtitle "[S1140] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
@@ -407,7 +408,7 @@ do
 		# S1610 ONSCREEN
 		if grep -q "1" /tmp/value
 		then
-			dialog --backtitle "[S1610] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'onscreen' enabled!" 5 30
+			dialog --backtitle "[S1610] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'onscreen' enabled!" 5 40
 			sed -i '/episode=/d' /tmp/settings_new
 			echo "episode=onscreen" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -415,7 +416,7 @@ do
 		# S1620 XMLTV_NS
 		elif grep -q "2" /tmp/value
 		then
-			dialog --backtitle "[S1620] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'xmltv_ns' enabled!" 5 30
+			dialog --backtitle "[S1620] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'xmltv_ns' enabled!" 5 40
 			sed -i '/episode=/d' /tmp/settings_new
 			echo "episode=xmltv_ns" >> /tmp/settings_new
 			echo "H" > /tmp/value

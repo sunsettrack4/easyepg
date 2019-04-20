@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ###############################
-# SWISSCOM JSON > XML CONVERTER #
+# TVPLAYER JSON > XML CONVERTER #
 # ###############################
 
 # CHANNELS
@@ -42,11 +42,11 @@ my $json;
     close $fh;
 }
 
-# READ JSON INPUT FILE: SWC HARDCODED CHLIST
+# READ JSON INPUT FILE: TVP HARDCODED CHLIST
 my $chlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "swc_channels.json" or die;
+    open my $fh, "<", "tvp_channels.json" or die;
     $chlist = <$fh>;
     close $fh;
 }
@@ -91,52 +91,52 @@ my $countryVER =  $initdata->{'country'};
 my @attributes = @{ $data->{'attributes'} };
 foreach my $attributes ( @attributes ) {
 		
-	# ####################
-    # DEFINE JSON VALUES #
-    # ####################
+		# ####################
+        # DEFINE JSON VALUES #
+        # ####################
         
-    # DEFINE CHANNEL ID + NAME
-	my $cname   = $attributes->{'Title'};
-	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+        # DEFINE CHANNEL ID + NAME
+		my $cname   = $attributes->{'name'};
+		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
         
-    # DEFINE LANGUAGE VERSION
-    my $languageVER =  $initdata->{'language'};
+        # DEFINE LANGUAGE VERSION
+        my $languageVER =  $initdata->{'language'};
         
-    # DEFINE RYTEC CHANNEL ID (language)
-	my $rytec = $chdata->{'channels'}{$countryVER};
-	
-	# DEFINE SELECTED CHANNELS
-	my @configdata = @{ $configdata->{'channels'} };
+        # DEFINE RYTEC CHANNEL ID (language)
+		my $rytec = $chdata->{'channels'}{$countryVER};
 		
-	# DEFINE SETTINGS
-    my $setup_general  = $setupdata->{'settings'};
-    my $setup_cid      = $setup_general->{'cid'};
+		# DEFINE SELECTED CHANNELS
+		my @configdata = @{ $configdata->{'channels'} };
+		
+		# DEFINE SETTINGS
+        my $setup_general  = $setupdata->{'settings'};
+        my $setup_cid      = $setup_general->{'cid'};
         
-    # DEFINE SETTINGS VALUES
-    my $enabled  = "enabled";
-    my $disabled = "disabled";
+        # DEFINE SETTINGS VALUES
+        my $enabled  = "enabled";
+        my $disabled = "disabled";
         
         
-    # ##################
-	# PRINT XML OUTPUT #
-	# ##################
+        # ##################
+		# PRINT XML OUTPUT #
+		# ##################
         
-	# CHANNEL ID (condition) (settings)
-	foreach my $selected_channel ( @configdata ) {
-		if( $cname eq $selected_channel ) { 
-			if( $setup_cid eq $enabled ) {
-				if( defined $rytec->{$cname} ) {
-					print "<channel id=\"" . $rytec->{$cname} . "\">";
+		# CHANNEL ID (condition) (settings)
+		foreach my $selected_channel ( @configdata ) {
+			if( $cname eq $selected_channel ) { 
+				if( $setup_cid eq $enabled ) {
+					if( defined $rytec->{$cname} ) {
+						print "<channel id=\"" . $rytec->{$cname} . "\">";
+					} else {
+						print "<channel id=\"" . $cname . "\">";
+						print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $cname . "\n";
+					}
 				} else {
 					print "<channel id=\"" . $cname . "\">";
-					print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $cname . "\n";
 				}
-			} else {
-				print "<channel id=\"" . $cname . "\">";
+				
+				# CHANNEL NAME (language)
+				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
 			}
-			
-			# CHANNEL NAME (language)
-			print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
 		}
-	}
 }
