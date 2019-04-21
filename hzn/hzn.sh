@@ -93,14 +93,6 @@ then
 	exit 0
 fi
 
-if ! curl --write-out %{http_code} --silent --output /dev/null $baseurl/programschedules/$date1/1 | grep -q "200"
-then
-	printf "Service provider unavailable!\n\n"
-	exit 0
-fi
-
-printf "\n"
-
 date1=$(date '+%Y%m%d')
 date2=$(date -d '1 day' '+%Y%m%d')
 date3=$(date -d '2 days' '+%Y%m%d')
@@ -108,6 +100,14 @@ date4=$(date -d '3 days' '+%Y%m%d')
 date5=$(date -d '4 days' '+%Y%m%d')
 date6=$(date -d '5 days' '+%Y%m%d')
 date7=$(date -d '6 days' '+%Y%m%d')
+
+if ! curl --write-out %{http_code} --silent --output /dev/null $baseurl/programschedules/$date1/1 | grep -q "200"
+then
+	printf "Service provider unavailable!\n\n"
+	exit 0
+fi
+
+printf "\n"
 
 
 # ##################

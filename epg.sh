@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.1.9 BETA - 2019/04/20            "
+echo " Release v0.2.0 BETA - 2019/04/21            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -254,6 +254,54 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e tkm/ch_json2xml.pl ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/chlist_printer.pl ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/cid_json.pl ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/compare_menu.pl ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/epg_json2xml.pl ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/settings.sh ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/tkm.sh ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/swc.sh"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/url_printer.pl ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/url_printer.pl"
+	ERROR="true"
+fi
+
 if [ ! -e combine.sh ]
 then
 	printf "\nMissing file in main folder: combine.sh       "
@@ -340,6 +388,7 @@ ls -l hzn/ >  /tmp/providerlist
 ls -l ztt/ >>  /tmp/providerlist
 ls -l swc/ >>  /tmp/providerlist
 ls -l tvp/ >>  /tmp/providerlist
+ls -l tkm/ >>  /tmp/providerlist
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
 	dialog --backtitle "[M1W00] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --infobox "Please press any button to enter the main menu.\n\nThe script will proceed in 5 seconds." 7 50
@@ -372,15 +421,24 @@ do
 	ls -l ztt/ >> /tmp/providerlist
 	ls -l swc/ >> /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
+	ls -l tkm/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	2 "OPEN GRABBER SETTINGS" \' >> /tmp/menu
 	fi
 	
 	# M1300 CREATE SINGLE-/MULTI-SOURCE XML FILE
-	if ls xml/ | grep -q ".xml"
+	ls -l hzn/ >  /tmp/providerlist
+	ls -l ztt/ >>  /tmp/providerlist
+	ls -l swc/ >>  /tmp/providerlist
+	ls -l tvp/ >>  /tmp/providerlist
+	ls -l tkm/ >>  /tmp/providerlist
+	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
-		echo '	3 "MODIFY XML FILES" \' >> /tmp/menu
+		if ls xml/ | grep -q ".xml"
+		then
+			echo '	3 "MODIFY XML FILES" \' >> /tmp/menu
+		fi
 	fi
 	
 	# M1400 CONTINUE IN GRABBER MODE
@@ -388,6 +446,7 @@ do
 	ls -l ztt/ >> /tmp/providerlist
 	ls -l swc/ >> /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
+	ls -l tkm/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	4 "CONTINUE IN GRABBER MODE" \' >> /tmp/menu
@@ -406,7 +465,7 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# M1100 MENU OVERLAY
-		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 12 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 13 40 10 \' > /tmp/menu
 
 		# M1110 HORIZON
 		echo '	1 "HORIZON" \' >> /tmp/menu
@@ -419,6 +478,9 @@ do
 		
 		# M1140 TVPLAYER
 		echo '	4 "TVPLAYER" \' >> /tmp/menu
+		
+		# M1150 TELEKOM
+		echo '	5 "TELEKOM" \' >> /tmp/menu
 
 		echo "2> /tmp/value" >> /tmp/menu
 
@@ -1030,6 +1092,72 @@ do
 			else
 				echo "M" > /tmp/value
 			fi
+		
+		
+		# #################
+		# M1150 TELEKOM   #
+		# #################
+
+		elif grep -q "5" /tmp/value
+		then
+			# M1150 MENU OVERLAY
+			echo 'dialog --backtitle "[M1140] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TELEKOM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1151 DE
+			if [ ! -d tkm/de ]
+			then
+				echo '	1 "[DE] MAGENTA TV" \' >> /tmp/menu
+			fi
+			
+			# M115E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M141E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TELEKOM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+				
+				
+			# #####################
+			# M1151 MAGENTA TV DE #
+			# #####################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir tkm/de
+				chmod 0777 tkm/de
+				echo '{"country":"DE","language":"de"}' > tkm/de/init.json
+				cp tkm/settings.sh tkm/de/settings.sh
+				cp tkm/tkm.sh tkm/de/tkm.sh
+				cp tkm/epg_json2xml.pl tkm/de/
+				cp tkm/ch_json2xml.pl tkm/de/
+				cp tkm/cid_json.pl tkm/de/
+				cp tkm/chlist_printer.pl tkm/de/
+				cp tkm/compare_menu.pl tkm/de/
+				cp tkm/url_printer.pl tkm/de/
+				cd tkm/de && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tkm/de/channels.json ]
+				then
+					rm -rf tkm/de
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M115X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
 				
 		
 		# ############
@@ -1072,6 +1200,12 @@ do
 		if ls -l tvp/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	4 "TVPLAYER" \' >> /tmp/menu
+		fi
+		
+		# M1250 TELEKOM
+		if ls -l tkm/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	5 "TELEKOM" \' >> /tmp/menu
 		fi
 		
 		echo "2> /tmp/value" >> /tmp/menu
@@ -1493,7 +1627,7 @@ do
 		
 		elif grep -q "4" /tmp/value
 		then
-			# M1230 MENU OVERLAY
+			# M1240 MENU OVERLAY
 			echo 'dialog --backtitle "[M1240] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVPLAYER" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
 			
 			# M1241 TVPLAYER UK
@@ -1517,7 +1651,7 @@ do
 			
 			
 			# ####################
-			# M1241 TVPLAYER CH  #
+			# M1241 TVPLAYER UK  #
 			# ####################
 			
 			if grep -q "1" /tmp/value
@@ -1536,6 +1670,62 @@ do
 			
 			# ############
 			# M124X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
+		
+		# ######################
+		# M1250 MAGENTA TV DE  #
+		# ######################
+		
+		elif grep -q "5" /tmp/value
+		then
+			# M1250 MENU OVERLAY
+			echo 'dialog --backtitle "[M1250] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TELEKOM" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1251 MAGENTA TV DE
+			if [ -d tkm/de ]
+			then
+				echo '	1 "[DE] MAGENTATV" \' >> /tmp/menu
+			fi
+			
+			# M125E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M125E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TELEKOM" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ######################
+			# M1251 MAGENTA TV DE  #
+			# ######################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd tkm/de
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tkm/de/channels.json ]
+				then
+					rm -rf tkm/de xml/magentatv_de.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M125X EXIT #
 			# ############
 			
 			else
@@ -1670,6 +1860,20 @@ then
 		sleep 2s
 		
 		cd tvp/uk 2> /dev/null && bash tvp.sh && cd - > /dev/null && cp tvp/uk/tvp.xml xml/tvplayer_uk.xml 2> /dev/null
+	fi
+	
+	if ls -l tkm/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " TELEKOM EPG SIMPLE XMLTV GRABBER            "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd tkm/de 2> /dev/null && bash tkm.sh && cd - > /dev/null && cp tkm/de/magenta.xml xml/magentatv_de.xml 2> /dev/null
 	fi
 fi
 
@@ -1931,6 +2135,23 @@ do
 			sed 's/fileNAME/tvplayer_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 			sed -i "s/channelsFILE/$folder\/tvp_uk_channels.json/g" /tmp/prog_combine.pl
 			printf "\n<!-- PROGRAMMES: TVPLAYER UK -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# MAGENTA TV DE
+	if [ -s combine/$folder/tkm_de_channels.json ]
+	then
+		if [ -s xml/magentatv_de.xml ]
+		then
+			sed 's/fileNAME/magentatv_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/tkm_de_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: MAGENTA TV DE -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/magentatv_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/tkm_de_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: MAGENTA TV DE -->\n\n" >> /tmp/combined_programmes
 			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 		fi
 	fi

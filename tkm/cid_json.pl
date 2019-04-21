@@ -20,10 +20,10 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ###############################
-# SWISSCOM CHANNEL LIST CREATOR #
+# MAGENTA TV CHANNEL ID CREATOR #
 # ###############################
 
-# COMPARE STRINGS, CREATE MENU LIST
+# CHANNEL IDs
 
 use strict;
 use warnings;
@@ -33,49 +33,40 @@ use utf8;
  
 use JSON;
 
-# READ JSON INPUT FILE: COMPARISM LIST
+# READ JSON INPUT FILE: CHLIST
 my $json;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "/tmp/compare.json" or die;
+    open my $fh, "<", "/tmp/chlist" or die;
     $json = <$fh>;
     close $fh;
 }
 
 # CONVERT JSON TO PERL STRUCTURES
-my $data      = decode_json($json);
+my $data   = decode_json($json);
 
+print "{ \"cid\":\n  {\n";
 
-#
-# DEFINE JSON VALUES
-#
-
-my $new_name2id = $data->{'newname2id'};
-my $new_id2name = $data->{'newid2name'};
-my $old_name2id = $data->{'oldname2id'};
-my $old_id2name = $data->{'oldid2name'};
-my @configname  = @{ $data->{'config'} };
-
-
-#
-# COMPARE VALUES + CREATE MENU LIST
-#
-
-foreach my $configname ( @configname ) {
-	
-	# DEFINE IDs
-	my $old_id = $old_name2id->{$configname};
-	my $new_id = $new_name2id->{$configname};
-	
-	# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
-	if( $new_id eq $old_id ) {
-		print "$configname\n";
+my @channellist = @{ $data->{'channellist'} };
+foreach my $channellist ( @channellist ) {
 		
-	# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
-	} elsif( defined $new_id ) {
-		print "$configname\n";
-		print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
-	} else {
-		print STDERR "[ WARNING ] CHANNEL $configname not found in channel lists!\n";
-	}
+	# ####################
+    # DEFINE JSON VALUES #
+    # ####################
+        
+    # DEFINE CHANNEL NAME
+	my $cname   = $channellist->{'name'};
+	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+		
+	# DEFINE CHANNEL ID
+	my $cid     = $channellist->{'contentId'};
+        
+    # ###################
+	# PRINT JSON OUTPUT #
+	# ###################
+        
+	# CHANNEL ID (condition)
+	print "  \"$cid\":\"$cname\",\n";
 }
+
+print "  \"000000000000\":\"DUMMY\"\n  }\n}";

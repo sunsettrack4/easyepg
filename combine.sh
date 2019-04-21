@@ -125,7 +125,7 @@ then
 			# COLLECT FILES #
 			# ###############
 			
-			echo 'dialog --backtitle "[M1311] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > CHANNELS" --title "CHANNEL LIST" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
+			echo 'dialog --backtitle "[M1311] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADD" --title "CHANNEL LIST" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
 			
 			if [ -e xml/horizon_de.xml ]
 			then
@@ -211,6 +211,12 @@ then
 				sed 's/<channel id="/"[TVPLAYER UK] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 			
+			if [ -e xml/magentatv_de.xml ]
+			then
+				grep 'channel id=' xml/magentatv_de.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[MAGENTATV DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+			
 			echo "2>/tmp/channels" >> /tmp/chmenu
 			
 			sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
@@ -232,7 +238,7 @@ then
 				rm /tmp/setupname /tmp/chduplicates 2> /dev/null
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
-				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/"//g' /tmp/xmlch2
+				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
 				sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
 				
 				if [ -s /tmp/chduplicates ]
@@ -252,7 +258,7 @@ then
 		if [ -s /tmp/channels ]
 		then
 			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g' /tmp/channels
+			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
 			then
@@ -324,6 +330,11 @@ then
 				if [ -e xml/tvplayer_uk.xml ]
 				then
 					grep "TVPLAYER UK" /tmp/channels | sed '/TVPLAYER UK/s/\[TVPLAYER UK\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvp_uk_channels.json
+				fi
+				
+				if [ -e xml/magentatv_de.xml ]
+				then
+					grep "MAGENTATV DE" /tmp/channels | sed '/MAGENTATV DE/s/\[MAGENTATV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tkm_de_channels.json
 				fi
 			fi
 			
@@ -735,6 +746,31 @@ then
 					
 					cd - > /dev/null
 					
+					# MAGENTATV DE
+					if [ -e xml/magentatv_de.xml ]
+					then
+						grep 'channel id=' xml/magentatv_de.xml > /tmp/xmlch_tkmde
+						sed -i 's/<channel id="/[MAGENTATV DE] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_tkmde
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tkm_de_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tkm_de_channels.json /tmp/xmlch_tkmde
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e tkm_de_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' tkm_de_channels.json > /tmp/channels_tkmde && cat /tmp/channels_tkmde >> /tmp/xmlch2
+						sed -i 's/.*/[MAGENTATV DE] &/g' /tmp/channels_tkmde
+						
+						comm -12 <(sort -u /tmp/xmlch_tkmde) <(sort -u /tmp/channels_tkmde) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_tkmde) <(sort -u /tmp/channels_tkmde) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
 					# END
 					echo "2>/tmp/channels" >> /tmp/chmenu
 					
@@ -749,7 +785,7 @@ then
 					
 					if [ -e /tmp/menu ]
 					then
-						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]" /tmp/chmenu
+						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
 							rm /tmp/menu
@@ -768,9 +804,9 @@ then
 					if [ -s /tmp/channels ]
 					then
 						sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
+						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
 							
-						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g' /tmp/channels
+						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g' /tmp/channels
 						
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) ]
 						then
@@ -842,6 +878,11 @@ then
 							if [ -e xml/tvplayer_uk.xml ]
 							then
 								grep "TVPLAYER UK" /tmp/channels | sed '/TVPLAYER UK/s/\[TVPLAYER UK\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvp_uk_channels.json
+							fi
+							
+							if [ -e xml/magentatv_de.xml ]
+							then
+								grep "MAGENTATV DE" /tmp/channels | sed '/MAGENTATV DE/s/\[MAGENTATV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tkm_de_channels.json
 							fi
 						fi
 						
