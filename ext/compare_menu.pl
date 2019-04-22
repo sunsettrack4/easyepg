@@ -29,7 +29,7 @@ use utf8;
 my $xml;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "xml/fileNAME" or die;
+    open my $fh, "<", "ext_file.xml" or die;
     $xml = <$fh>;
     close $fh;
 }
@@ -38,7 +38,7 @@ my $xml;
 my $json;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "combine/channelsFILE" or die;
+    open my $fh, "<", "channels.json" or die;
     $json = <$fh>;
     close $fh;
 }
@@ -88,9 +88,8 @@ foreach my $configdata ( @configdata ) {
 		
 		if( $channel_id eq $configdata ) {
 		
-			# CHANNEL ID + NAME
-			print "<channel id=\"" . $channel_id . "\">\n";
-			print "  <display-name lang=\"" . $ch_lang . "\">" . $ch_name . "<\/display-name>\n<\/channel>\n";
+			# CHANNEL NAMES
+			print "$configdata\n";
 		}
 	}
 }

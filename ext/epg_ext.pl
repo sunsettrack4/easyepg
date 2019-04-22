@@ -29,7 +29,7 @@ use utf8;
 my $xml;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "xml/fileNAME" or die;
+    open my $fh, "<", "ext_file.xml" or die;
     $xml = <$fh>;
     close $fh;
 }
@@ -38,7 +38,7 @@ my $xml;
 my $json;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "combine/channelsFILE" or die;
+    open my $fh, "<", "channels.json" or die;
     $json = <$fh>;
     close $fh;
 }
@@ -69,6 +69,7 @@ my @programme = @{ $tv->{programme} };
 # DEFINE SELECTED CHANNELS
 my @configdata = @{ $init->{'channels'} };
 
+print "\n<!-- PROGRAMME DATA: EXTERNAL SOURCE -->\n\n";
 
 # ######################
 # PRINT PROGRAMME LIST #

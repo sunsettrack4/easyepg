@@ -1,7 +1,10 @@
 #!/bin/bash
 
-#      Copyright (C) 2017-2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/zattoo_tvh/
+#      Copyright (C) 2019 Jan-Luca Neumann
+#      https://github.com/sunsettrack4/easyepg
+#		
+#      Collaborators:
+#      - DeBaschdi ( https://github.com/DeBaschdi )
 #
 #  This Program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

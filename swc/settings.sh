@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #      Copyright (C) 2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/easyepg/hzn
+#      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
 #      - DeBaschdi ( https://github.com/DeBaschdi )

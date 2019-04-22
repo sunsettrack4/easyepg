@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #      Copyright (C) 2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/easyepg/hzn
+#      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
 #      - DeBaschdi ( https://github.com/DeBaschdi )
@@ -217,6 +217,12 @@ then
 				sed 's/<channel id="/"[MAGENTATV DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 			
+			if [ -e xml/external_oa.xml ]
+			then
+				grep 'channel id=' xml/external_oa.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[EXTERNAL OA] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+			
 			echo "2>/tmp/channels" >> /tmp/chmenu
 			
 			sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
@@ -238,7 +244,7 @@ then
 				rm /tmp/setupname /tmp/chduplicates 2> /dev/null
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
-				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
+				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
 				sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
 				
 				if [ -s /tmp/chduplicates ]
@@ -258,7 +264,7 @@ then
 		if [ -s /tmp/channels ]
 		then
 			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g' /tmp/channels
+			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
 			then
@@ -335,6 +341,21 @@ then
 				if [ -e xml/magentatv_de.xml ]
 				then
 					grep "MAGENTATV DE" /tmp/channels | sed '/MAGENTATV DE/s/\[MAGENTATV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tkm_de_channels.json
+				fi
+				
+				if [ -e xml/external_oa.xml ]
+				then
+					grep "EXTERNAL OA" /tmp/channels | sed '/EXTERNAL OA/s/\[EXTERNAL OA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/ext_oa_channels.json
+				fi
+				
+				if [ -e xml/external_ob.xml ]
+				then
+					grep "EXTERNAL OB" /tmp/channels | sed '/EXTERNAL OB/s/\[EXTERNAL OB\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/ext_ob_channels.json
+				fi
+				
+				if [ -e xml/external_oc.xml ]
+				then
+					grep "EXTERNAL OC" /tmp/channels | sed '/EXTERNAL OC/s/\[EXTERNAL OC\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/ext_oc_channels.json
 				fi
 			fi
 			
@@ -771,6 +792,81 @@ then
 					
 					cd - > /dev/null
 					
+					# EXTERNAL SLOT 1
+					if [ -e xml/external_oa.xml ]
+					then
+						grep 'channel id=' xml/external_oa.xml > /tmp/xmlch_extoa
+						sed -i 's/<channel id="/[EXTERNAL OA] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_extoa
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_oa_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_oa_channels.json /tmp/xmlch_extoa
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e ext_oa_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' ext_oa_channels.json > /tmp/channels_extoa && cat /tmp/channels_extoa >> /tmp/xmlch2
+						sed -i 's/.*/[EXTERNAL OA] &/g' /tmp/channels_extoa
+						
+						comm -12 <(sort -u /tmp/xmlch_extoa) <(sort -u /tmp/channels_extoa) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_extoa) <(sort -u /tmp/channels_extoa) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
+					# EXTERNAL SLOT 2
+					if [ -e xml/external_ob.xml ]
+					then
+						grep 'channel id=' xml/external_ob.xml > /tmp/xmlch_extob
+						sed -i 's/<channel id="/[EXTERNAL OB] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_extob
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_ob_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_ob_channels.json /tmp/xmlch_extob
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e ext_ob_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' ext_ob_channels.json > /tmp/channels_extob && cat /tmp/channels_extob >> /tmp/xmlch2
+						sed -i 's/.*/[EXTERNAL OB] &/g' /tmp/channels_extob
+						
+						comm -12 <(sort -u /tmp/xmlch_extob) <(sort -u /tmp/channels_extob) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_extob) <(sort -u /tmp/channels_extob) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
+					# EXTERNAL SLOT 3
+					if [ -e xml/external_oc.xml ]
+					then
+						grep 'channel id=' xml/external_oc.xml > /tmp/xmlch_extoc
+						sed -i 's/<channel id="/[EXTERNAL OC] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_extoc
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_oc_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_oc_channels.json /tmp/xmlch_extoc
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e ext_oc_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' ext_oc_channels.json > /tmp/channels_extoc && cat /tmp/channels_extoc >> /tmp/xmlch2
+						sed -i 's/.*/[EXTERNAL OC] &/g' /tmp/channels_extoc
+						
+						comm -12 <(sort -u /tmp/xmlch_extoc) <(sort -u /tmp/channels_extoc) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_extoc) <(sort -u /tmp/channels_extoc) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
 					# END
 					echo "2>/tmp/channels" >> /tmp/chmenu
 					
@@ -785,7 +881,7 @@ then
 					
 					if [ -e /tmp/menu ]
 					then
-						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]" /tmp/chmenu
+						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
 							rm /tmp/menu
@@ -804,9 +900,9 @@ then
 					if [ -s /tmp/channels ]
 					then
 						sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
+						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
 							
-						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g' /tmp/channels
+						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g;' /tmp/channels
 						
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) ]
 						then
@@ -883,6 +979,21 @@ then
 							if [ -e xml/magentatv_de.xml ]
 							then
 								grep "MAGENTATV DE" /tmp/channels | sed '/MAGENTATV DE/s/\[MAGENTATV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tkm_de_channels.json
+							fi
+							
+							if [ -e xml/external_oa.xml ]
+							then
+								grep "EXTERNAL OA" /tmp/channels | sed '/EXTERNAL OA/s/\[EXTERNAL OA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_oa_channels.json
+							fi
+							
+							if [ -e xml/external_ob.xml ]
+							then
+								grep "EXTERNAL OB" /tmp/channels | sed '/EXTERNAL OB/s/\[EXTERNAL OB\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_ob_channels.json
+							fi
+							
+							if [ -e xml/external_oc.xml ]
+							then
+								grep "EXTERNAL OC" /tmp/channels | sed '/EXTERNAL OC/s/\[EXTERNAL OC\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_oc_channels.json
 							fi
 						fi
 						

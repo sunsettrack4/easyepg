@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #      Copyright (C) 2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/easyepg/hzn
+#      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
 #      - DeBaschdi ( https://github.com/DeBaschdi )
@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.2.1 BETA - 2019/04/22            "
+echo " Release v0.2.2 BETA - 2019/04/22            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -296,6 +296,36 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e ext/ch_ext.pl ]
+then
+	printf "\nMissing file in External folder: ext/ch_ext.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ext/compare_menu.pl ]
+then
+	printf "\nMissing file in External folder: ext/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ext/epg_ext.pl ]
+then
+	printf "\nMissing file in External folder: ext/epg_ext.pl"
+	ERROR="true"
+fi
+
+if [ ! -e ext/ext.sh ]
+then
+	printf "\nMissing file in External folder: ext/ext.sh"
+	ERROR="true"
+fi
+
+if [ ! -e ext/settings.sh ]
+then
+	printf "\nMissing file in External folder: ext/settings.sh"
+	ERROR="true"
+fi
+
 if [ ! -e combine.sh ]
 then
 	printf "\nMissing file in main folder: combine.sh       "
@@ -383,6 +413,7 @@ ls -l ztt/ >>  /tmp/providerlist
 ls -l swc/ >>  /tmp/providerlist
 ls -l tvp/ >>  /tmp/providerlist
 ls -l tkm/ >>  /tmp/providerlist
+ls -l ext/ >>  /tmp/providerlist
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
 	dialog --backtitle "[M1W00] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --infobox "Please press any button to enter the main menu.\n\nThe script will proceed in 5 seconds." 7 50
@@ -416,6 +447,7 @@ do
 	ls -l swc/ >> /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
+	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	2 "OPEN GRABBER SETTINGS" \' >> /tmp/menu
@@ -427,6 +459,7 @@ do
 	ls -l swc/ >>  /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
+	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		if ls xml/ | grep -q ".xml"
@@ -441,6 +474,7 @@ do
 	ls -l swc/ >> /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
+	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
 		echo '	4 "CONTINUE IN GRABBER MODE" \' >> /tmp/menu
@@ -459,7 +493,7 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# M1100 MENU OVERLAY
-		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 13 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 14 40 10 \' > /tmp/menu
 
 		# M1110 HORIZON
 		echo '	1 "HORIZON" \' >> /tmp/menu
@@ -475,6 +509,9 @@ do
 		
 		# M1150 TELEKOM
 		echo '	5 "TELEKOM" \' >> /tmp/menu
+		
+		# M1160 EXTERNAL
+		echo '	6 "EXTERNAL" \' >> /tmp/menu
 
 		echo "2> /tmp/value" >> /tmp/menu
 
@@ -974,7 +1011,7 @@ do
 			# M113E ERROR
 			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
 			then
-				dialog --backtitle "[M131E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > SWISSCOM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				dialog --backtitle "[M113E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > SWISSCOM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
 				sleep 2s
 				echo "M" > /tmp/value
 			else
@@ -1040,7 +1077,7 @@ do
 			# M114E ERROR
 			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
 			then
-				dialog --backtitle "[M141E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVPLAYER" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				dialog --backtitle "[M114E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVPLAYER" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
 				sleep 2s
 				echo "M" > /tmp/value
 			else
@@ -1094,7 +1131,7 @@ do
 		elif grep -q "5" /tmp/value
 		then
 			# M1150 MENU OVERLAY
-			echo 'dialog --backtitle "[M1140] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TELEKOM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			echo 'dialog --backtitle "[M1150] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TELEKOM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
 			
 			# M1151 DE
 			if [ ! -d tkm/de ]
@@ -1105,7 +1142,7 @@ do
 			# M115E ERROR
 			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
 			then
-				dialog --backtitle "[M141E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TELEKOM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				dialog --backtitle "[M115E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TELEKOM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
 				sleep 2s
 				echo "M" > /tmp/value
 			else
@@ -1151,7 +1188,129 @@ do
 			else
 				echo "M" > /tmp/value
 			fi
+		
+		
+		# #################
+		# M1160 EXTERNAL  #
+		# #################
+
+		elif grep -q "6" /tmp/value
+		then
+			# M1160 MENU OVERLAY
+			echo 'dialog --backtitle "[M1160] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > EXTERNAL" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1161 SLOT 1
+			if [ ! -d ext/oa ]
+			then
+				echo '	1 "[OA] EXTERNAL SLOT 1" \' >> /tmp/menu
+			fi
+			
+			# M1162 SLOT 2
+			if [ ! -d ext/ob ]
+			then
+				echo '	2 "[OB] EXTERNAL SLOT 2" \' >> /tmp/menu
+			fi
+			
+			# M1163 SLOT 3
+			if [ ! -d ext/oc ]
+			then
+				echo '	1 "[OC] EXTERNAL SLOT 3" \' >> /tmp/menu
+			fi
+			
+			# M116E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M116E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > EXTERNAL" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
 				
+				
+			# #######################
+			# M1161 EXTERNAL SLOT 1 #
+			# #######################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir ext/oa
+				chmod 0777 ext/oa
+				cp ext/settings.sh ext/oa/settings.sh
+				cp ext/ext.sh ext/oa/ext.sh
+				cp ext/epg_ext.pl ext/oa/
+				cp ext/ch_ext.pl ext/oa/
+				cp ext/compare_menu.pl ext/oa/
+				cd ext/oa && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ext/oa/channels.json ]
+				then
+					rm -rf ext/oa
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# #######################
+			# M1162 EXTERNAL SLOT 2 #
+			# #######################
+				
+			elif grep -q "2" /tmp/value
+			then
+				mkdir ext/ob
+				chmod 0777 ext/ob
+				cp ext/settings.sh ext/ob/settings.sh
+				cp ext/ext.sh ext/ob/ext.sh
+				cp ext/epg_ext.pl ext/ob/
+				cp ext/ch_ext.pl ext/ob/
+				cp ext/compare_menu.pl ext/ob/
+				cd ext/ob && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ext/ob/channels.json ]
+				then
+					rm -rf ext/ob
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# #######################
+			# M1163 EXTERNAL SLOT 3 #
+			# #######################
+				
+			elif grep -q "3" /tmp/value
+			then
+				mkdir ext/oc
+				chmod 0777 ext/oc
+				cp ext/settings.sh ext/oc/settings.sh
+				cp ext/ext.sh ext/oc/ext.sh
+				cp ext/epg_ext.pl ext/oc/
+				cp ext/ch_ext.pl ext/oc/
+				cp ext/compare_menu.pl ext/oc/
+				cd ext/oc && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ext/oc/channels.json ]
+				then
+					rm -rf ext/oc
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M116X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
 		
 		# ############
 		# M1X00 EXIT #
@@ -1199,6 +1358,12 @@ do
 		if ls -l tkm/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	5 "TELEKOM" \' >> /tmp/menu
+		fi
+		
+		# M1260 EXTERNAL
+		if ls -l ext/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	6 "EXTERNAL" \' >> /tmp/menu
 		fi
 		
 		echo "2> /tmp/value" >> /tmp/menu
@@ -1724,6 +1889,110 @@ do
 			else
 				echo "M" > /tmp/value
 			fi
+		
+		
+		# ######################
+		# M1260 EXTERNAL       #
+		# ######################
+		
+		elif grep -q "6" /tmp/value
+		then
+			# M1260 MENU OVERLAY
+			echo 'dialog --backtitle "[M1260] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > EXTERNAL" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1261 EXTERNAL SLOT 1
+			if [ -d ext/oa ]
+			then
+				echo '	1 "[OA] EXTERNAL SLOT 1" \' >> /tmp/menu
+			fi
+			
+			# M1262 EXTERNAL SLOT 2
+			if [ -d ext/ob ]
+			then
+				echo '	2 "[OB] EXTERNAL SLOT 2" \' >> /tmp/menu
+			fi
+			
+			# M1263 EXTERNAL SLOT 3
+			if [ -d ext/oc ]
+			then
+				echo '	3 "[OC] EXTERNAL SLOT 3" \' >> /tmp/menu
+			fi
+			
+			# M126E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M126E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > EXTERNAL" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ########################
+			# M1261 EXTERNAL SLOT 1  #
+			# ########################
+						
+			if grep -q "1" /tmp/value
+			then
+				cd ext/oa
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ext/oa/channels.json ]
+				then
+					rm -rf ext/oa xml/external_oa.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ########################
+			# M1262 EXTERNAL SLOT 2  #
+			# ########################
+						
+			elif grep -q "2" /tmp/value
+			then
+				cd ext/ob
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ext/ob/channels.json ]
+				then
+					rm -rf ext/ob xml/external_ob.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ########################
+			# M1263 EXTERNAL SLOT 3  #
+			# ########################
+						
+			elif grep -q "3" /tmp/value
+			then
+				cd ext/oc
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e ext/oc/channels.json ]
+				then
+					rm -rf ext/oc xml/external_oc.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M126X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
 			
 		
 		# ############
@@ -1867,6 +2136,22 @@ then
 		sleep 2s
 		
 		cd tkm/de 2> /dev/null && bash tkm.sh && cd - > /dev/null && cp tkm/de/magenta.xml xml/magentatv_de.xml 2> /dev/null
+	fi
+	
+	if ls -l ext/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " EXTERNAL EPG SIMPLE XMLTV GRABBER            "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd ext/oa 2> /dev/null && bash ext.sh && cd - > /dev/null && cp ext/oa/external.xml xml/external_oa.xml 2> /dev/null
+		cd ext/ob 2> /dev/null && bash ext.sh && cd - > /dev/null && cp ext/ob/external.xml xml/external_ob.xml 2> /dev/null
+		cd ext/oc 2> /dev/null && bash ext.sh && cd - > /dev/null && cp ext/oc/external.xml xml/external_oc.xml 2> /dev/null
 	fi
 fi
 
@@ -2145,6 +2430,57 @@ do
 			sed 's/fileNAME/magentatv_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 			sed -i "s/channelsFILE/$folder\/tkm_de_channels.json/g" /tmp/prog_combine.pl
 			printf "\n<!-- PROGRAMMES: MAGENTA TV DE -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# EXTERNAL SLOT 1
+	if [ -s combine/$folder/ext_oa_channels.json ]
+	then
+		if [ -s xml/external_oa.xml ]
+		then
+			sed 's/fileNAME/external_oa.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/ext_oa_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: EXTERNAL SOURCE SLOT 1 -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/external_oa.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/ext_oa_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 1 -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# EXTERNAL SLOT 2
+	if [ -s combine/$folder/ext_ob_channels.json ]
+	then
+		if [ -s xml/external_ob.xml ]
+		then
+			sed 's/fileNAME/external_ob.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/ext_ob_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: EXTERNAL SOURCE SLOT 2 -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/external_ob.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/ext_ob_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 2 -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# EXTERNAL SLOT 3
+	if [ -s combine/$folder/ext_oc_channels.json ]
+	then
+		if [ -s xml/external_oc.xml ]
+		then
+			sed 's/fileNAME/external_oc.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/ext_oc_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: EXTERNAL SOURCE SLOT 3 -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/external_oc.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/ext_oc_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 3 -->\n\n" >> /tmp/combined_programmes
 			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 		fi
 	fi
