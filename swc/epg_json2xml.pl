@@ -39,7 +39,7 @@ use Time::Piece;
 my $json;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "workfile" or die;
+    open my $fh, "<", "/tmp/epg_workfile" or die;
     $json = <$fh>;
     close $fh;
 }
@@ -101,7 +101,7 @@ my $setupdata = decode_json($settings);
 my $countryVER =  $initdata->{'country'};
         
 # DEFINE LANGUAGE VERSION
-my $languageVER =  $initdata->{'language'};
+# my $languageVER =  $initdata->{'language'};		# LANGUAGE IS BASED ON PROVIDED EPG DATA
 
 print "\n<!-- EPG DATA - SOURCE: SWISSCOM $countryVER -->\n\n";
  
@@ -145,358 +145,323 @@ foreach my $attributes ( $data->{attributes} ) {
         # START + END + CHANNEL
         #
         
-        my $broadcastnodes = $item->{'Nodes'};
-        my @broadcastitems = @{ $broadcastnodes->{'Items'} };
+        my $channelnodes = $item->{'Nodes'};
+        my @channelitems = @{ $channelnodes->{'Items'} };
         
-        foreach my $broadcastitems ( @broadcastitems ) {
-			my $cid          = $broadcastitems->{'Channel'};
-			my @availability = @{ $broadcastitems->{'Availabilities'} };
+        foreach my $channelitems ( @channelitems ) {
+			my $channelcontents = $channelitems->{'Content'};
 			
-			foreach my $availability ( @availability ) {
-				my $start = $availability->{'AvailabilityStart'};
-				my $stop  = $availability->{'AvailabilityEnd'};
-				
-				$start =~ s/[-:TZ]//g;
-				$stop  =~ s/[-:TZ]//g;
-				
-				if( defined $cidEXT->{$cid} ) {
-					if( $setup_cid eq $enabled ) {
-						if( defined $rytec->{$cidEXT->{$cid}} ) {
-							print "<programme start=\"" . $start . " +0000\" stop=\"" . $stop . " +0000\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+			my $broadcastnodes = $channelcontents->{'Nodes'};
+			my @broadcastitems = @{ $broadcastnodes->{'Items'} };
+			
+			foreach my $broadcastitems ( @broadcastitems ) {
+				my $cid          = $broadcastitems->{'Channel'};
+				my @availability = @{ $broadcastitems->{'Availabilities'} };
+			
+				foreach my $availability ( @availability ) {
+					my $start = $availability->{'AvailabilityStart'};
+					my $stop  = $availability->{'AvailabilityEnd'};
+					
+					$start =~ s/[-:TZ]//g;
+					$stop  =~ s/[-:TZ]//g;
+					
+					if( defined $cidEXT->{$cid} ) {
+						if( $setup_cid eq $enabled ) {
+							if( defined $rytec->{$cidEXT->{$cid}} ) {
+								print "<programme start=\"" . $start . " +0000\" stop=\"" . $stop . " +0000\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+							} else {
+								print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+								print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
+							}
 						} else {
 							print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"" . $cidEXT->{$cid} . "\">\n";
-							print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
 						}
 					} else {
-						print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+						print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"$cid\">\n";
+						print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 					}
-				} else {
-					print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"$cid\">\n";
-					print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
-				}
-			}
-		}
-		
-		
-		#
-		# IMAGE
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentnodes = $contents->{'Nodes'};
 			
-			# DEFINE IMAGE PARAMETERS
-			my $imagetype    = "Image";
-			my $image_location;
 			
-			if( defined $contentnodes ) {
-				my @contentitems = @{ $contentnodes->{'Items'} };
+					#
+					# IMAGE
+					#
 				
-				if ( @contentitems ) {
-					while( my( $image_id, $image ) = each( @contentitems ) ) {		# SEARCH FOR IMAGE
-						if( $image->{'Kind'} eq $imagetype ) {
-							$image_location = $image_id;
-							last;
-						}
-					}
-					if( defined $image_location) {
-						print "  <icon src=\"https://services.sg1.etvp01.sctv.ch/content/images" . $contentnodes->{'Items'}[$image_location]{'ContentPath'} . "_w1920.webp\" />\n";
-					}
-				}	
-			}
-		}
-		
-		
-		#
-		# TITLE
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentdesc  = $contents->{'Description'};
-			
-			my $title = $contentdesc->{'Title'};
-			
-			$title =~ s/\&/\&amp;/g;
-			print "  <title lang=\"" . $languageVER . "\">" . $title . "</title>\n";
-		}
-		
-		
-		#
-		# SUB-TITLE
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentdesc  = $contents->{'Description'};
-			
-			my $subtitle = $contentdesc->{'Subtitle'};
-			
-			if( defined $subtitle ) {
-				$subtitle =~ s/\&/\&amp;/g;
-				print "  <sub-title lang=\"" . $languageVER . "\">" . $subtitle . "</sub-title>\n";
-			}
-		}
-		
-		
-		#
-		# DESCRIPTION
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentdesc  = $contents->{'Description'};
-			
-			my $desc = $contentdesc->{'Summary'};
-			
-			if( defined $desc ) {
-				$desc =~ s/\&/\&amp;/g;
-				print "  <desc lang=\"" . $languageVER . "\">" . $desc . "</desc>\n";
-			}
-		}
-		
-		
-		#
-		# CREDITS
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my @relations    = @{ $broadcastitems->{'Relations'} };
-			
-			if ( @relations ) {
-				
-				while( my( $cast, $cast_id ) = each( @relations ) ) {
-					if( $cast_id->{'Role'} eq "Actor" ) {
-						print "  <credits>\n";
+					my $contents     = $broadcastitems->{'Content'};
+					my $contentnodes = $contents->{'Nodes'};
+					
+					# DEFINE IMAGE PARAMETERS
+					my $imagetype    = "Image";
+					my $image_location;
+					
+					if( defined $contentnodes ) {
+						my @contentitems = @{ $contentnodes->{'Items'} };
 						
-						foreach my $relations ( @relations ) {
-							my $role = $relations->{'Role'};
-							
-							if( $role eq "Director" ) {
-								my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
-								my $dir_fname = $director->{'FirstName'};
-								my $dir_lname = $director->{'LastName'};
-								
-								if( defined $dir_lname ) {
-									if( defined $dir_fname) {
-										print "    <director>" . $dir_fname . " " . $dir_lname . "</director>\n";
-									} else {
-										print "    <director>" . $dir_lname . "</director>\n";
-									}
-								} elsif( defined $dir_fname ) {
-									print "    <director>" . $dir_fname . "</director>\n";
+						if ( @contentitems ) {
+							while( my( $image_id, $image ) = each( @contentitems ) ) {		# SEARCH FOR IMAGE
+								if( $image->{'Kind'} eq $imagetype ) {
+									$image_location = $image_id;
+									last;
 								}
 							}
-							
-							if( $role eq "Actor" ) {
-								my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
-								my $act_fname = $actor->{'FirstName'};
-								my $act_lname = $actor->{'LastName'};
-								
-								if( defined $act_lname ) {
-									if( defined $act_fname) {
-										print "    <actor>" . $act_fname . " " . $act_lname . "</actor>\n";
-									} else {
-										print "    <actor>" . $act_lname . "</actor>\n";
-									}
-								} elsif( defined $act_fname ) {
-									print "    <actor>" . $act_fname . "</actor>\n";
-								}
+							if( defined $image_location) {
+								print "  <icon src=\"https://services.sg1.etvp01.sctv.ch/content/images" . $contentnodes->{'Items'}[$image_location]{'ContentPath'} . "_w1920.webp\" />\n";
 							}
-						}
-						
-						print "  </credits>\n";
-						last;
-					} elsif( $cast_id->{'Role'} eq "Director" ) {
-						print "  <credits>\n";
-						
-						foreach my $relations ( @relations ) {
-							my $role = $relations->{'Role'};
-							
-							if( $role eq "Director" ) {
-								my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
-								my $dir_fname = $director->{'FirstName'};
-								my $dir_lname = $director->{'LastName'};
-								
-								if( defined $dir_lname ) {
-									if( defined $dir_fname) {
-										print "    <director>" . $dir_fname . " " . $dir_lname . "</director>\n";
-									} else {
-										print "    <director>" . $dir_lname . "</director>\n";
-									}
-								} elsif( defined $dir_fname ) {
-									print "    <director>" . $dir_fname . "</director>\n";
-								}
-							}
-							
-							if( $role eq "Actor" ) {
-								my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
-								my $act_fname = $actor->{'FirstName'};
-								my $act_lname = $actor->{'LastName'};
-								
-								if( defined $act_lname ) {
-									if( defined $act_fname) {
-										print "    <actor>" . $act_fname . " " . $act_lname . "</actor>\n";
-									} else {
-										print "    <actor>" . $act_lname . "</actor>\n";
-									}
-								} elsif( defined $act_fname ) {
-									print "    <actor>" . $act_fname . "</actor>\n";
-								}
-							}
-						}
-						
-						print "  </credits>\n";
-						last;
+						}	
 					}
-				}
-								
+			
+			
+					#
+					# TITLE
+					#
 				
-			}
-		}
-		
-		
-		#
-		# DATE
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentdesc  = $contents->{'Description'};
-			
-			my $date = $contentdesc->{'ReleaseDate'};
-			
-			if( defined $date ) {
-				$date =~ s/-.*//g;
-				print "  <date>" . $date . "</date>\n";
-			}
-		}
-		
-		
-		#
-		# COUNTRY
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentdesc  = $contents->{'Description'};
-			
-			my $country = $contentdesc->{'Country'};
-			
-			if( defined $country ) {
-				print "  <country>" . $country . "</country>\n";
-			}
-		}
-		
-		
-		#
-		# CATEGORY
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my @relations    = @{ $broadcastitems->{'Relations'} };
-			
-			if ( @relations ) {
+					my $contentdesc  = $contents->{'Description'};
+					
+					my $title       = $contentdesc->{'Title'};
+					my $languageVER = $contentdesc->{'Language'};
+					
+					$title =~ s/\&/\&amp;/g;
+					print "  <title lang=\"" . $languageVER . "\">" . $title . "</title>\n";
 				
-				# DEFINE CATEGORY PARAMETERS
-				my $genretype    = "Genre";
-				my $genre_location;
-			
-				while( my( $genre_id, $genre ) = each( @relations ) ) {		# SEARCH FOR CATEGORY
-					if( $genre->{'Kind'} eq $genretype ) {
-						$genre_location = $genre_id;
-						last;
+				
+					#
+					# SUB-TITLE
+					#
+
+					my $subtitle = $contentdesc->{'Subtitle'};
+					
+					if( defined $subtitle ) {
+						$subtitle =~ s/\&/\&amp;/g;
+						print "  <sub-title lang=\"" . $languageVER . "\">" . $subtitle . "</sub-title>\n";
 					}
-				}
-				if( defined $genre_location) {
-					if ( $setup_genre eq $enabled ) {
-						if ( defined $eit->{ $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} } ) {
-							print "  <category lang=\"" . $languageVER . "\">" . $eit->{ $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} } . "</category>\n";
-						} else {
-							print "  <category lang=\"" . $languageVER . "\">" . $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} . "</category>\n";
-							print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'}" . "\n";
+				
+				
+					#
+					# DESCRIPTION
+					#
+					
+					my $desc = $contentdesc->{'Summary'};
+					
+					if( defined $desc ) {
+						$desc =~ s/\&/\&amp;/g;
+						print "  <desc lang=\"" . $languageVER . "\">" . $desc . "</desc>\n";
+					}
+				
+				
+					#
+					# CREDITS
+					#
+
+					my @relations    = @{ $broadcastitems->{'Relations'} };
+					
+					if ( @relations ) {
+						
+						while( my( $cast, $cast_id ) = each( @relations ) ) {
+							if( $cast_id->{'Role'} eq "Actor" ) {
+								print "  <credits>\n";
+								
+								foreach my $relations ( @relations ) {
+									my $role = $relations->{'Role'};
+									
+									if( $role eq "Director" ) {
+										my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
+										my $dir_fname = $director->{'FirstName'};
+										my $dir_lname = $director->{'LastName'};
+										
+										if( defined $dir_lname ) {
+											if( defined $dir_fname) {
+												print "    <director>" . $dir_fname . " " . $dir_lname . "</director>\n";
+											} else {
+												print "    <director>" . $dir_lname . "</director>\n";
+											}
+										} elsif( defined $dir_fname ) {
+											print "    <director>" . $dir_fname . "</director>\n";
+										}
+									}
+									
+									if( $role eq "Actor" ) {
+										my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
+										my $act_fname = $actor->{'FirstName'};
+										my $act_lname = $actor->{'LastName'};
+										
+										if( defined $act_lname ) {
+											if( defined $act_fname) {
+												print "    <actor>" . $act_fname . " " . $act_lname . "</actor>\n";
+											} else {
+												print "    <actor>" . $act_lname . "</actor>\n";
+											}
+										} elsif( defined $act_fname ) {
+											print "    <actor>" . $act_fname . "</actor>\n";
+										}
+									}
+								}
+								
+								print "  </credits>\n";
+								last;
+							} elsif( $cast_id->{'Role'} eq "Director" ) {
+								print "  <credits>\n";
+								
+								foreach my $relations ( @relations ) {
+									my $role = $relations->{'Role'};
+									
+									if( $role eq "Director" ) {
+										my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
+										my $dir_fname = $director->{'FirstName'};
+										my $dir_lname = $director->{'LastName'};
+										
+										if( defined $dir_lname ) {
+											if( defined $dir_fname) {
+												print "    <director>" . $dir_fname . " " . $dir_lname . "</director>\n";
+											} else {
+												print "    <director>" . $dir_lname . "</director>\n";
+											}
+										} elsif( defined $dir_fname ) {
+											print "    <director>" . $dir_fname . "</director>\n";
+										}
+									}
+									
+									if( $role eq "Actor" ) {
+										my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
+										my $act_fname = $actor->{'FirstName'};
+										my $act_lname = $actor->{'LastName'};
+										
+										if( defined $act_lname ) {
+											if( defined $act_fname) {
+												print "    <actor>" . $act_fname . " " . $act_lname . "</actor>\n";
+											} else {
+												print "    <actor>" . $act_lname . "</actor>\n";
+											}
+										} elsif( defined $act_fname ) {
+											print "    <actor>" . $act_fname . "</actor>\n";
+										}
+									}
+								}
+								
+								print "  </credits>\n";
+								last;
+							}
+						}
+										
+						
+					}
+				
+				
+					#
+					# DATE
+					#
+					
+					my $date = $contentdesc->{'ReleaseDate'};
+					
+					if( defined $date ) {
+						$date =~ s/-.*//g;
+						print "  <date>" . $date . "</date>\n";
+					}
+				
+				
+					#
+					# COUNTRY
+					#
+					
+					my $country = $contentdesc->{'Country'};
+					
+					if( defined $country ) {
+						print "  <country>" . $country . "</country>\n";
+					}
+				
+				
+					#
+					# CATEGORY
+					#
+					
+					if ( @relations ) {
+						
+						# DEFINE CATEGORY PARAMETERS
+						my $genretype    = "Genre";
+						my $genre_location;
+					
+						while( my( $genre_id, $genre ) = each( @relations ) ) {		# SEARCH FOR CATEGORY
+							if( $genre->{'Kind'} eq $genretype ) {
+								$genre_location = $genre_id;
+								last;
+							}
+						}
+						if( defined $genre_location) {
+							if ( $setup_genre eq $enabled ) {
+								if ( defined $eit->{ $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} } ) {
+									print "  <category lang=\"" . $languageVER . "\">" . $eit->{ $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} } . "</category>\n";
+								} else {
+									print "  <category lang=\"" . $languageVER . "\">" . $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} . "</category>\n";
+									print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'}" . "\n";
+								}
+							}
 						}
 					}
-				}
-			}
-		}
-		
-		
-		#
-		# SEASON + EPISODE
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $series       = $contents->{'Series'};
-			
-			my $seasonno     = $series->{'Season'};
-			my $episodeno    = $series->{'Episode'};
-			
-			# ONSCREEN
-			if( $setup_episode eq $onscreen ) {
-				if( defined $seasonno ) {
-					if( defined $episodeno ) {
-						print "  <episode-num system=\"onscreen\">" . "S" . $seasonno . " E" . $episodeno . "</episode-num>\n";
-					} else {
-						print "  <episode-num system=\"onscreen\">" . "S" . $seasonno . "</episode-num>\n";
+				
+				
+					#
+					# SEASON + EPISODE
+					#
+				
+					my $series       = $contents->{'Series'};
+					
+					my $seasonno     = $series->{'Season'};
+					my $episodeno    = $series->{'Episode'};
+					
+					# ONSCREEN
+					if( $setup_episode eq $onscreen ) {
+						if( defined $seasonno ) {
+							if( defined $episodeno ) {
+								print "  <episode-num system=\"onscreen\">" . "S" . $seasonno . " E" . $episodeno . "</episode-num>\n";
+							} else {
+								print "  <episode-num system=\"onscreen\">" . "S" . $seasonno . "</episode-num>\n";
+							}
+						} elsif( defined $episodeno ) {
+							print "  <episode-num system=\"onscreen\">" . "E" . $episodeno . "</episode-num>\n";
+						}
+					
+					# XMLTV_NS
+					} elsif( $setup_episode eq $xmltv_ns ) {
+						if( defined $seasonno ) {
+							my $XMLseason  = $seasonno - 1;
+							if( defined $episodeno ) {
+								my $XMLepisode  = $episodeno - 1;
+								print "  <episode-num system=\"xmltv_ns\">" . $XMLseason . " . " . $XMLepisode . " . </episode-num>\n";
+							} else {
+								print "  <episode-num system=\"xmltv_ns\">" . $XMLseason . " . 0 . </episode-num>\n";
+							}
+						} elsif( defined $episodeno ) {
+							my $XMLepisode  = $episodeno - 1;
+							print "  <episode-num system=\"xmltv_ns\">0 . " . $XMLepisode . " . </episode-num>\n";
+						}
 					}
-				} elsif( defined $episodeno ) {
-					print "  <episode-num system=\"onscreen\">" . "E" . $episodeno . "</episode-num>\n";
-				}
-			
-			# XMLTV_NS
-			} elsif( $setup_episode eq $xmltv_ns ) {
-				if( defined $seasonno ) {
-					my $XMLseason  = $seasonno - 1;
-					if( defined $episodeno ) {
-						my $XMLepisode  = $episodeno - 1;
-						print "  <episode-num system=\"xmltv_ns\">" . $XMLseason . " . " . $XMLepisode . " . </episode-num>\n";
-					} else {
-						print "  <episode-num system=\"xmltv_ns\">" . $XMLseason . " . 0 . </episode-num>\n";
+				
+				
+					#
+					# AGE RATING
+					#
+					
+					my $age = $contentdesc->{'AgeRestrictionRating'};
+					
+					if( defined $age ) {
+						$age =~ s/\+//g;
+						print "  <rating>\n    <value>" . $age . "</value>\n  </rating>\n";
 					}
-				} elsif( defined $episodeno ) {
-					my $XMLepisode  = $episodeno - 1;
-					print "  <episode-num system=\"xmltv_ns\">0 . " . $XMLepisode . " . </episode-num>\n";
+				
+				
+					#
+					# STAR RATING
+					#
+					
+					my $star        = $contentdesc->{'Rating'};
+					
+					if( defined $star ) {
+						my $star_rating = $star/10;
+						print "  <star-rating>\n    <value>" . $star_rating . "/10</value>\n  </star-rating>\n";
+					}
 				}
-			}
+			
+			print "</programme>\n";
+			
 		}
-		
-		
-		#
-		# AGE RATING
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentdesc  = $contents->{'Description'};
-			
-			my $age = $contentdesc->{'AgeRestrictionRating'};
-			
-			if( defined $age ) {
-				$age =~ s/\+//g;
-				print "  <rating>\n    <value>" . $age . "</value>\n  </rating>\n";
-			}
 		}
-		
-		
-		#
-		# STAR RATING
-		#
-		
-		foreach my $broadcastitems ( @broadcastitems ) {
-			my $contents     = $broadcastitems->{'Content'};
-			my $contentdesc  = $contents->{'Description'};
-			
-			my $star        = $contentdesc->{'Rating'};
-			
-			if( defined $star ) {
-				my $star_rating = $star/10;
-				print "  <star-rating>\n    <value>" . $star_rating . "/10</value>\n  </star-rating>\n";
-			}
-		}
-		
-		print "</programme>\n";
 	}
 }

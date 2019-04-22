@@ -100,7 +100,8 @@ foreach my $attributes ( @attributes ) {
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
         
     # DEFINE LANGUAGE VERSION
-    my $languageVER =  $initdata->{'language'};
+    # my $languageVER =  $initdata->{'language'};
+    my $languageVER = $attributes->{'Languages'}[0];
         
     # DEFINE RYTEC CHANNEL ID (language)
 	my $rytec = $chdata->{'channels'}{$countryVER};

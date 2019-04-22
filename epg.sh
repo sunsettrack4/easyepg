@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.2.0 BETA - 2019/04/21            "
+echo " Release v0.2.1 BETA - 2019/04/22            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -173,12 +173,6 @@ fi
 if [ ! -e swc/cid_json.pl ]
 then
 	printf "\nMissing file in Swisscom folder: swc/cid_json.pl"
-	ERROR="true"
-fi
-
-if [ ! -e swc/compare_crid.pl ]
-then
-	printf "\nMissing file in Swisscom folder: swc/compare_crid.pl"
 	ERROR="true"
 fi
 
@@ -1002,7 +996,6 @@ do
 				echo '{"country":"CH","language":"de"}' > swc/ch/init.json
 				cp swc/settings.sh swc/ch/settings.sh
 				cp swc/swc.sh swc/ch/swc.sh
-				cp swc/compare_crid.pl swc/ch/
 				cp swc/epg_json2xml.pl swc/ch/
 				cp swc/ch_json2xml.pl swc/ch/
 				cp swc/cid_json.pl swc/ch/
