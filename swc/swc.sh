@@ -76,13 +76,13 @@ printf "\rChecking manifest files... "
 perl chlist_printer.pl > /tmp/compare.json
 perl url_printer.pl 2>/tmp/errors.txt | sed '/DUMMY/d' > mani/common
 
-printf "\n$(echo $(wc -l < mani/common)) manifest to be downloaded!\n\n"
+printf "\n$(echo $(wc -l < mani/common)) manifest file(s) to be downloaded!\n\n"
 
 if [ $(wc -l < mani/common) -ge 7 ]
 then
 	number=$(echo $(( $(wc -l < mani/common) / 7)))
 
-	split -l $number --numeric-suffixes mani/common mani/day
+	split --lines=$(( $number + 0,5 )) --numeric-suffixes mani/common mani/day
 
 	rm mani/common 2> /dev/null
 else	

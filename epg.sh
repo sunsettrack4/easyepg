@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.2.2 BETA - 2019/04/22            "
+echo " Release v0.2.3 BETA - 2019/04/23            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="

@@ -136,7 +136,6 @@ foreach my $attributes ( @attributes ) {
 		}
 		
 		# DEFINE PROGRAM STRINGS
-		my @image     = @{ $item->{'pictures'} };
 		my $title     = $item->{'name'};
 		my $subtitle  = $item->{'subName'}; 
 		my $cast      = $item->{'cast'};
@@ -200,43 +199,47 @@ foreach my $attributes ( @attributes ) {
 		}
         
         # IMAGE (condition) (loop)
-        if ( @image ) {
-			while( my( $image_id, $image ) = each( @image ) ) {		# SEARCH FOR IMAGE WITH THE HIGHEST RESOLUTION
-				my @res = @{ $image->{'resolution'} };
-				my $img = $image->{'href'};
-				foreach my $res ( @res ) {
-					if( $res eq '1920' ) {			# FULL HD 16:9
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '1440' ) {		# FULL HD 4:3
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '1280' ) {		# HD 16:9
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '1280' ) {		# HD 16:9
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '960' ) {		# SD 16:9
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '720' ) {		# SD 4:3
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '480' ) {		# LOW SD 16:9
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '360' ) {		# LOW SD 4:3
-						$img_loc = $image_id;
-						last;
-					} elsif( $res eq '180' ) {		# JUST... WHY?!
-						$img_loc = $image_id;
-						last;
+        if( exists $item->{'pictures'} ) {
+			my @image     = @{ $item->{'pictures'} };
+        
+			if ( @image ) {
+				while( my( $image_id, $image ) = each( @image ) ) {		# SEARCH FOR IMAGE WITH THE HIGHEST RESOLUTION
+					my @res = @{ $image->{'resolution'} };
+					my $img = $image->{'href'};
+					foreach my $res ( @res ) {
+						if( $res eq '1920' ) {			# FULL HD 16:9
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '1440' ) {		# FULL HD 4:3
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '1280' ) {		# HD 16:9
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '1280' ) {		# HD 16:9
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '960' ) {		# SD 16:9
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '720' ) {		# SD 4:3
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '480' ) {		# LOW SD 16:9
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '360' ) {		# LOW SD 4:3
+							$img_loc = $image_id;
+							last;
+						} elsif( $res eq '180' ) {		# JUST... WHY?!
+							$img_loc = $image_id;
+							last;
+						}
 					}
 				}
-			}
-			if( defined $img_loc ) {
-				print "  <icon src=\"" . $item->{'pictures'}[$img_loc]{'href'} . "\" />\n";
+				if( defined $img_loc ) {
+					print "  <icon src=\"" . $item->{'pictures'}[$img_loc]{'href'} . "\" />\n";
+				}
 			}
 		}
 		
