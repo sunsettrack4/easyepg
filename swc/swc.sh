@@ -81,8 +81,8 @@ printf "\n$(echo $(wc -l < mani/common)) manifest file(s) to be downloaded!\n\n"
 if [ $(wc -l < mani/common) -ge 7 ]
 then
 	number=$(echo $(( $(wc -l < mani/common) / 7)))
-
-	split --lines=$(( $number + 0,5 )) --numeric-suffixes mani/common mani/day
+	
+	split --lines=$(( $number + 1 )) --numeric-suffixes mani/common mani/day
 
 	rm mani/common 2> /dev/null
 else	

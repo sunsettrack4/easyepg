@@ -93,7 +93,9 @@ foreach my $entries ( @entries ) {
 			if( $new_id eq $old_id ) {
 				
 				if( $oid eq $new_id ) {
-					print $crid . "\n";
+					if( defined $crid ) {
+						print $crid . "\n";
+					}
 				}
 			
 			# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
@@ -101,7 +103,9 @@ foreach my $entries ( @entries ) {
 				print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
 				
 				if( $oid eq $new_id ) {
-					print $crid . "_NEW_ID\n";
+					if( defined $crid ) {
+						print $crid . "_NEW_ID\n";
+					}
 				}
 				
 			} else {

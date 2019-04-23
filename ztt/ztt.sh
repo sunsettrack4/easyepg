@@ -1060,7 +1060,7 @@ if [ $(wc -l < day/common) -ge 7 ]
 then
 	number=$(echo $(( $(wc -l < day/common) / 7)))
 	
-	split --lines=$(( $number + 0,5 )) --numeric-suffixes day/common day/day
+	split --lines=$(( $number + 1 )) --numeric-suffixes day/common day/day
 
 	rm day/common 2> /dev/null
 else	
