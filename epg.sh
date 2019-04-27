@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.2.4 BETA - 2019/04/23            "
+echo " Release v0.2.5 BETA - 2019/04/27            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -89,12 +89,6 @@ fi
 if [ ! -e hzn/compare_menu.pl ]
 then
 	printf "\nMissing file in Horzon folder: compare_menu.pl   "
-	ERROR="true"
-fi
-
-if [ ! -e hzn/compare_crid.pl ]
-then
-	printf "\nMissing file in Horzon folder: compare_crid.pl   "
 	ERROR="true"
 fi
 
@@ -619,7 +613,7 @@ do
 				cp hzn/settings.sh hzn/de/
 				cp hzn/chlist_printer.pl hzn/de/
 				cp hzn/compare_menu.pl hzn/de/
-				cp hzn/compare_crid.pl hzn/de/
+				sed 's/XX/DE/g;s/YYY/deu/g' hzn/url_printer.pl > hzn/de/url_printer.pl
 				cd hzn/de && bash settings.sh
 				cd - > /dev/null
 				
@@ -647,7 +641,7 @@ do
 				cp hzn/settings.sh hzn/at/
 				cp hzn/chlist_printer.pl hzn/at/
 				cp hzn/compare_menu.pl hzn/at/
-				cp hzn/compare_crid.pl hzn/at/
+				sed 's/XX/AT/g;s/YYY/deu/g' hzn/url_printer.pl > hzn/at/url_printer.pl
 				cd hzn/at && bash settings.sh
 				cd - > /dev/null
 				
@@ -675,7 +669,7 @@ do
 				cp hzn/settings.sh hzn/ch/
 				cp hzn/chlist_printer.pl hzn/ch/
 				cp hzn/compare_menu.pl hzn/ch/
-				cp hzn/compare_crid.pl hzn/ch/
+				sed 's/XX/CH/g;s/YYY/deu/g' hzn/url_printer.pl > hzn/ch/url_printer.pl
 				cd hzn/ch && bash settings.sh
 				cd - > /dev/null
 				
@@ -703,7 +697,7 @@ do
 				cp hzn/settings.sh hzn/nl/
 				cp hzn/chlist_printer.pl hzn/nl/
 				cp hzn/compare_menu.pl hzn/nl/
-				cp hzn/compare_crid.pl hzn/nl/
+				sed 's/XX/NL/g;s/YYY/nld/g' hzn/url_printer.pl > hzn/nl/url_printer.pl
 				cd hzn/nl && bash settings.sh
 				cd - > /dev/null
 				
@@ -731,7 +725,7 @@ do
 				cp hzn/settings.sh hzn/pl/
 				cp hzn/chlist_printer.pl hzn/pl/
 				cp hzn/compare_menu.pl hzn/pl/
-				cp hzn/compare_crid.pl hzn/pl/
+				sed 's/XX/PL/g;s/YYY/pol/g' hzn/url_printer.pl > hzn/pl/url_printer.pl
 				cd hzn/pl && bash settings.sh
 				cd - > /dev/null
 				
@@ -759,7 +753,7 @@ do
 				cp hzn/settings.sh hzn/ie/
 				cp hzn/chlist_printer.pl hzn/ie/
 				cp hzn/compare_menu.pl hzn/ie/
-				cp hzn/compare_crid.pl hzn/ie/
+				sed 's/XX/IE/g;s/YYY/eng/g' hzn/url_printer.pl > hzn/ie/url_printer.pl
 				cd hzn/ie && bash settings.sh
 				cd - > /dev/null
 				
@@ -787,7 +781,7 @@ do
 				cp hzn/settings.sh hzn/sk/
 				cp hzn/chlist_printer.pl hzn/sk/
 				cp hzn/compare_menu.pl hzn/sk/
-				cp hzn/compare_crid.pl hzn/sk/
+				sed 's/XX/SK/g;s/YYY/slk/g' hzn/url_printer.pl > hzn/sk/url_printer.pl
 				cd hzn/sk && bash settings.sh
 				cd - > /dev/null
 				
@@ -815,7 +809,7 @@ do
 				cp hzn/settings.sh hzn/cz/
 				cp hzn/chlist_printer.pl hzn/cz/
 				cp hzn/compare_menu.pl hzn/cz/
-				cp hzn/compare_crid.pl hzn/cz/
+				sed 's/XX/CZ/g;s/YYY/ces/g' hzn/url_printer.pl > hzn/cz/url_printer.pl
 				cd hzn/cz && bash settings.sh
 				cd - > /dev/null
 				
@@ -843,7 +837,7 @@ do
 				cp hzn/settings.sh hzn/hu/
 				cp hzn/chlist_printer.pl hzn/hu/
 				cp hzn/compare_menu.pl hzn/hu/
-				cp hzn/compare_crid.pl hzn/hu/
+				sed 's/XX/HU/g;s/YYY/hun/g' hzn/url_printer.pl > hzn/hu/url_printer.pl
 				cd hzn/hu && bash settings.sh
 				cd - > /dev/null
 				
@@ -871,7 +865,7 @@ do
 				cp hzn/settings.sh hzn/ro/
 				cp hzn/chlist_printer.pl hzn/ro/
 				cp hzn/compare_menu.pl hzn/ro/
-				cp hzn/compare_crid.pl hzn/ro/
+				sed 's/XX/RO/g;s/YYY/ron/g' hzn/url_printer.pl > hzn/ro/url_printer.pl
 				cd hzn/ro && bash settings.sh
 				cd - > /dev/null
 				

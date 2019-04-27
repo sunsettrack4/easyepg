@@ -96,7 +96,7 @@ fi
 
 x=$(wc -l < mani/day00)
 y=20
-h=100
+h=40
 
 if [ $x -gt $h ]
 then

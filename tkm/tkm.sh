@@ -123,7 +123,7 @@ fi
 
 x=$(wc -l < mani/day00)
 y=20
-h=100
+h=40
 
 if [ $x -gt $h ]
 then
@@ -277,7 +277,8 @@ printf "\rCreating EPG manifest file... "
 rm /tmp/manifile.json 2> /dev/null
 cat mani/* > /tmp/manifile.json
 sed -i 's/}\]}}/}]}/g' /tmp/manifile.json
-jq -s '.' /tmp/manifile.json > /tmp/epg_workfile 
+jq -s '.' /tmp/manifile.json > /tmp/epg_workfile 2>/tmp/errors.txt
+sed -i '/"genres":/{s/"genres": "/"genres": ["/g;s/",/"]/g;s/,/","/g;s/\]/&,/g}' /tmp/epg_workfile
 sed -i '1s/\[/{ "attributes":[/g;$s/\]/&}/g' /tmp/epg_workfile
 
 echo "DONE!" && printf "\n"
@@ -384,18 +385,6 @@ else
 	fi
 fi
 
-# CONVERT CATEGORIES INTO EIT FORMAT (settings)
-printf "\rConverting categories into EIT format..."
-
-if [ -e magenta.xml ]
-then
-	if grep -q '"category": "enabled"' settings.json
-	then
-		curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/genremapper/genremapper.pl > /tmp/genremapper.pl
-		perl /tmp/genremapper.pl < magenta.xml > magenta_eit.xml 2> /dev/null && mv magenta_eit.xml magenta.xml
-		printf " OK!\n\n"
-	fi
-fi
 
 # SHOW WARNINGS
 cat epg_warnings.txt >> warnings.txt && rm epg_warnings.txt

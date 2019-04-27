@@ -167,211 +167,219 @@ foreach my $attributes ( $data->{attributes} ) {
 		# PRINT XML OUTPUT #
 		# ##################
 		
-		# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition) (settings)
-		if( defined $cidEXT->{$cid} ) {
-			if( $setup_cid eq $enabled ) {
-				if( defined $rytec->{$cidEXT->{$cid}} ) {
-					print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+		# PRINT PROGRAMME STRING ONLY IF CERTAIN VALUES ARE DEFINED
+		if( defined $title and defined $start and defined $end and defined $cid ) {
+		
+			# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition) (settings)
+			if( defined $cidEXT->{$cid} ) {
+				if( $setup_cid eq $enabled ) {
+					if( defined $rytec->{$cidEXT->{$cid}} ) {
+						print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+					} else {
+						print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+						print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
+					}
 				} else {
 					print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
-					print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
 				}
 			} else {
-				print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+				print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"$cid\">\n";
+				print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 			}
-		} else {
-			print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"$cid\">\n";
-			print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
-		}
-		
-		# IMAGE (condition)
-		if( defined $image ) {
-			print "  <icon src=\"" . "https://images.zattic.com/cms/" . $image . "/original.jpg" . "\" />\n";
-		}
-		
-		# TITLE (language)
-		$title =~ s/\&/\&amp;/g;
-		print "  <title lang=\"$languageVER\">$title</title>\n";
-		
-		# SUBTITLE (condition) (language)
-		if( defined $subtitle ) {
-			$subtitle =~ s/\&/\&amp;/g;
-			print "  <sub-title lang=\"$languageVER\">$title</sub-title>\n";
-		}
-		
-		# DESCRIPTION (condition) (language)
-		if( defined $desc ) {
-			$desc =~ s/\&/\&amp;/g;					# REQUIRED TO READ XML FILE CORRECTLY
-			print "  <desc lang=\"$languageVER\">$desc</desc>\n";
-		}
-		
-		# CREDITS (condition)
-		if ( @director ) {
-			print "  <credits>\n";
-			foreach my $PRINTdirector ( @director ) {
-				print "    <director>" . $PRINTdirector . "</director>\n";
+			
+			# IMAGE (condition)
+			if( defined $image ) {
+				print "  <icon src=\"" . "https://images.zattic.com/cms/" . $image . "/original.jpg" . "\" />\n";
 			}
-			if ( @actor ) {
+			
+			# TITLE (language)
+			$title =~ s/\&/\&amp;/g;
+			print "  <title lang=\"$languageVER\">$title</title>\n";
+			
+			# SUBTITLE (condition) (language)
+			if( defined $subtitle ) {
+				$subtitle =~ s/\&/\&amp;/g;
+				print "  <sub-title lang=\"$languageVER\">$title</sub-title>\n";
+			}
+			
+			# DESCRIPTION (condition) (language)
+			if( defined $desc ) {
+				$desc =~ s/\&/\&amp;/g;					# REQUIRED TO READ XML FILE CORRECTLY
+				$desc =~ s/<[^>]*>//g;					# REMOVE XML STRINGS WITHIN JSON VALUE
+				print "  <desc lang=\"$languageVER\">$desc</desc>\n";
+			}
+			
+			# CREDITS (condition)
+			if ( @director ) {
+				print "  <credits>\n";
+				foreach my $PRINTdirector ( @director ) {
+					$PRINTdirector =~ s/\&/\&amp;/g;
+					print "    <director>" . $PRINTdirector . "</director>\n";
+				}
+				if ( @actor ) {
+					foreach my $PRINTactor ( @actor ) {
+						$PRINTactor =~ s/\&/\&amp;/g;
+						print "    <actor>" . $PRINTactor . "</actor>\n";
+					}
+				}
+				print "  </credits>\n";
+			} elsif ( @actor ) {
+				print "  <credits>\n";
 				foreach my $PRINTactor ( @actor ) {
+					$PRINTactor =~ s/\&/\&amp;/g;
 					print "    <actor>" . $PRINTactor . "</actor>\n";
 				}
+				print "  </credits>\n";
 			}
-			print "  </credits>\n";
-		} elsif ( @actor ) {
-			print "  <credits>\n";
-			foreach my $PRINTactor ( @actor ) {
-				print "    <actor>" . $PRINTactor . "</actor>\n";
+			
+			# DATE (condition)
+			if( defined $date ) {
+				print "  <date>$date</date>\n";
 			}
-			print "  </credits>\n";
-		}
-		
-		# DATE (condition)
-		if( defined $date ) {
-			print "  <date>$date</date>\n";
-		}
-		
-		# COUNTRY (condition)
-		if( defined $country ) {
-			print "  <country>" . $country . "</country>\n";
-		}
-		
-		# CATEGORIES (USE SINGLE CATEGORY) (condition) (language) (settings)
-		if( $setup_category eq $disabled ) {
-			if ( defined $genre1 ) {
-				$genre1 =~ s/\&/\&amp;/g;
-				if ( $setup_genre eq $enabled ) {
-					if ( defined $eit->{ $genre1 } ) {
-						print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+			
+			# COUNTRY (condition)
+			if( defined $country ) {
+				print "  <country>" . $country . "</country>\n";
+			}
+			
+			# CATEGORIES (USE SINGLE CATEGORY) (condition) (language) (settings)
+			if( $setup_category eq $disabled ) {
+				if ( defined $genre1 ) {
+					$genre1 =~ s/\&/\&amp;/g;
+					if ( $setup_genre eq $enabled ) {
+						if ( defined $eit->{ $genre1 } ) {
+							print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+						} else {
+							print "  <category lang=\"$languageVER\">$genre1</category>\n";
+							print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre1" . "\n";;
+						}
 					} else {
 						print "  <category lang=\"$languageVER\">$genre1</category>\n";
-						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre1" . "\n";;
 					}
-				} else {
-					print "  <category lang=\"$languageVER\">$genre1</category>\n";
-				}
-			} elsif ( defined $category ) {
-				$category =~ s/\&/\&amp;/g;
-				if ( $setup_genre eq $enabled ) {
-					if ( defined $eit->{ $category } ) {
-						print "  <category lang=\"$languageVER\">" . $eit->{ $category } . "</category>\n";
-					} else {
-						print "  <category lang=\"$languageVER\">$category</category>\n";
-						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$category" . "\n";;
+				} elsif ( defined $category ) {
+					$category =~ s/\&/\&amp;/g;
+					if ( $setup_genre eq $enabled ) {
+						if ( defined $eit->{ $category } ) {
+							print "  <category lang=\"$languageVER\">" . $eit->{ $category } . "</category>\n";
+						} else {
+							print "  <category lang=\"$languageVER\">$category</category>\n";
+							print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$category" . "\n";;
+						}
 					}
 				}
 			}
-		}
-		
-		# CATEGORIES (PRINT ALL CATEGORIES) (condition) (language) (settings)
-		if( $setup_category eq $enabled ) {
-			if ( defined $genre1 ) {
-				$genre1 =~ s/\&/\&amp;/g;
-				if ( $setup_genre eq $enabled ) {
-					if ( defined $eit->{ $genre1 } ) {
-						print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+			
+			# CATEGORIES (PRINT ALL CATEGORIES) (condition) (language) (settings)
+			if( $setup_category eq $enabled ) {
+				if ( defined $genre1 ) {
+					$genre1 =~ s/\&/\&amp;/g;
+					if ( $setup_genre eq $enabled ) {
+						if ( defined $eit->{ $genre1 } ) {
+							print "  <category lang=\"$languageVER\">" . $eit->{ $genre1 } . "</category>\n";
+						} else {
+							print "  <category lang=\"$languageVER\">$genre1</category>\n";
+							print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre1" . "\n";;
+						}
 					} else {
 						print "  <category lang=\"$languageVER\">$genre1</category>\n";
-						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre1" . "\n";;
 					}
-				} else {
-					print "  <category lang=\"$languageVER\">$genre1</category>\n";
-				}
-			} elsif ( defined $category ) {
-				$category =~ s/\&/\&amp;/g;
-				if ( $setup_genre eq $enabled ) {
-					if ( defined $eit->{ $category } ) {
-						print "  <category lang=\"$languageVER\">" . $eit->{ $category } . "</category>\n";
+				} elsif ( defined $category ) {
+					$category =~ s/\&/\&amp;/g;
+					if ( $setup_genre eq $enabled ) {
+						if ( defined $eit->{ $category } ) {
+							print "  <category lang=\"$languageVER\">" . $eit->{ $category } . "</category>\n";
+						} else {
+							print "  <category lang=\"$languageVER\">$category</category>\n";
+							print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$category" . "\n";;
+						}
 					} else {
 						print "  <category lang=\"$languageVER\">$category</category>\n";
-						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$category" . "\n";;
 					}
-				} else {
-					print "  <category lang=\"$languageVER\">$category</category>\n";
 				}
-			}
-			if ( defined $genre2 ) {
-				$genre2 =~ s/\&/\&amp;/g;
-				if ( $setup_genre eq $enabled ) {
-					if ( defined $eit->{ $genre2 } ) {
-						print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
+				if ( defined $genre2 ) {
+					$genre2 =~ s/\&/\&amp;/g;
+					if ( $setup_genre eq $enabled ) {
+						if ( defined $eit->{ $genre2 } ) {
+							print "  <category lang=\"$languageVER\">" . $eit->{ $genre2 } . "</category>\n";
+						} else {
+							print "  <category lang=\"$languageVER\">$genre2</category>\n";
+							print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre2" . "\n";;
+						}
 					} else {
 						print "  <category lang=\"$languageVER\">$genre2</category>\n";
-						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre2" . "\n";;
 					}
-				} else {
-					print "  <category lang=\"$languageVER\">$genre2</category>\n";
 				}
-			}
-			if ( defined $genre3 ) {
-				$genre3 =~ s/\&/\&amp;/g;
-				if ( $setup_genre eq $enabled ) {
-					if ( defined $eit->{ $genre3 } ) {
-						print "  <category lang=\"$languageVER\">" . $eit->{ $genre3 } . "</category>\n";
+				if ( defined $genre3 ) {
+					$genre3 =~ s/\&/\&amp;/g;
+					if ( $setup_genre eq $enabled ) {
+						if ( defined $eit->{ $genre3 } ) {
+							print "  <category lang=\"$languageVER\">" . $eit->{ $genre3 } . "</category>\n";
+						} else {
+							print "  <category lang=\"$languageVER\">$genre3</category>\n";
+							print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre3" . "\n";;
+						}
 					} else {
 						print "  <category lang=\"$languageVER\">$genre3</category>\n";
-						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre3" . "\n";;
 					}
-				} else {
-					print "  <category lang=\"$languageVER\">$genre3</category>\n";
 				}
 			}
-		}
-		
-		# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
-		if( $setup_episode eq $xmltv_ns ) {
-			if( defined $series ) {
-				if( $series  =~ m/\d{4}/) {
-					undef $series;				# REMOVE USELESS SERIES STRINGS
+			
+			# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
+			if( $setup_episode eq $xmltv_ns ) {
+				if( defined $series ) {
+					if( $series  =~ m/\d{4}/) {
+						undef $series;				# REMOVE USELESS SERIES STRINGS
+					}
 				}
-			}
-			if( defined $episode ) {
-				if( $episode =~ m/\d{7}/) {
-					undef $episode;				# REMOVE USELESS EPISODE STRINGS
-				}
-			}
-			if( defined $series ) {
-				my $XMLseries  = $series - 1;
 				if( defined $episode ) {
+					if( $episode =~ m/\d{7}/) {
+						undef $episode;				# REMOVE USELESS EPISODE STRINGS
+					}
+				}
+				if( defined $series ) {
+					my $XMLseries  = $series - 1;
+					if( defined $episode ) {
+						my $XMLepisode = $episode - 1;
+						print "  <episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>\n";
+					} else {
+						print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
+					}
+				} elsif( defined $episode ) {
 					my $XMLepisode = $episode - 1;
-					print "  <episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>\n";
-				} else {
-					print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
-				}
-			} elsif( defined $episode ) {
-				my $XMLepisode = $episode - 1;
-				print "  <episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>\n";
-			}
-		}
-		
-		# SEASON/EPISODE (ONSCREEN) (condition) (settings)
-		if( $setup_episode eq $onscreen ) {
-			if( defined $series ) {
-				if( $series  =~ m/\d{4}/) {
-					undef $series;				# REMOVE USELESS SERIES STRINGS
+					print "  <episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>\n";
 				}
 			}
-			if( defined $episode ) {
-				if( $episode =~ m/\d{7}/) {
-					undef $episode;				# REMOVE USELESS EPISODE STRINGS
+			
+			# SEASON/EPISODE (ONSCREEN) (condition) (settings)
+			if( $setup_episode eq $onscreen ) {
+				if( defined $series ) {
+					if( $series  =~ m/\d{4}/) {
+						undef $series;				# REMOVE USELESS SERIES STRINGS
+					}
 				}
-			}
-			if( defined $series ) {
 				if( defined $episode ) {
-					print "  <episode-num system=\"onscreen\">S$series E$episode</episode-num>\n";
-				} else {
-					print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
+					if( $episode =~ m/\d{7}/) {
+						undef $episode;				# REMOVE USELESS EPISODE STRINGS
+					}
 				}
-			} elsif( defined $episode ) {
-				print "  <episode-num system=\"onscreen\">E$episode</episode-num>\n";
+				if( defined $series ) {
+					if( defined $episode ) {
+						print "  <episode-num system=\"onscreen\">S$series E$episode</episode-num>\n";
+					} else {
+						print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
+					}
+				} elsif( defined $episode ) {
+					print "  <episode-num system=\"onscreen\">E$episode</episode-num>\n";
+				}
 			}
+			
+			# AGE RATING (condition)
+			if( defined $age) {
+				print "  <rating>\n    <value>$age</value>\n  </rating>\n";
+			}
+			
+			# END OF PROGRAMME
+			print "</programme>\n";
 		}
-		
-		# AGE RATING (condition)
-		if( defined $age) {
-			print "  <rating>\n    <value>$age</value>\n  </rating>\n";
-		}
-		
-		# END OF PROGRAMME
-		print "</programme>\n";
     }
 }
