@@ -46,7 +46,7 @@ my $compare;
 my $programme;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "/tmp/epg_workfile" or die;
+    open my $fh, "<", "day/dayNUMBER" or die;
     $programme = <$fh>;
     close $fh;
 }
