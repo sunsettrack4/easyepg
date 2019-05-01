@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.2.5 BETA - 2019/04/27            "
+echo " Release v0.2.6 BETA - 2019/05/01            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -54,7 +54,10 @@ mkdir combine 2> /dev/null && chmod 0777 combine 2> /dev/null
 chmod 0777 hzn 2> /dev/null && chmod 0777 hzn/* 2> /dev/null
 chmod 0777 ztt 2> /dev/null && chmod 0777 ztt/* 2> /dev/null
 chmod 0777 swc 2> /dev/null && chmod 0777 swc/* 2> /dev/null
-chmod 0777 swc 2> /dev/null && chmod 0777 tvp/* 2> /dev/null
+chmod 0777 tvp 2> /dev/null && chmod 0777 tvp/* 2> /dev/null
+chmod 0777 tkm 2> /dev/null && chmod 0777 tkm/* 2> /dev/null
+chmod 0777 rdt 2> /dev/null && chmod 0777 rdt/* 2> /dev/null
+chmod 0777 ext 2> /dev/null && chmod 0777 ext/* 2> /dev/null
 
 if [ ! -e hzn/ch_json2xml.pl ]
 then
@@ -290,6 +293,60 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e rdt/ch_json2xml.pl ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/chlist_printer.pl ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/cid_json.pl ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/compare_crid.pl ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/compare_crid.pl"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/compare_menu.pl ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/epg_json2xml.pl ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/rdt.sh ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/rdt.sh"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/settings.sh ]
+then
+	printf "\nMissing file in RadioTimes folder: settings/rdt.sh"
+	ERROR="true"
+fi
+
+if [ ! -e rdt/url_printer.pl ]
+then
+	printf "\nMissing file in RadioTimes folder: rdt/url_printer.pl"
+	ERROR="true"
+fi
+
 if [ ! -e ext/ch_ext.pl ]
 then
 	printf "\nMissing file in External folder: ext/ch_ext.pl"
@@ -408,6 +465,7 @@ ls -l ztt/ >>  /tmp/providerlist
 ls -l swc/ >>  /tmp/providerlist
 ls -l tvp/ >>  /tmp/providerlist
 ls -l tkm/ >>  /tmp/providerlist
+ls -l rdt/ >>  /tmp/providerlist
 ls -l ext/ >>  /tmp/providerlist
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
@@ -442,6 +500,7 @@ do
 	ls -l swc/ >> /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
+	ls -l rdt/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -454,6 +513,7 @@ do
 	ls -l swc/ >>  /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
+	ls -l rdt/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -469,6 +529,7 @@ do
 	ls -l swc/ >> /tmp/providerlist
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
+	ls -l rdt/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -505,8 +566,11 @@ do
 		# M1150 TELEKOM
 		echo '	5 "TELEKOM" \' >> /tmp/menu
 		
-		# M1160 EXTERNAL
-		echo '	6 "EXTERNAL" \' >> /tmp/menu
+		# M1160 RADIOTIMES
+		echo '	6 "RADIOTIMES" \' >> /tmp/menu
+		
+		# M11+0 EXTERNAL
+		echo '	+ "EXTERNAL" \' >> /tmp/menu
 
 		echo "2> /tmp/value" >> /tmp/menu
 
@@ -1183,39 +1247,106 @@ do
 			else
 				echo "M" > /tmp/value
 			fi
-		
-		
-		# #################
-		# M1160 EXTERNAL  #
-		# #################
+			
+			
+		# ##################
+		# M1160 RADIOTIMES #
+		# ##################
 
 		elif grep -q "6" /tmp/value
 		then
 			# M1160 MENU OVERLAY
-			echo 'dialog --backtitle "[M1160] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > EXTERNAL" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			echo 'dialog --backtitle "[M1160] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > RADIOTIMES" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
 			
-			# M1161 SLOT 1
-			if [ ! -d ext/oa ]
+			# M1161 DE
+			if [ ! -d rdt/uk ]
 			then
-				echo '	1 "[OA] EXTERNAL SLOT 1" \' >> /tmp/menu
-			fi
-			
-			# M1162 SLOT 2
-			if [ ! -d ext/ob ]
-			then
-				echo '	2 "[OB] EXTERNAL SLOT 2" \' >> /tmp/menu
-			fi
-			
-			# M1163 SLOT 3
-			if [ ! -d ext/oc ]
-			then
-				echo '	1 "[OC] EXTERNAL SLOT 3" \' >> /tmp/menu
+				echo '	1 "[UK] RADIOTIMES" \' >> /tmp/menu
 			fi
 			
 			# M116E ERROR
 			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
 			then
-				dialog --backtitle "[M116E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > EXTERNAL" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				dialog --backtitle "[M116E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > RADIOTIMES" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+				
+				
+			# #####################
+			# M1161 RADIOTIMES UK #
+			# #####################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir rdt/uk
+				chmod 0777 rdt/uk
+				echo '{"country":"UK","language":"en"}' > rdt/uk/init.json
+				cp rdt/settings.sh rdt/uk/settings.sh
+				cp rdt/rdt.sh rdt/uk/rdt.sh
+				cp rdt/epg_json2xml.pl rdt/uk/
+				cp rdt/ch_json2xml.pl rdt/uk/
+				cp rdt/cid_json.pl rdt/uk/
+				cp rdt/chlist_printer.pl rdt/uk/
+				cp rdt/compare_menu.pl rdt/uk/
+				cp rdt/compare_crid.pl rdt/uk/
+				cp rdt/url_printer.pl rdt/uk/
+				cd rdt/uk && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e rdt/uk/channels.json ]
+				then
+					rm -rf rdt/uk
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M116X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
+		
+		# #################
+		# M11+0 EXTERNAL  #
+		# #################
+
+		elif grep -q "+" /tmp/value
+		then
+			# M11+0 MENU OVERLAY
+			echo 'dialog --backtitle "[M11+0] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > EXTERNAL" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M11+1 SLOT 1
+			if [ ! -d ext/oa ]
+			then
+				echo '	1 "[OA] EXTERNAL SLOT 1" \' >> /tmp/menu
+			fi
+			
+			# M11+2 SLOT 2
+			if [ ! -d ext/ob ]
+			then
+				echo '	2 "[OB] EXTERNAL SLOT 2" \' >> /tmp/menu
+			fi
+			
+			# M11+3 SLOT 3
+			if [ ! -d ext/oc ]
+			then
+				echo '	1 "[OC] EXTERNAL SLOT 3" \' >> /tmp/menu
+			fi
+			
+			# M11+E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M11+E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > EXTERNAL" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
 				sleep 2s
 				echo "M" > /tmp/value
 			else
@@ -1227,7 +1358,7 @@ do
 				
 				
 			# #######################
-			# M1161 EXTERNAL SLOT 1 #
+			# M11+1 EXTERNAL SLOT 1 #
 			# #######################
 				
 			if grep -q "1" /tmp/value
@@ -1251,7 +1382,7 @@ do
 			
 			
 			# #######################
-			# M1162 EXTERNAL SLOT 2 #
+			# M11+2 EXTERNAL SLOT 2 #
 			# #######################
 				
 			elif grep -q "2" /tmp/value
@@ -1275,7 +1406,7 @@ do
 			
 			
 			# #######################
-			# M1163 EXTERNAL SLOT 3 #
+			# M11+3 EXTERNAL SLOT 3 #
 			# #######################
 				
 			elif grep -q "3" /tmp/value
@@ -1299,7 +1430,7 @@ do
 			
 			
 			# ############
-			# M116X EXIT #
+			# M11+X EXIT #
 			# ############
 			
 			else
@@ -1355,10 +1486,16 @@ do
 			echo '	5 "TELEKOM" \' >> /tmp/menu
 		fi
 		
-		# M1260 EXTERNAL
+		# M1260 RADIOTIMES
+		if ls -l rdt/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	6 "RADIOTIMES" \' >> /tmp/menu
+		fi
+		
+		# M12+0 EXTERNAL
 		if ls -l ext/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	6 "EXTERNAL" \' >> /tmp/menu
+			echo '	+ "EXTERNAL" \' >> /tmp/menu
 		fi
 		
 		echo "2> /tmp/value" >> /tmp/menu
@@ -1886,37 +2023,93 @@ do
 			fi
 		
 		
-		# ######################
-		# M1260 EXTERNAL       #
-		# ######################
+		# ##################
+		# M1260 RADIOTIMES #
+		# ##################
 		
 		elif grep -q "6" /tmp/value
 		then
 			# M1260 MENU OVERLAY
-			echo 'dialog --backtitle "[M1260] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > EXTERNAL" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			echo 'dialog --backtitle "[M1260] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > RADIOTIMES" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
 			
-			# M1261 EXTERNAL SLOT 1
-			if [ -d ext/oa ]
+			# M1261 RADIOTIMES UK
+			if [ -d rdt/uk ]
 			then
-				echo '	1 "[OA] EXTERNAL SLOT 1" \' >> /tmp/menu
-			fi
-			
-			# M1262 EXTERNAL SLOT 2
-			if [ -d ext/ob ]
-			then
-				echo '	2 "[OB] EXTERNAL SLOT 2" \' >> /tmp/menu
-			fi
-			
-			# M1263 EXTERNAL SLOT 3
-			if [ -d ext/oc ]
-			then
-				echo '	3 "[OC] EXTERNAL SLOT 3" \' >> /tmp/menu
+				echo '	1 "[UK] RADIOTIMES" \' >> /tmp/menu
 			fi
 			
 			# M126E ERROR
 			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
 			then
-				dialog --backtitle "[M126E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > EXTERNAL" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				dialog --backtitle "[M126E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > RADIOTIMES" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ######################
+			# M1261 RADIOTIMES UK  #
+			# ######################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd rdt/uk
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e rdt/uk/channels.json ]
+				then
+					rm -rf rdt/uk xml/radiotimes_uk.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M126X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
+		
+		# ######################
+		# M12+0 EXTERNAL       #
+		# ######################
+		
+		elif grep -q "+" /tmp/value
+		then
+			# M12+0 MENU OVERLAY
+			echo 'dialog --backtitle "[M12+0] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > EXTERNAL" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M12+1 EXTERNAL SLOT 1
+			if [ -d ext/oa ]
+			then
+				echo '	1 "[OA] EXTERNAL SLOT 1" \' >> /tmp/menu
+			fi
+			
+			# M12+2 EXTERNAL SLOT 2
+			if [ -d ext/ob ]
+			then
+				echo '	2 "[OB] EXTERNAL SLOT 2" \' >> /tmp/menu
+			fi
+			
+			# M12+3 EXTERNAL SLOT 3
+			if [ -d ext/oc ]
+			then
+				echo '	3 "[OC] EXTERNAL SLOT 3" \' >> /tmp/menu
+			fi
+			
+			# M12+E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M12+E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > EXTERNAL" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
 				sleep 2s
 				echo "M" > /tmp/value
 			else
@@ -1928,7 +2121,7 @@ do
 			
 			
 			# ########################
-			# M1261 EXTERNAL SLOT 1  #
+			# M12+1 EXTERNAL SLOT 1  #
 			# ########################
 						
 			if grep -q "1" /tmp/value
@@ -1946,7 +2139,7 @@ do
 			
 			
 			# ########################
-			# M1262 EXTERNAL SLOT 2  #
+			# M12+2 EXTERNAL SLOT 2  #
 			# ########################
 						
 			elif grep -q "2" /tmp/value
@@ -1964,7 +2157,7 @@ do
 			
 			
 			# ########################
-			# M1263 EXTERNAL SLOT 3  #
+			# M12+3 EXTERNAL SLOT 3  #
 			# ########################
 						
 			elif grep -q "3" /tmp/value
@@ -1982,7 +2175,7 @@ do
 			
 			
 			# ############
-			# M126X EXIT #
+			# M12+X EXIT #
 			# ############
 			
 			else
@@ -2131,6 +2324,20 @@ then
 		sleep 2s
 		
 		cd tkm/de 2> /dev/null && bash tkm.sh && cd - > /dev/null && cp tkm/de/magenta.xml xml/magentatv_de.xml 2> /dev/null
+	fi
+	
+	if ls -l rdt/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " RADIOTIMES EPG SIMPLE XMLTV GRABBER         "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd rdt/uk 2> /dev/null && bash rdt.sh && cd - > /dev/null && cp rdt/uk/radiotimes.xml xml/radiotimes_uk.xml 2> /dev/null
 	fi
 	
 	if ls -l ext/ | grep -q '^d'
@@ -2425,6 +2632,23 @@ do
 			sed 's/fileNAME/magentatv_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 			sed -i "s/channelsFILE/$folder\/tkm_de_channels.json/g" /tmp/prog_combine.pl
 			printf "\n<!-- PROGRAMMES: MAGENTA TV DE -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# RADIOTIMES UK
+	if [ -s combine/$folder/rdt_uk_channels.json ]
+	then
+		if [ -s xml/radiotimes_uk.xml ]
+		then
+			sed 's/fileNAME/radiotimes_uk.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/rdt_uk_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: RADIOTIMES UK -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/radiotimes_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/rdt_uk_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: RADIOTIMES UK -->\n\n" >> /tmp/combined_programmes
 			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 		fi
 	fi

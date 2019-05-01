@@ -77,7 +77,7 @@ my $date6   = $time6->strftime('%s') . "000";
 my $date7   = $time7->strftime('%s') . "000";
 my $date8   = $time8->strftime('%s') . "000";
 
-# XXFINE COMPARE DATA
+# DEFINE COMPARE DATA
 my $new_name2id = $channels_data->{'newname2id'};
 my $new_id2name = $channels_data->{'newid2name'};
 my $old_name2id = $channels_data->{'oldname2id'};

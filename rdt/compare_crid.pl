@@ -19,9 +19,13 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##############################
-# ZATTOO CHANNEL LIST CREATOR #
-# ##############################
+# #################################
+# RADIOTIMES CHANNEL LIST CREATOR #
+# #################################
+
+#
+# PRINT CHANNEL IDs for EPISODE JSON FILES
+#
 
 # COMPARE STRINGS, CREATE CRID LIST
 
@@ -67,38 +71,53 @@ my $old_id2name = $comparedata->{'oldid2name'};
 my @configname  = @{ $comparedata->{'config'} };
 
 # DEFINE PROGRAMME STRINGS
-my @channels = @{ $programmedata->{'channels'} };
+my @attributes = @{ $programmedata->{'attributes'} };
 
-foreach my $channels ( @channels )  {
-	my @programs = @{ $channels->{'programs'} };
-	my $oid      = $channels->{'cid'};
+foreach my $attributes ( @attributes )  {
+	my @channels = @{ $attributes->{'Channels'} };
 	
-	foreach my $programs ( @programs ) {
-		my $id = $programs->{'id'};
+	foreach my $channels ( @channels ) {
+		my $cid = $channels->{'Id'};
 
 		foreach my $configname ( @configname ) {
 		
-			# DEFINE IDs
+			# DEFINE CHANNEL IDs
 			my $old_id = $old_name2id->{$configname};
 			my $new_id = $new_name2id->{$configname};
 			
-			# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
-			if( $new_id eq $old_id ) {
-				
-				if( $oid eq $new_id ) {
-					print $id . "\n";
-				}
+			# DEFINE PROGRAMME IDs
+			my @programmes = @{ $channels->{'TvListings'} };
 			
-			# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
-			} elsif( defined $new_id ) {
-				print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel Name!\n";
+			foreach my $programmes ( @programmes ) {
+				my $pid  = $programmes->{'EpisodeId'};
+				my $spec = $programmes->{'Specialisation'};
+			
+				# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
+				if( $new_id eq $old_id ) {
+					
+					if( $cid eq $new_id and defined $spec ) {
+						if( $spec eq "tv" ) {
+							print $pid . "_TV\n";
+						} elsif( $spec eq "film" ) {
+							print $pid . "_MV\n";
+						}
+					}
 				
-				if ( $oid eq $new_id ) {
-					print $id . "_NEW_ID\n";
+				# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
+				} elsif( defined $new_id ) {
+					print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel Name!\n";
+					
+					if ( $cid eq $new_id and defined $spec ) {
+						if( $spec eq "tv" ) {
+							print $pid . "_TV_NEW_ID\n";
+						} elsif( $spec eq "film" ) {
+							print $pid . "_MV_NEW_ID\n";
+						}
+					}
+					
+				} else {
+					print STDERR "[ WARNING ] CHANNEL $configname not found in channel list!\n";
 				}
-				
-			} else {
-				print STDERR "[ WARNING ] CHANNEL $configname not found in channel list!\n";
 			}
 		}
 	}
