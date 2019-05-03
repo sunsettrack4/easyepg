@@ -122,19 +122,10 @@ foreach my $attributes ( @attributes ) {
         
         # CONVERT FROM TIMESTAMP TO XMLTV DATE FORMAT
 		$start =~ s/[-: ]//g;
-		if( $start =~ /UTC\+0200/ ) {		# SUMMER
-			$start =~ s/UTC.*/ +0200/g;
-		} elsif( $start =~ /UTC\+0100/ ) {	# WINTER
-			$start =~ s/UTC.*/ +0100/g;
-		}
-		
 		$end   =~ s/[-: ]//g;
-		if( $end =~ /UTC\+0200/ ) {			# SUMMER
-			$end   =~ s/UTC.*/ +0200/g;
-		} elsif( $end =~ /UTC\+0100/ ) {	# WINTER
-			$end   =~ s/UTC.*/ +0100/g;
-		}
-		
+		$start =~ s/UTC.*//g;
+		$end =~ s/UTC.*//g;
+
 		# DEFINE PROGRAM STRINGS
 		my $title     = $item->{'name'};
 		my $subtitle  = $item->{'subName'}; 
@@ -189,16 +180,16 @@ foreach my $attributes ( @attributes ) {
 			if( defined $cidEXT->{$cid} ) {
 				if( $setup_cid eq $enabled ) {
 					if( defined $rytec->{$cidEXT->{$cid}} ) {
-						print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+						print "<programme start=\"$start +0000\" stop=\"$end +0000\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
 					} else {
-						print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+						print "<programme start=\"$start +0000\" stop=\"$end +0000\" channel=\"" . $cidEXT->{$cid} . "\">\n";
 						print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
 					}
 				} else {
-					print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+					print "<programme start=\"$start +0000\" stop=\"$end +0000\" channel=\"" . $cidEXT->{$cid} . "\">\n";
 				}
 			} else {
-				print "<programme start=\"$start\" stop=\"$end\" channel=\"$cid\">\n";
+				print "<programme start=\"$start +0000\" stop=\"$end +0000\" channel=\"$cid\">\n";
 				print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 			}
 			

@@ -32,7 +32,7 @@ rm /tmp/cookie 2> /dev/null
 curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"userId":"Guest","mac":"00:00:00:00:00:00"}' 'https://web.magentatv.de/EPG/JSON/Login' > /dev/null
 
 # LOGIN
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"terminalid":"00:00:00:00:00:00","mac":"00:00:00:00:00:00","terminaltype":"MACWEBTV","utcEnable":1,"timezone":"Europe/Berlin","userType":3,"terminalvendor":"Unknown","preSharedKeyID":"PC01P00002","cnonce":"5c568c605002ce124ed35b6786f4a8e3","areaid":"1","templatename":"default","usergroup":"-1","subnetId":"4901"}' 'https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup' > /dev/null
+curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"terminalid":"00:00:00:00:00:00","mac":"00:00:00:00:00:00","terminaltype":"WEBTV","utcEnable":1,"timezone":"UTC","userType":3,"terminalvendor":"Unknown","preSharedKeyID":"PC01P00002","cnonce":"5c6ff0b9e4e5efb1498e7eaa8f54d9fb"}' 'https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup' > /dev/null
 
 # GET SESSION ID
 grep "CSRFSESSION" /tmp/cookie > /tmp/session && sed -i 's/\(.*\)\(CSRFSESSION\)	\(.*\)/X_CSRFToken: \3/g' /tmp/session
