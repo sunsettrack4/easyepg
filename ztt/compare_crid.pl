@@ -91,7 +91,7 @@ foreach my $channels ( @channels )  {
 			
 			# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
 			} elsif( defined $new_id ) {
-				print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel Name!\n";
+				print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
 				
 				if ( $oid eq $new_id ) {
 					print $id . "_NEW_ID\n";

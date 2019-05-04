@@ -491,12 +491,13 @@ fi
 
 printf "\rPreparing download...                              "
 
-ls cache/new > compare 2> /dev/null && sed -i 's/_NEW_ID//g' day/daydlnew_1 2> /dev/null
+ls cache/new > compare 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_1 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew
 rm compare
 
-sed -i "s/\(.*\)_TV/curl -s 'https:\/\/immediate-prod.apigee.net\/broadcast-content\/1\/episodes\/\1' | grep '\1' > cache\/new\/&/g" day/daynew
-sed -i "s/\(.*\)_MV/curl -s 'https:\/\/immediate-prod.apigee.net\/broadcast-content\/1\/films\/\1' | grep '\1' > cache\/new\/&/g" day/daynew
+sed -i "s/\(.*\)_TV/curl -s 'https:\/\/immediate-prod.apigee.net\/broadcast-content\/1\/episodes\/\1' | grep '+id+:+\1' > cache\/new\/&/g" day/daynew
+sed -i "s/\(.*\)_MV/curl -s 'https:\/\/immediate-prod.apigee.net\/broadcast-content\/1\/films\/\1' | grep '+id+:+\1' > cache\/new\/&/g" day/daynew
+sed -i 's/+id+:+/"id":"/g' day/daynew
 
 cat day/daynew > day/common
 
@@ -693,18 +694,9 @@ sed -i 's/></>\n</g;s/<display-name/  &/g' radiotimes_channels
 printf "\rRetrieving Channel IDs...                            "
 perl cid_json.pl > rdt_cid.json && rm chlist
 
-# COMBINING ALL EPG PARTS TO ONE FILE
-printf "\rCopying JSON files to common file...                 "
-cat cache/new/* > workfile 2> /dev/null
-
-# VALIDATE JSON FILE
-printf "\rValidating JSON EPG file...                          "
-sed -i 's/.*/{"attributes":&}/g' workfile
-jq -s '{ attributes: map(.attributes) }' workfile > workfile2 && mv workfile2 workfile
-
 # CONVERT JSON INTO XML: EPG
 printf "\rConverting EPG JSON file into XML format...          "
-perl epg_json2xml.pl > radiotimes_epg 2>epg_warnings.txt # && rm /tmp/epg_workfile 2> /dev/null
+perl epg_json2xml.pl > radiotimes_epg 2>epg_warnings.txt && rm /tmp/epg_workfile 2> /dev/null
 
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                           "

@@ -90,6 +90,7 @@ foreach my $mainchannels_new ( @newchannels_name2id_main ) {
 	
 	# DEFINE REGION
 	my $newregion  = $mainchannels_new->{'Region'};
+	$newregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# PRINT NEW CHANNEL NAMES
 	if( $newregion ne "" ) {
@@ -115,6 +116,7 @@ foreach my $subchannels_new ( @newchannels_name2id_sub ) {
 	
 	# DEFINE REGION
 	my $newregion  = $subchannels_new->{'Region'};
+	$newregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# PRINT NEW CHANNEL NAMES
 	if( $newregion ne "" ) {
@@ -144,6 +146,7 @@ foreach my $mainchannels_new ( @newchannels_id2name_main ) {
 	
 	# DEFINE NEW CHANNEL ID
 	my $newregion  = $mainchannels_new->{'Region'};
+	$newregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 	
 	# PRINT NEW CHANNEL NAMES
 	if( $newregion ne "" ) {
@@ -169,6 +172,7 @@ foreach my $subchannels_new ( @newchannels_id2name_sub ) {
 	
 	# DEFINE NEW CHANNEL ID
 	my $newregion  = $subchannels_new->{'Region'};
+	$newregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 	
 	# PRINT NEW CHANNEL NAMES
 	if( $newregion ne "" ) {
@@ -202,6 +206,7 @@ foreach my $mainchannels_old ( @oldchannels_name2id_main ) {
 	
 	# DEFINE REGION
 	my $oldregion  = $mainchannels_old->{'Region'};
+	$oldregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 							
 	# PRINT OLD CHANNEL NAMES
 	if( $oldregion ne "" ) {
@@ -227,6 +232,7 @@ foreach my $subchannels_old ( @oldchannels_name2id_sub ) {
 	
 	# DEFINE REGION
 	my $oldregion  = $subchannels_old->{'Region'};
+	$oldregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 							
 	# PRINT OLD CHANNEL NAMES
 	if( $oldregion ne "" ) {
@@ -256,6 +262,7 @@ foreach my $mainchannels_old ( @oldchannels_id2name_main ) {
 	
 	# DEFINE OLD REGION
 	my $oldregion  = $mainchannels_old->{'Region'};
+	$oldregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 						
 	# PRINT OLD CHANNEL NAMES
 	if( $oldregion ne "" ) {
@@ -281,6 +288,7 @@ foreach my $subchannels_old ( @oldchannels_id2name_sub ) {
 	
 	# DEFINE OLD REGION
 	my $oldregion  = $subchannels_old->{'Region'};
+	$oldregion =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 						
 	# PRINT OLD CHANNEL NAMES
 	if( $oldregion ne "" ) {

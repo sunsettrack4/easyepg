@@ -63,12 +63,6 @@ do
 	elif grep -q "day=12" /tmp/settings_new
 	then
 		echo '	2 "TIME PERIOD (currently: 12 days)" \' >> /tmp/menu
-	elif grep -q "day=13" /tmp/settings_new
-	then
-		echo '	2 "TIME PERIOD (currently: 13 days)" \' >> /tmp/menu
-	elif grep -q "day=14" /tmp/settings_new
-	then
-		echo '	2 "TIME PERIOD (currently: 14 days)" \' >> /tmp/menu
 	elif grep -q "day=1" /tmp/settings_new
 	then
 		echo '	2 "TIME PERIOD (currently: 1 day)" \' >> /tmp/menu
@@ -233,7 +227,7 @@ do
 		while grep -q "X" /tmp/value
 		do
 			# R1200 MENU OVERLAY
-			dialog --backtitle "[R1200] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
+			dialog --backtitle "[R1200] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-12=enable)" 10 46 2>/tmp/value
 							
 			sed -i 's/.*/epg&-/g' /tmp/value
 			
@@ -262,8 +256,8 @@ do
 				dialog --backtitle "[R1230] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
-			# R1240 INPUT: 10-14 DAYS
-			elif grep -q "epg1[0-4]-" /tmp/value
+			# R1240 INPUT: 10-12 DAYS
+			elif grep -q "epg1[0-2]-" /tmp/value
 			then
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new

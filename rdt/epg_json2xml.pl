@@ -45,15 +45,6 @@ my $json_mani;
     $json_mani = <$fh>;
     close $fh;
 }
- 
-# READ JSON INPUT FILE: EPG WORKFILE
-my $json_epg;
-{
-    local $/; #Enable 'slurp' mode
-    open my $fh, "<", "workfile" or die;
-    $json_epg = <$fh>;
-    close $fh;
-}
 
 # READ JSON INPUT FILE: RADIOTIMES NUMERIC CHANNEL IDs
 my $chidlist;
@@ -102,7 +93,6 @@ my $settings;
  
 # CONVERT JSON TO PERL STRUCTURES
 my $manidata  = decode_json($json_mani);
-my $epgdata   = decode_json($json_epg);
 my $chdata    = decode_json($chlist);
 my $chiddata  = decode_json($chidlist);
 my $genredata = decode_json($genrelist);
@@ -140,7 +130,6 @@ my $onscreen = "onscreen";
 print "\n<!-- EPG DATA - SOURCE: RADIOTIMES $countryVER -->\n\n";
 
 my @maniattributes = @{ $manidata->{'attributes'} };
-my @epg_attributes = @{ $epgdata->{'attributes'} };
 
 foreach my $maniattributes ( @maniattributes ) {
 	my @channels = @{ $maniattributes->{'Channels'} };
@@ -163,23 +152,27 @@ foreach my $maniattributes ( @maniattributes ) {
 					
 			# DEFINE IMAGE
 			my $image = $manilistings->{'Image'};
-			$image    =~ s/\&amp.*//g;
+			$image    =~ s/\&.*//g;
 						
 			# DEFINE TITLE
 			my $title = $manilistings->{'Title'};
+			
+			# DEFINE DESCRIPTION
+			my $desc  = $manilistings->{'Description'};
 						
 			# DEFINE GENRE
 			my $genre = $manilistings->{'Genre'};
 					
-			# DEFINE MANIFEST PROGRAMME ID
+			# DEFINE MANIFEST PROGRAMME ID + TYPE
 			my $manipid = $manilistings->{'EpisodeId'};
+			my $spec    = $manilistings->{'Specialisation'};
 			
 			# ##################
 			# PRINT XML OUTPUT #
 			# ##################
 			
 			# PRINT PROGRAMME STRING ONLY IF CERTAIN VALUES ARE DEFINED
-			if( defined $title and defined $start and defined $end and defined $cid ) {
+			if( defined $title and defined $start and defined $end and defined $cid and defined $spec) {
 			
 				# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition) (settings)
 				if( defined $cidEXT->{$cid} ) {
@@ -203,35 +196,73 @@ foreach my $maniattributes ( @maniattributes ) {
 					print "  <icon src=\"" . $image . "\" />\n";
 				}
 				
-				# TITLE
-				$title =~ s/\&/\&amp;/g;
-				print "  <title lang=\"" . $languageVER . "\">" . $title . "</title>\n";
-				
 				# EPG ROUTINE 1
-				foreach my $epg_attributes ( @epg_attributes ) {
-					my $epgpid   = $epg_attributes->{'id'};
+				my $json_epg;
+				
+				if(open(my $tvm, "cache/new/$manipid" . "_TV")) {
+					local $/;
+					$json_epg = <$tvm>;
+					close $tvm;
+				} elsif(open(my $mvm, "cache/new/$manipid" . "_MV")) {
+					local $/;
+					$json_epg = <$mvm>;
+					close $mvm;
+				}
 					
-					if( $epgpid eq $manipid ) {
+				my $epg_attributes = decode_json($json_epg);
 						
-						# SUB-TITLE (condition)
-						my $subtitle = $epg_attributes->{'display_title'}->{'subtitle'};
-						if( defined $subtitle ) {
-							$subtitle =~ s/\&/\&amp;/g;
-							print "  <sub-title lang=\"" . $languageVER . "\">" . $subtitle . "</sub-title>\n";
-						}
+				if( defined $epg_attributes ) {
+					
+					# TITLE
+					my $display_title = $epg_attributes->{'display_title'}->{'title'};
+					my $medium_title  = $epg_attributes->{'title'};
+					if( defined $display_title ) {
+						$display_title =~ s/\&/\&amp;/g;
+						$display_title =~ s/<[^>]*>//g;
+						print "  <title lang=\"" . $languageVER . "\">" . $display_title . "</title>\n";
+					} elsif( defined $medium_title ) {
+						$medium_title =~ s/\&/\&amp;/g;
+						$medium_title =~ s/<[^>]*>//g;
+						print "  <title lang=\"" . $languageVER . "\">" . $medium_title . "</title>\n";
+					} else {
+						$title =~ s/\&#39;/'/g;
+						$title =~ s/\&/\&amp;/g;
+						$title =~ s/<[^>]*>//g;
+						print "  <title lang=\"" . $languageVER . "\">" . $title . "</title>\n";
+					}
 						
-						# DESCRIPTION (condition)
-						my $desc     = $epg_attributes->{'long_description'};
-						if( defined $desc ) {
-							$desc =~ s/\&/\&amp;/g;
-							print "  <desc lang=\"" . $languageVER . "\">" . $desc . "</desc>\n";
-						}
+					# SUB-TITLE (condition)
+					my $subtitle = $epg_attributes->{'display_title'}->{'subtitle'};
+					if( defined $subtitle ) {
+						$subtitle =~ s/\&/\&amp;/g;
+						$subtitle =~ s/<[^>]*>//g;
+						print "  <sub-title lang=\"" . $languageVER . "\">" . $subtitle . "</sub-title>\n";
+					}
+					
+					# DESCRIPTION (condition)
+					my $long_desc   = $epg_attributes->{'long_description'};
+					my $medium_desc = $epg_attributes->{'description'};
+					if( defined $long_desc ) {
+						$long_desc =~ s/\&/\&amp;/g;
+						$long_desc =~ s/<[^>]*>//g;
+						print "  <desc lang=\"" . $languageVER . "\">" . $long_desc . "</desc>\n";
+					} elsif( defined $medium_desc ) {
+						$medium_desc =~ s/\&/\&amp;/g;
+						$medium_desc =~ s/<[^>]*>//g;
+						print "  <desc lang=\"" . $languageVER . "\">" . $medium_desc . "</desc>\n";
+					} elsif( defined $desc ) {
+						$desc =~ s/\&#39;/'/g;
+						$desc =~ s/\&/\&amp;/g;
+						$desc =~ s/<[^>]*>//g;
+						print "  <desc lang=\"" . $languageVER . "\">" . $desc . "</desc>\n";
+					}
 						
-						# CREDITS (condition)
+					# CREDITS (condition)
+					if(exists $epg_attributes->{'imco_cast'} ) {
 						my @cast     = @{ $epg_attributes->{'imco_cast'} };
 						if( @cast ) {
 							print "  <credits>\n";
-							
+								
 							foreach my $cast ( @cast ) {
 								my $name = $cast->{'name'};
 								my $role = $cast->{'role'};
@@ -245,12 +276,12 @@ foreach my $maniattributes ( @maniattributes ) {
 										print "    <producer>" . $name . "</producer>\n";
 									}
 								}
-								
+										
 								if( $type eq "cast" ) {
 									if( $role eq "Presenter" ) {
 										print "    <presenter>" . $name . "</presenter>\n";
 									} elsif($role =~ /^(Host|Contributor|Team Captain|Panellist)$/) {
-										print "    <contibutor>" . $name . "</contibutor>\n"; 		# PLACE HOLDER
+										print "    <contributor>" . $name . "</contributor>\n"; 		# PLACE HOLDER
 									} else {
 										print "    <actor>" . $name . "</actor>\n";
 									}
@@ -258,30 +289,30 @@ foreach my $maniattributes ( @maniattributes ) {
 							}
 							print "  </credits>\n";
 						}
-						
-						# DATE (condition)
-						my $date     = $epg_attributes->{'year'};
-						if( defined $date )	{
-							print "  <date>" . $date . "</date>\n";
-						}
-						
-						# COUNTRY (condition)
-						my $country_1  = $epg_attributes->{'countries_of_origin'}[0];
-						my $country_2  = $epg_attributes->{'countries_of_origin'}[1];
-						my $country_3  = $epg_attributes->{'countries_of_origin'}[2];
-						
-						if( defined $country_3 ) {
-							print "  <country>" . $country_3 . ", " . $country_2 . ", " . $country_1 . "</country>\n";
-						} elsif( defined $country_2 ) {
-							print "  <country>" . $country_2 . ", " . $country_1 . "</country>\n";
-						} elsif( defined $country_1 ) {
-							print "  <country>" . $country_1 . "</country>\n";
-						}
+					}
+								
+					# DATE (condition)
+					my $date     = $epg_attributes->{'year'};
+					if( defined $date )	{
+						print "  <date>" . $date . "</date>\n";
+					}
+								
+					# COUNTRY (condition)
+					my $country_1  = $epg_attributes->{'countries_of_origin'}[0];
+					my $country_2  = $epg_attributes->{'countries_of_origin'}[1];
+					my $country_3  = $epg_attributes->{'countries_of_origin'}[2];
+								
+					if( defined $country_3 ) {
+						print "  <country>" . $country_3 . ", " . $country_2 . ", " . $country_1 . "</country>\n";
+					} elsif( defined $country_2 ) {
+						print "  <country>" . $country_2 . ", " . $country_1 . "</country>\n";
+					} elsif( defined $country_1 ) {
+						print "  <country>" . $country_1 . "</country>\n";
 					}
 				}
 				
 				# CATEGORIES (USE ONE CATEGORY ONLY) (condition) (language) (settings)
-				if ( defined $genre ) {
+				if ( defined $genre and $genre ne "" ) {
 					if ( $setup_genre eq $enabled ) {
 						if ( defined $eit->{ $genre } ) {
 							print "  <category lang=\"$languageVER\">" . $eit->{ $genre } . "</category>\n";
@@ -295,83 +326,86 @@ foreach my $maniattributes ( @maniattributes ) {
 				}
 				
 				# EPG ROUTINE 2
-				foreach my $epg_attributes ( @epg_attributes ) {
-					my $epgpid   = $epg_attributes->{'id'};
+				if( defined $epg_attributes ) {
 					
-					if( $epgpid eq $manipid ) {
+					my $epgpid   = $epg_attributes->{'id'};
 						
-						# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
-						my $series   = $epg_attributes->{'series_number'};
-						my $episode  = $epg_attributes->{'episode_number'};
-						
-						if( $setup_episode eq $xmltv_ns ) {
-							if( defined $series ) {
-								my $XMLseries  = $series - 1;
-								if( defined $episode ) {
+					if( defined $epgpid ) {
+						if( $epgpid eq $manipid ) {
+							
+							# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
+							my $series   = $epg_attributes->{'series_number'};
+							my $episode  = $epg_attributes->{'episode_number'};
+							
+							if( $setup_episode eq $xmltv_ns ) {
+								if( defined $series ) {
+									my $XMLseries  = $series - 1;
+									if( defined $episode ) {
+										my $XMLepisode = $episode - 1;
+										print "  <episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>\n";
+									} else {
+										print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
+									}
+								} elsif( defined $episode ) {
 									my $XMLepisode = $episode - 1;
-									print "  <episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>\n";
-								} else {
-									print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
-								}
-							} elsif( defined $episode ) {
-								my $XMLepisode = $episode - 1;
-								print "  <episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>\n";
-							}
-						}
-						
-						# SEASON/EPISODE (ONSCREEN) (condition) (settings)
-						if( $setup_episode eq $onscreen ) {
-							if( defined $series ) {
-								if( defined $episode ) {
-									print "  <episode-num system=\"onscreen\">S$series E$episode</episode-num>\n";
-								} else {
-									print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
-								}
-							} elsif( defined $episode ) {
-								print "  <episode-num system=\"onscreen\">E$episode</episode-num>\n";
-							}
-						}
-						
-						# AGE RATING (condition)
-						my @age      = @{ $epg_attributes->{'certificates'} };
-						my $age2     = $epg_attributes->{'restrictions'}[0]{'minimumAGE'};
-						my $var_loc;
-						
-						if( @age ) {
-							while( my( $value_id, $value ) = each( @age ) ) {
-								my $class = $value->{'classification'};
-								if( $class eq "U" ) {			# UNIVERSAL
-									$var_loc = $value_id;
-									last;
-								} elsif( $class eq "PG" ) {		# PG
-									$var_loc = $value_id;
-									last;
-								} elsif( $class eq "12A" ) {	# AGE: 12 A
-									$var_loc = $value_id;
-									last;
-								} elsif( $class eq "12" ) {		# AGE: 12
-									$var_loc = $value_id;
-									last;
-								} elsif( $class eq "15" ) {		# AGE: 16
-									$var_loc = $value_id;
-									last;
-								} elsif( $class eq "18" ) {		# AGE: 18
-									$var_loc = $value_id;
-									last;
+									print "  <episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>\n";
 								}
 							}
 							
-							if( defined $var_loc ) {
-								print "  <rating system=\"BBFC\">\n    <value>" . $epg_attributes->{'certificates'}[$var_loc]{'classification'} . "</value>\n  </rating>\n";
-							} elsif( defined $age2 ) {
-								print "  <rating system=\"BBFC\">\n    <value>" . $age2 . "</value>\n  </rating>\n";
+							# SEASON/EPISODE (ONSCREEN) (condition) (settings)
+							if( $setup_episode eq $onscreen ) {
+								if( defined $series ) {
+									if( defined $episode ) {
+										print "  <episode-num system=\"onscreen\">S$series E$episode</episode-num>\n";
+									} else {
+										print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
+									}
+								} elsif( defined $episode ) {
+									print "  <episode-num system=\"onscreen\">E$episode</episode-num>\n";
+								}
 							}
-						}
-						
-						# STAR RATING (condition)
-						my $star     = $epg_attributes->{'imco_reviews'}[0]{'rating'};
-						if( defined $star ) {
-							print "  <star-rating>\n    <value>" . $star*2 . "/10</value>\n</star-rating>\n";
+							
+							# AGE RATING (condition)
+							my @age      = @{ $epg_attributes->{'certificates'} };
+							my $age2     = $epg_attributes->{'restrictions'}[0]{'minimumAGE'};
+							my $var_loc;
+							
+							if( @age ) {
+								while( my( $value_id, $value ) = each( @age ) ) {
+									my $class = $value->{'classification'};
+									if( $class eq "U" ) {			# UNIVERSAL
+										$var_loc = $value_id;
+										last;
+									} elsif( $class eq "PG" ) {		# PG
+										$var_loc = $value_id;
+										last;
+									} elsif( $class eq "12A" ) {	# AGE: 12 A
+										$var_loc = $value_id;
+										last;
+									} elsif( $class eq "12" ) {		# AGE: 12
+										$var_loc = $value_id;
+										last;
+									} elsif( $class eq "15" ) {		# AGE: 16
+										$var_loc = $value_id;
+										last;
+									} elsif( $class eq "18" ) {		# AGE: 18
+										$var_loc = $value_id;
+										last;
+									}
+								}
+								
+								if( defined $var_loc ) {
+									print "  <rating system=\"BBFC\">\n    <value>" . $epg_attributes->{'certificates'}[$var_loc]{'classification'} . "</value>\n  </rating>\n";
+								} elsif( defined $age2 ) {
+									print "  <rating system=\"BBFC\">\n    <value>" . $age2 . "</value>\n  </rating>\n";
+								}
+							}
+							
+							# STAR RATING (condition)
+							my $star     = $epg_attributes->{'imco_reviews'}[0]{'rating'};
+							if( defined $star ) {
+								print "  <star-rating>\n    <value>" . $star*2 . "/10</value>\n</star-rating>\n";
+							}
 						}
 					}
 				}

@@ -64,6 +64,7 @@ foreach my $mainchannels ( @mainchannels ) {
 	
 	# DEFINE CHANNEL REGION
 	my $region  = $mainchannels->{'Region'};
+	$region =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE CHANNEL ID
 	my $cid     = $mainchannels->{'Id'};
@@ -97,6 +98,7 @@ foreach my $subchannels ( @subchannels ) {
 	
 	# DEFINE CHANNEL REGION
 	my $region  = $subchannels->{'Region'};
+	$region =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE CHANNEL ID
 	my $cid     = $subchannels->{'Id'};

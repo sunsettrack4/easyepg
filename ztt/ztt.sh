@@ -960,6 +960,7 @@ date_14=$(date -d '13 days' '+%Y%m%d')
 
 if ! grep -q "<cache incomplete>" init.txt 2> /dev/null
 then
+	rm -rf cache/old 2> /dev/null
 	mv cache/new_$date1 cache/old_$date1 2> /dev/null
 	mv cache/new_$date2 cache/old_$date2 2> /dev/null
 	mv cache/new_$date3 cache/old_$date3 2> /dev/null
