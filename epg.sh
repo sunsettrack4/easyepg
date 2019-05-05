@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.2.6 BETA - 2019/05/01            "
+echo " Release v0.2.7 BETA - 2019/05/05            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -57,6 +57,7 @@ chmod 0777 swc 2> /dev/null && chmod 0777 swc/* 2> /dev/null
 chmod 0777 tvp 2> /dev/null && chmod 0777 tvp/* 2> /dev/null
 chmod 0777 tkm 2> /dev/null && chmod 0777 tkm/* 2> /dev/null
 chmod 0777 rdt 2> /dev/null && chmod 0777 rdt/* 2> /dev/null
+chmod 0777 wpu 2> /dev/null && chmod 0777 wpu/* 2> /dev/null
 chmod 0777 ext 2> /dev/null && chmod 0777 ext/* 2> /dev/null
 
 if [ ! -e hzn/ch_json2xml.pl ]
@@ -341,6 +342,48 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e wpu/ch_json2xml.pl ]
+then
+	printf "\nMissing file in Waipu.tv folder: wpu/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e wpu/chlist_printer.pl ]
+then
+	printf "\nMissing file in Waipu.tv folder: wpu/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e wpu/cid_json.pl ]
+then
+	printf "\nMissing file in Waipu.tv folder: wpu/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e wpu/compare_menu.pl ]
+then
+	printf "\nMissing file in Waipu.tv folder: wpu/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e wpu/epg_json2xml.pl ]
+then
+	printf "\nMissing file in Waipu.tv folder: wpu/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e wpu/settings.sh ]
+then
+	printf "\nMissing file in Waipu.tv folder: wpu/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e wpu/wpu.sh ]
+then
+	printf "\nMissing file in Waipu.tv folder: wpu/wpu.sh"
+	ERROR="true"
+fi
+
 if [ ! -e rdt/url_printer.pl ]
 then
 	printf "\nMissing file in RadioTimes folder: rdt/url_printer.pl"
@@ -466,6 +509,7 @@ ls -l swc/ >>  /tmp/providerlist
 ls -l tvp/ >>  /tmp/providerlist
 ls -l tkm/ >>  /tmp/providerlist
 ls -l rdt/ >>  /tmp/providerlist
+ls -l wpu/ >>  /tmp/providerlist
 ls -l ext/ >>  /tmp/providerlist
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
@@ -501,6 +545,7 @@ do
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
+	ls -l wpu/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -514,6 +559,7 @@ do
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
+	ls -l wpu/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -530,6 +576,7 @@ do
 	ls -l tvp/ >>  /tmp/providerlist
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
+	ls -l wpu/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -549,7 +596,7 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# M1100 MENU OVERLAY
-		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 14 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 16 40 10 \' > /tmp/menu
 
 		# M1110 HORIZON
 		echo '	1 "HORIZON" \' >> /tmp/menu
@@ -568,6 +615,9 @@ do
 		
 		# M1160 RADIOTIMES
 		echo '	6 "RADIOTIMES" \' >> /tmp/menu
+		
+		# M1170 WAIPU.TV
+		echo '	7 "WAIPU.TV" \' >> /tmp/menu
 		
 		# M11+0 EXTERNAL
 		echo '	+ "EXTERNAL" \' >> /tmp/menu
@@ -1316,6 +1366,71 @@ do
 			fi
 		
 		
+		# ##################
+		# M1170 WAIPU.TV   #
+		# ##################
+
+		elif grep -q "7" /tmp/value
+		then
+			# M1170 MENU OVERLAY
+			echo 'dialog --backtitle "[M1170] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > WAIPU.TV" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1171 DE
+			if [ ! -d wpu/de ]
+			then
+				echo '	1 "[DE] WAIPU.TV" \' >> /tmp/menu
+			fi
+			
+			# M117E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M117E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > WAIPU.TV" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+				
+				
+			# #####################
+			# M1171 WAIPU.TV DE   #
+			# #####################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir wpu/de
+				chmod 0777 wpu/de
+				echo '{"country":"DE","language":"de"}' > wpu/de/init.json
+				cp wpu/settings.sh wpu/de/settings.sh
+				cp wpu/wpu.sh wpu/de/wpu.sh
+				cp wpu/epg_json2xml.pl wpu/de/
+				cp wpu/ch_json2xml.pl wpu/de/
+				cp wpu/cid_json.pl wpu/de/
+				cp wpu/chlist_printer.pl wpu/de/
+				cp wpu/compare_menu.pl wpu/de/
+				cd wpu/de && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e wpu/de/channels.json ]
+				then
+					rm -rf wpu/de
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M117X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
+		
 		# #################
 		# M11+0 EXTERNAL  #
 		# #################
@@ -1454,7 +1569,7 @@ do
 	elif grep -q "2" /tmp/value
 	then
 		# M1200 MENU OVERLAY
-		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 12 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1200] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS" --title "PROVIDERS" --menu "Please select a provider you want to change:" 16 40 10 \' > /tmp/menu
 		
 		# M1210 HORIZON
 		if ls -l hzn/ | grep -q '^d' 2> /dev/null
@@ -1490,6 +1605,12 @@ do
 		if ls -l rdt/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	6 "RADIOTIMES" \' >> /tmp/menu
+		fi
+		
+		# M1270 WAIPU.TV
+		if ls -l wpu/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	7 "WAIPU.TV" \' >> /tmp/menu
 		fi
 		
 		# M12+0 EXTERNAL
@@ -2079,6 +2200,62 @@ do
 			fi
 		
 		
+		# ##################
+		# M1270 WAIPU.TV   #
+		# ##################
+		
+		elif grep -q "7" /tmp/value
+		then
+			# M1270 MENU OVERLAY
+			echo 'dialog --backtitle "[M1270] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > WAIPU.TV" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1271 WAIPU.TV DE
+			if [ -d wpu/de ]
+			then
+				echo '	1 "[DE] WAIPU.TV" \' >> /tmp/menu
+			fi
+			
+			# M127E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M127E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > WAIPU.TV" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ######################
+			# M1271 WAIPU.TV DE    #
+			# ######################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd wpu/de
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e wpu/de/channels.json ]
+				then
+					rm -rf wpu/de xml/waipu_de.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M127X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
+		
 		# ######################
 		# M12+0 EXTERNAL       #
 		# ######################
@@ -2338,6 +2515,20 @@ then
 		sleep 2s
 		
 		cd rdt/uk 2> /dev/null && bash rdt.sh && cd - > /dev/null && cp rdt/uk/radiotimes.xml xml/radiotimes_uk.xml 2> /dev/null
+	fi
+	
+	if ls -l wpu/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " WAIPU.TV EPG SIMPLE XMLTV GRABBER           "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd wpu/de 2> /dev/null && bash wpu.sh && cd - > /dev/null && cp wpu/de/waipu.xml xml/waipu_de.xml 2> /dev/null
 	fi
 	
 	if ls -l ext/ | grep -q '^d'
@@ -2649,6 +2840,23 @@ do
 			sed 's/fileNAME/radiotimes_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 			sed -i "s/channelsFILE/$folder\/rdt_uk_channels.json/g" /tmp/prog_combine.pl
 			printf "\n<!-- PROGRAMMES: RADIOTIMES UK -->\n\n" >> /tmp/combined_programmes
+			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+		fi
+	fi
+	
+	# WAIPU.TV DE
+	if [ -s combine/$folder/wpu_de_channels.json ]
+	then
+		if [ -s xml/waipu_de.xml ]
+		then
+			sed 's/fileNAME/waipu_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+			sed -i "s/channelsFILE/$folder\/wpu_de_channels.json/g" /tmp/ch_combine.pl
+			printf "\n<!-- CHANNEL LIST: WAIPU.TV DE -->\n\n" >> /tmp/combined_channels
+			perl /tmp/ch_combine.pl >> /tmp/combined_channels
+			
+			sed 's/fileNAME/waipu_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+			sed -i "s/channelsFILE/$folder\/wpu_de_channels.json/g" /tmp/prog_combine.pl
+			printf "\n<!-- PROGRAMMES: WAIPU.TV DE -->\n\n" >> /tmp/combined_programmes
 			perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 		fi
 	fi

@@ -199,7 +199,7 @@ foreach my $attributes ( $data->{attributes} ) {
 			# SUBTITLE (condition) (language)
 			if( defined $subtitle ) {
 				$subtitle =~ s/\&/\&amp;/g;
-				print "  <sub-title lang=\"$languageVER\">$title</sub-title>\n";
+				print "  <sub-title lang=\"$languageVER\">$subtitle</sub-title>\n";
 			}
 			
 			# DESCRIPTION (condition) (language)

@@ -223,6 +223,12 @@ then
 				sed 's/<channel id="/"[RADIOTIMES UK] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 			
+			if [ -e xml/waipu_de.xml ]
+			then
+				grep 'channel id=' xml/waipu_de.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[WAIPU.TV DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+			
 			if [ -e xml/external_oa.xml ]
 			then
 				grep 'channel id=' xml/external_oa.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
@@ -250,7 +256,7 @@ then
 				rm /tmp/setupname /tmp/chduplicates 2> /dev/null
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
-				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
+				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
 				sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
 				
 				if [ -s /tmp/chduplicates ]
@@ -270,7 +276,7 @@ then
 		if [ -s /tmp/channels ]
 		then
 			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
+			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
 			then
@@ -352,6 +358,11 @@ then
 				if [ -e xml/radiotimes_uk.xml ]
 				then
 					grep "RADIOTIMES UK" /tmp/channels | sed '/RADIOTIMES UK/s/\[RADIOTIMES UK\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/rdt_uk_channels.json
+				fi
+				
+				if [ -e xml/waipu_de.xml ]
+				then
+					grep "WAIPU.TV DE" /tmp/channels | sed '/WAIPU.TV DE/s/\[WAIPU.TV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/wpu_de_channels.json
 				fi
 				
 				if [ -e xml/external_oa.xml ]
@@ -828,6 +839,31 @@ then
 					
 					cd - > /dev/null
 					
+					# WAIPU.TV DE
+					if [ -e xml/waipu_de.xml ]
+					then
+						grep 'channel id=' xml/waipu_de.xml > /tmp/xmlch_wpude
+						sed -i 's/<channel id="/[WAIPU.TV DE] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_wpude
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/wpu_de_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/wpu_de_channels.json /tmp/xmlch_wpude
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e wpu_de_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' wpu_de_channels.json > /tmp/channels_wpude && cat /tmp/channels_wpude >> /tmp/xmlch2
+						sed -i 's/.*/[WAIPU.TV DE] &/g' /tmp/channels_wpude
+						
+						comm -12 <(sort -u /tmp/xmlch_wpude) <(sort -u /tmp/channels_wpude) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_wpude) <(sort -u /tmp/channels_wpude) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+					
 					# EXTERNAL SLOT 1
 					if [ -e xml/external_oa.xml ]
 					then
@@ -917,7 +953,7 @@ then
 					
 					if [ -e /tmp/menu ]
 					then
-						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[RADIOTIMES [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
+						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[RADIOTIMES [A-Z][A-Z]\]|\[WAIPU.TV [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
 							rm /tmp/menu
@@ -936,9 +972,9 @@ then
 					if [ -s /tmp/channels ]
 					then
 						sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
+						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
 							
-						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g;' /tmp/channels
+						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g;' /tmp/channels
 						
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) ]
 						then
@@ -1020,6 +1056,11 @@ then
 							if [ -e xml/radiotimes_uk.xml ]
 							then
 								grep "RADIOTIMES UK" /tmp/channels | sed '/RADIOTIMES UK/s/\[RADIOTIMES UK\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/rdt_uk_channels.json
+							fi
+							
+							if [ -e xml/waipu_de.xml ]
+							then
+								grep "WAIPU.TV DE" /tmp/channels | sed '/WAIPU.TV DE/s/\[WAIPU.TV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/wpu_de_channels.json
 							fi
 							
 							if [ -e xml/external_oa.xml ]
