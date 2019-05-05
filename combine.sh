@@ -419,8 +419,14 @@ then
 			# M1323 POST SCRIPTS
 			echo '	3 "ADD/MODIFY POST SHELL SCRIPT" \' >> /tmp/menu
 			
-			# M1324 REMOVE SETUP
-			echo '	4 "REMOVE THIS SETUP" \' >> /tmp/menu
+			# M1324 CREATE CHANNEL LIST
+			if [ -e xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml ]
+			then
+				echo '	4 "CREATE CHANNEL LIST AS TXT FILE" \' >> /tmp/menu
+			fi
+			
+			# M1325 REMOVE SETUP
+			echo '	5 "REMOVE THIS SETUP" \' >> /tmp/menu
 			
 			echo "2> /tmp/setupvalue" >> /tmp/menu
 			bash /tmp/menu
@@ -1172,11 +1178,28 @@ then
 				echo "B" > /tmp/value
 			elif grep -q "4" /tmp/setupvalue
 			then
+				# ###########################
+				# M1324 CREATE CHANNEL LIST #
+				# ###########################
+				
+				if [ -e xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml ]
+				then
+					grep -E "<display-name|<channel id=" xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml | \
+					sed ':a $!N;s/\n  <display-name/<display-name/;ta P;D' | \
+					sed 's/\(<channel id=.*\)\(<display-name.*\)/\2\1/g' | \
+					sed 's/<display-name lang="de">//g;s/<\/display-name><channel id="/ : /g;s/">//g' \
+						> combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).txt
+					
+					dialog --backtitle "[M1324] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > CHANNEL LIST" --title "CHANNEL LIST AS TEXTFILE" --msgbox "Okay! Channel list created!" 5 40
+					echo "B" > /tmp/value
+				fi
+			elif grep -q "5" /tmp/setupvalue
+			then
 				# ####################
-				# M1324 REMOVE SETUP #
+				# M1325 REMOVE SETUP #
 				# ####################
 				
-				dialog --backtitle "[M1324] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > REMOVE" --title "REMOVE SETUP" --yesno "Are you sure to delete this setup?" 5 40
+				dialog --backtitle "[M1325] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > REMOVE" --title "REMOVE SETUP" --yesno "Are you sure to delete this setup?" 5 40
 				
 				response=$?
 					
