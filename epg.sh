@@ -534,7 +534,7 @@ fi
 while grep -q "M" /tmp/value
 do
 	# M1000 MENU OVERLAY
-	echo 'dialog --backtitle "[M1000] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --menu "Welcome to EasyEPG! :)\n(c) 2019 Jan-Luca Neumann\n\nIf you like this script, please support my work:\nhttps://paypal.me/sunsettrack4\n\nPlease choose an option:" 17 55 10 \' > /tmp/menu
+	echo 'dialog --backtitle "[M1000] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --menu "Welcome to EasyEPG! :)\n(c) 2019 Jan-Luca Neumann\n\nIf you like this script, please support my work:\nhttps://paypal.me/sunsettrack4\n\nPlease choose an option:" 19 55 10 \' > /tmp/menu
 
 	# M1100 ADD GRABBER
 	echo '	1 "ADD GRABBER INSTANCE" \' >> /tmp/menu
@@ -585,7 +585,10 @@ do
 	fi
 	
 	# M1500 UPDATE
-	echo '5	"UPDATE THIS SCRIPT" \' >> /tmp/menu
+	echo '	5 "UPDATE THIS SCRIPT" \' >> /tmp/menu
+	
+	# M1600 ABOUT
+	echo '	6 "ABOUT EASYEPG" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 
@@ -2421,6 +2424,15 @@ do
 			echo "M" > /tmp/value
 		fi
 	
+	
+	# ###########################
+	# M1600 ABOUT THIS PROJECT  #
+	# ###########################
+	
+	elif grep -q "6" /tmp/value
+	then
+		dialog --backtitle "[M1600] EASYEPG SIMPLE XMLTV GRABBER > ABOUT"  --title "ABOUT THE EASYEPG PROJECT" --msgbox "easyEPG Grabber\n(c) 2019 Jan-Luca Neumann / sunsettrack4\nhttps://github.com/sunsettrack4\n\nLicensed under GPL v3.0 - All rights reserved.\n\n* This tool provides high-quality EPG data from different IPTV/OTT sources.\n* It allows you to combine multiple sources for XMLTV file creation.\n* Missing data can be added by using the IMDB mapper tool.\n* Furthermore, you can import XML files from external sources.\n\nSpecial thanks:\n- DeBaschdi - https://github.com/debaschdi (for collaboration)" 19 70
+		echo "M" > /tmp/value
 	
 	# ############
 	# M1X00 EXIT #
