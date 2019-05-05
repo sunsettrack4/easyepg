@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.2.7 BETA - 2019/05/05            "
+echo " Release v0.2.8 BETA - 2019/05/05            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -453,6 +453,7 @@ command -v perldoc >/dev/null 2>&1 || { printf "\nperl-doc is required but it's 
 command -v cpan >/dev/null 2>&1 || { printf "\ncpan is required but it's not installed!" >&2; ERROR2="true"; }
 command -v jq >/dev/null 2>&1 || { printf "\njq is required but it's not installed!" >&2; ERROR2="true"; }
 command -v php >/dev/null 2>&1 || { printf "\nphp is required but it's not installed!" >&2; ERROR2="true"; }
+command -v git >/dev/null 2>&1 || { printf "\ngit is required but it's not installed!" >&2; ERROR2="true"; }
 
 if command -v perldoc >/dev/null
 then
@@ -582,6 +583,9 @@ do
 	then
 		echo '	4 "CONTINUE IN GRABBER MODE" \' >> /tmp/menu
 	fi
+	
+	# M1500 UPDATE
+	echo '5	"UPDATE THIS SCRIPT" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 
@@ -2390,6 +2394,32 @@ do
 	elif grep -q "4" /tmp/value
 	then
 		echo "G" > /tmp/value
+	
+	
+	# ##############
+	# M1500 UPDATE #
+	# ##############
+	
+	elif grep -q "5" /tmp/value
+	then
+		clear
+		
+		rm -rf easyepg 2> /dev/null
+		git clone https://github.com/sunsettrack4/easyepg
+		
+		if [ -e easyepg/update.sh ]
+		then
+			bash easyepg/update.sh
+			rm -rf easyepg 2> /dev/null
+			read -n 1 -s -r -p "Press any key to continue..."
+			bash epg.sh
+			exit 0
+		else
+			rm -rf easyepg 2> /dev/null
+			printf "\r[ ERROR ]  Missing script: update.sh\n"
+			read -n 1 -s -r -p "Press any key to continue..."
+			echo "M" > /tmp/value
+		fi
 	
 	
 	# ############
