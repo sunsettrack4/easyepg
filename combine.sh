@@ -408,7 +408,7 @@ then
 		while grep -q "B" /tmp/value
 		do
 			# M1320 MENU OVERLAY
-			echo 'dialog --backtitle "[M1320] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "MODIFY SETUP" --menu "Please choose an option:" 12 45 10 \' > /tmp/menu
+			echo 'dialog --backtitle "[M1320] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "MODIFY SETUP" --menu "Please choose an option:" 13 45 10 \' > /tmp/menu
 			
 			# M1321 CHANNEL LIST
 			echo '	1 "MODIFY CHANNEL LIST" \' >> /tmp/menu
@@ -425,8 +425,11 @@ then
 				echo '	4 "CREATE CHANNEL LIST AS TXT FILE" \' >> /tmp/menu
 			fi
 			
-			# M1325 REMOVE SETUP
-			echo '	5 "REMOVE THIS SETUP" \' >> /tmp/menu
+			# M1325 RUN COMBINE SCRIPT
+			echo '	5 "RUN COMBINE SCRIPT" \' >> /tmp/menu
+			
+			# M1326 REMOVE SETUP
+			echo '	6 "REMOVE THIS SETUP" \' >> /tmp/menu
 			
 			echo "2> /tmp/setupvalue" >> /tmp/menu
 			bash /tmp/menu
@@ -1188,18 +1191,425 @@ then
 					sed ':a $!N;s/\n  <display-name/<display-name/;ta P;D' | \
 					sed 's/\(<channel id=.*\)\(<display-name.*\)/\2\1/g' | \
 					sed 's/<display-name lang="de">//g;s/<\/display-name><channel id="/ : /g;s/">//g' \
-						> combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).txt
+						> xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).txt
 					
 					dialog --backtitle "[M1324] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > CHANNEL LIST" --title "CHANNEL LIST AS TEXTFILE" --msgbox "Okay! Channel list created!" 5 40
 					echo "B" > /tmp/value
 				fi
 			elif grep -q "5" /tmp/setupvalue
 			then
+				# #########################
+				# M1325 COMBINE XML FILES #
+				# #########################
+				
+				clear
+				ls combine > /tmp/combinefolders 2> /dev/null
+
+				if [ -s /tmp/combinefolders ]
+				then
+					echo ""
+					echo " --------------------------------------------"
+					echo " CREATING CUSTOMIZED XMLTV FILES             "
+					echo " --------------------------------------------"
+					echo ""
+					sleep 2s
+				fi
+
+				while [ -s /tmp/combinefolders ]
+				do
+					folder=$(sed -n "1p" /tmp/combinefolders)
+
+					printf "Creating XML file: $folder.xml ..."
+					rm /tmp/file /tmp/combined_channels /tmp/combined_programmes 2> /dev/null
+					
+					# HORIZON DE
+					if [ -s combine/$folder/hzn_de_channels.json ]
+					then
+						if [ -s xml/horizon_de.xml ]
+						then
+							sed 's/fileNAME/horizon_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_de_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: UNITYMEDIA GERMANY -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_de_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: UNITYMEDIA GERMANY -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON AT
+					if [ -s combine/$folder/hzn_at_channels.json ]
+					then
+						if [ -s xml/horizon_at.xml ]
+						then
+							sed 's/fileNAME/horizon_at.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_at_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: UPC AUSTRIA  -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_at.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_at_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: UPC AUSTRIA -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					
+					# HORIZON CH
+					if [ -s combine/$folder/hzn_ch_channels.json ]
+					then
+						if [ -s xml/horizon_ch.xml ]
+						then
+							sed 's/fileNAME/horizon_ch.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_ch_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: UPC SWITZERLAND -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_ch_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: UPC SWITZERLAND -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON NL
+					if [ -s combine/$folder/hzn_nl_channels.json ]
+					then
+						if [ -s xml/horizon_nl.xml ]
+						then
+							sed 's/fileNAME/horizon_nl.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_nl_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: ZIGGO NETHERLANDS -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_nl.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_nl_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: ZIGGO NETHERLANDS -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON PL
+					if [ -s combine/$folder/hzn_pl_channels.json ]
+					then
+						if [ -s xml/horizon_pl.xml ]
+						then
+							sed 's/fileNAME/horizon_pl.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_pl_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: HORIZON POLAND -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_pl.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_pl_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: HORIZON POLAND -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON IE
+					if [ -s combine/$folder/hzn_ie_channels.json ]
+					then
+						if [ -s xml/horizon_ie.xml ]
+						then
+							sed 's/fileNAME/horizon_ie.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_ie_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: VIRGIN MEDIA IRELAND -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_ie.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_ie_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: VIRGIN MEDIA IRELAND -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON SK
+					if [ -s combine/$folder/hzn_sk_channels.json ]
+					then
+						if [ -s xml/horizon_sk.xml ]
+						then
+							sed 's/fileNAME/horizon_sk.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_sk_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: HORIZON SLOVAKIA -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_sk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_sk_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: HORIZON SLOVAKIA -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON CZ
+					if [ -s combine/$folder/hzn_cz_channels.json ]
+					then
+						if [ -s xml/horizon_cz.xml ]
+						then
+							sed 's/fileNAME/horizon_cz.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_cz_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: HORIZON CZECH REPUBLIC -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_cz.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_cz_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: HORIZON CZECH REPUBLIC -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON HU
+					if [ -s combine/$folder/hzn_hu_channels.json ]
+					then
+						if [ -s xml/horizon_hu.xml ]
+						then
+							sed 's/fileNAME/horizon_hu.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_hu_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: HORIZON HUNGARY -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_hu.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_hu_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: HORIZON HUNGARY -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# HORIZON RO
+					if [ -s combine/$folder/hzn_ro_channels.json ]
+					then
+						if [ -s xml/horizon_ro.xml ]
+						then
+							sed 's/fileNAME/horizon_ro.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_ro_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: HORIZON ROMANIA -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/horizon_ro.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/hzn_ro_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: HORIZON ROMANIA -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# ZATTOO DE
+					if [ -s combine/$folder/ztt_de_channels.json ]
+					then
+						if [ -s xml/zattoo_de.xml ]
+						then
+							sed 's/fileNAME/zattoo_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/ztt_de_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: ZATTOO GERMANY -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/zattoo_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/ztt_de_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: ZATTOO GERMANY -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# ZATTOO CH
+					if [ -s combine/$folder/ztt_ch_channels.json ]
+					then
+						if [ -s xml/zattoo_ch.xml ]
+						then
+							sed 's/fileNAME/zattoo_ch.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/ztt_ch_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: ZATTOO SWITZERLAND -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/zattoo_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/ztt_ch_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: ZATTOO SWITZERLAND -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# SWISSCOM CH
+					if [ -s combine/$folder/swc_ch_channels.json ]
+					then
+						if [ -s xml/swisscom_ch.xml ]
+						then
+							sed 's/fileNAME/swisscom_ch.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/swc_ch_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: SWISSCOM SWITZERLAND -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/swisscom_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/swc_ch_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: SWISSCOM SWITZERLAND -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# TVPLAYER UK
+					if [ -s combine/$folder/tvp_uk_channels.json ]
+					then
+						if [ -s xml/tvplayer_uk.xml ]
+						then
+							sed 's/fileNAME/tvplayer_uk.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/tvp_uk_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: TVPLAYER UK -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/tvplayer_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/tvp_uk_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: TVPLAYER UK -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# MAGENTA TV DE
+					if [ -s combine/$folder/tkm_de_channels.json ]
+					then
+						if [ -s xml/magentatv_de.xml ]
+						then
+							sed 's/fileNAME/magentatv_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/tkm_de_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: MAGENTA TV DE -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/magentatv_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/tkm_de_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: MAGENTA TV DE -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# RADIOTIMES UK
+					if [ -s combine/$folder/rdt_uk_channels.json ]
+					then
+						if [ -s xml/radiotimes_uk.xml ]
+						then
+							sed 's/fileNAME/radiotimes_uk.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/rdt_uk_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: RADIOTIMES UK -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/radiotimes_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/rdt_uk_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: RADIOTIMES UK -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# WAIPU.TV DE
+					if [ -s combine/$folder/wpu_de_channels.json ]
+					then
+						if [ -s xml/waipu_de.xml ]
+						then
+							sed 's/fileNAME/waipu_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/wpu_de_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: WAIPU.TV DE -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/waipu_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/wpu_de_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: WAIPU.TV DE -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# EXTERNAL SLOT 1
+					if [ -s combine/$folder/ext_oa_channels.json ]
+					then
+						if [ -s xml/external_oa.xml ]
+						then
+							sed 's/fileNAME/external_oa.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/ext_oa_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: EXTERNAL SOURCE SLOT 1 -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/external_oa.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/ext_oa_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 1 -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# EXTERNAL SLOT 2
+					if [ -s combine/$folder/ext_ob_channels.json ]
+					then
+						if [ -s xml/external_ob.xml ]
+						then
+							sed 's/fileNAME/external_ob.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/ext_ob_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: EXTERNAL SOURCE SLOT 2 -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/external_ob.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/ext_ob_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 2 -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					# EXTERNAL SLOT 3
+					if [ -s combine/$folder/ext_oc_channels.json ]
+					then
+						if [ -s xml/external_oc.xml ]
+						then
+							sed 's/fileNAME/external_oc.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+							sed -i "s/channelsFILE/$folder\/ext_oc_channels.json/g" /tmp/ch_combine.pl
+							printf "\n<!-- CHANNEL LIST: EXTERNAL SOURCE SLOT 3 -->\n\n" >> /tmp/combined_channels
+							perl /tmp/ch_combine.pl >> /tmp/combined_channels
+							
+							sed 's/fileNAME/external_oc.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+							sed -i "s/channelsFILE/$folder\/ext_oc_channels.json/g" /tmp/prog_combine.pl
+							printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 3 -->\n\n" >> /tmp/combined_programmes
+							perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+						fi
+					fi
+					
+					cat /tmp/combined_programmes >> /tmp/combined_channels 2> /dev/null && mv /tmp/combined_channels /tmp/file 2> /dev/null
+					
+					if [ -s /tmp/file ]
+					then
+						sed -i 's/\&/\&amp;/g' /tmp/file
+					
+						sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
+						sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>' /tmp/file
+						sed '$s/.*/&\n<\/tv>/g' /tmp/file > combine/$folder/$folder.xml
+						rm /tmp/combined_programmes
+						sed -i '1d' /tmp/combinefolders
+						
+						if [ -s combine/$folder/setup.sh ]
+						then
+							bash combine/$folder/setup.sh
+						fi
+						
+						if [ -s combine/$folder/imdbmapper.pl ]
+						then
+							printf "\n\n --------------------------------------\n\nRunning addon: IMDB MAPPER for $folder.xml ...\n\n"
+							perl combine/$folder/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+							printf "\n\nDONE!\n\n"
+						fi
+						
+						if [ -s combine/$folder/ratingmapper.pl ]
+						then
+							printf "\n\n --------------------------------------\n\nRunning addon: RATING MAPPER for $folder.xml ...\n\n"
+							perl combine/$folder/ratingmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+							printf "\n\nDONE!\n\n"
+						fi
+						
+						cp combine/$folder/$folder.xml xml/$folder.xml
+						printf "\rXML file $folder.xml created!                            \n"
+					else
+						printf "\rCreation of XML file $folder.xml failed!\nNo XML or setup file available! Please check your setup!\n"
+						sed -i '1d' /tmp/combinefolders
+					fi
+				done
+				read -n 1 -s -r -p "Press any key to continue..."
+				echo "B" > /tmp/value
+			elif grep -q "6" /tmp/setupvalue
+			then
 				# ####################
-				# M1325 REMOVE SETUP #
+				# M1326 REMOVE SETUP #
 				# ####################
 				
-				dialog --backtitle "[M1325] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > REMOVE" --title "REMOVE SETUP" --yesno "Are you sure to delete this setup?" 5 40
+				dialog --backtitle "[M1326] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > REMOVE" --title "REMOVE SETUP" --yesno "Are you sure to delete this setup?" 5 40
 				
 				response=$?
 					
@@ -1209,7 +1619,7 @@ then
 				elif [ $response = 0 ]
 				then
 					rm -rf combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
-					dialog --backtitle "[M1325] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > REMOVE" --title "REMOVE SETUP" --msgbox "Setup successfully deleted!" 5 40
+					dialog --backtitle "[M1326] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > REMOVE" --title "REMOVE SETUP" --msgbox "Setup successfully deleted!" 5 40
 					echo "C" > /tmp/value
 				else
 					echo "B" > /tmp/value
