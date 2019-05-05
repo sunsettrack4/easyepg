@@ -63,6 +63,7 @@ echo "- DOWNLOAD PROCESS -" && echo ""
 printf "\rDeleting old files...                       "
 
 rm main/* 2> /dev/null
+rm /tmp/chlist chlist /tmp/workfile workfile 2> /dev/null
 
 
 #
@@ -70,7 +71,7 @@ rm main/* 2> /dev/null
 #
 
 printf "\rFetching channel list... "
-curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedulesettings?media=tv' > /tmp/workfile
+curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedulesettings?media=tv' > /tmp/chlist
 jq '.' /tmp/chlist > /tmp/workfile
 
 printf "\rChecking manifest files... "

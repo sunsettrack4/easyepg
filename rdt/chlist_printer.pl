@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # #################################
-# MAGENTA TV CHANNEL LIST CREATOR #
+# RADIOTIMES CHANNEL LIST CREATOR #
 # #################################
 
 # CREATE JSON FILE FOR COMPARISM

@@ -126,12 +126,9 @@ foreach my $attributes ( @attributes ) {
 		
 		# DEFINE PROGRAM STRINGS
 		my $program   = $item->{program};
-		my @image     = @{ $program->{'images'} };
 		my $title     = $program->{'title'};
 		my $subtitle  = $program->{'secondaryTitle'}; 
 		my $desc      = $program->{'longDescription'};
-		my @cast      = @{ $program->{'cast'} };
-		my @director  = @{ $program->{'directors'} };
 		my $date      = $program->{'year'};
 		my $genre1    = $program->{'categories'}[0]{'title'};
 		my $genre2    = $program->{'categories'}[1]{'title'};
@@ -196,33 +193,37 @@ foreach my $attributes ( @attributes ) {
 			}
 			
 			# IMAGE (condition) (loop)
-			if( @image ) {
-				while( my( $landscape_id, $image ) = each( @image ) ) {		# SEARCH FOR LANDSCAPE IMAGE
-					if( $image->{'assetType'} eq $landscape ) {
-						$landscape_location = $landscape_id;
-						last;
+			if( exists $program->{'images'} ) {
+				my @image     = @{ $program->{'images'} };
+				
+				if( @image ) {
+					while( my( $landscape_id, $image ) = each( @image ) ) {		# SEARCH FOR LANDSCAPE IMAGE
+						if( $image->{'assetType'} eq $landscape ) {
+							$landscape_location = $landscape_id;
+							last;
+						}
 					}
-				}
-				while( my( $portrait_id, $image ) = each( @image ) ) {		# SEARCH FOR PORTRAIT IMAGE
-					if( $image->{'assetType'} eq $portrait ) {
-						$portrait_location = $portrait_id;
-						last;
+					while( my( $portrait_id, $image ) = each( @image ) ) {		# SEARCH FOR PORTRAIT IMAGE
+						if( $image->{'assetType'} eq $portrait ) {
+							$portrait_location = $portrait_id;
+							last;
+						}
 					}
-				}
-				while( my( $poster_id, $image ) = each( @image ) ) {		# SEARCH FOR POSTER IMAGE
-					if( $image->{'assetType'} eq $poster ) {
-						$poster_location = $poster_id;
-						last;
+					while( my( $poster_id, $image ) = each( @image ) ) {		# SEARCH FOR POSTER IMAGE
+						if( $image->{'assetType'} eq $poster ) {
+							$poster_location = $poster_id;
+							last;
+						}
 					}
-				}
-				if( defined $portrait_location) {
-					print "  <icon src=\"" . $program->{'images'}[$portrait_location]{'url'} . "\" />\n";
-				}  
-				   elsif( defined $poster_location) {
-					print "  <icon src=\"" . $program->{'images'}[$poster_location]{'url'} . "\" />\n";
-				}
-				if( defined $landscape_location) {
-					print "  <poster src=\"" . $program->{'images'}[$landscape_location]{'url'} . "\" />\n";
+					if( defined $portrait_location) {
+						print "  <icon src=\"" . $program->{'images'}[$portrait_location]{'url'} . "\" />\n";
+					}  
+					   elsif( defined $poster_location) {
+						print "  <icon src=\"" . $program->{'images'}[$poster_location]{'url'} . "\" />\n";
+					}
+					if( defined $landscape_location) {
+						print "  <poster src=\"" . $program->{'images'}[$landscape_location]{'url'} . "\" />\n";
+					}
 				}
 			}
 			
@@ -246,26 +247,38 @@ foreach my $attributes ( @attributes ) {
 			}
 			
 			# CREDITS (condition)
-			if ( @director ) {
-				print "  <credits>\n";
-				foreach my $PRINTdirector ( @director ) {
-					$PRINTdirector =~ s/\&/\&amp;/g;
-					print "    <director>" . $PRINTdirector . "</director>\n";
+			if( exists $program->{'directors'} ) {
+				my @director  = @{ $program->{'directors'} };
+				
+				if ( @director ) {
+					print "  <credits>\n";
+					foreach my $PRINTdirector ( @director ) {
+						$PRINTdirector =~ s/\&/\&amp;/g;
+						print "    <director>" . $PRINTdirector . "</director>\n";
+					}
+					if( exists $program->{'cast'} ) {
+						my @cast      = @{ $program->{'cast'} };
+						
+						if ( @cast ) {
+							foreach my $PRINTcast ( @cast ) {
+								$PRINTcast =~ s/\&/\&amp;/g;
+								print "    <actor>" . $PRINTcast . "</actor>\n";
+							}
+						}
+					}
+					print "  </credits>\n";
 				}
-				if ( @cast ) {
+			} elsif ( exists $program->{'cast'} ) {
+				my @cast      = @{ $program->{'cast'} };
+				
+				if( @cast ) {
+					print "  <credits>\n";
 					foreach my $PRINTcast ( @cast ) {
 						$PRINTcast =~ s/\&/\&amp;/g;
 						print "    <actor>" . $PRINTcast . "</actor>\n";
 					}
+					print "  </credits>\n";
 				}
-				print "  </credits>\n";
-			} elsif ( @cast ) {
-				print "  <credits>\n";
-				foreach my $PRINTcast ( @cast ) {
-					$PRINTcast =~ s/\&/\&amp;/g;
-					print "    <actor>" . $PRINTcast . "</actor>\n";
-				}
-				print "  </credits>\n";
 			}
 			
 			# DATE (condition)
