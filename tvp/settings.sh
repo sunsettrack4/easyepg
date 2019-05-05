@@ -124,8 +124,11 @@ do
 		echo '	6 "EPISODE FORMAT (currently: onscreen)" \' >> /tmp/menu
 	fi
 	
-	# T1700 DELETE INSTANCE
-	echo '	7 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
+	# T1700 RUN XML SCRIPT
+	echo '	7 "RUN XML SCRIPT" \' >> /tmp/menu
+	
+	# T1900 DELETE INSTANCE
+	echo '	9 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 	
@@ -338,34 +341,61 @@ do
 		fi
 	
 	
-	# #######################
-	# T1700 DELETE INSTANCE #
-	# #######################
+	# ######################
+	# T1700 RUN XML SCRIPT #
+	# ######################
 	
 	elif grep -q "7" /tmp/value
 	then
-		# T1700 MENU OVERLAY
-		dialog --backtitle "[T1700] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+		clear
+		
+		echo ""
+		echo " --------------------------------------------"
+		echo " TVPLAYER EPG SIMPLE XMLTV GRABBER           "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		bash tvp.sh && cd - > /dev/null
+		
+		cp tvp/uk/tvp.xml xml/tvplayer_uk.xml 2> /dev/null
+		
+		cd - > /dev/null
+		
+		read -n 1 -s -r -p "Press any key to continue..."
+		echo "H" > /tmp/value
+	
+	
+	# #######################
+	# T1900 DELETE INSTANCE #
+	# #######################
+	
+	elif grep -q "9" /tmp/value
+	then
+		# T1900 MENU OVERLAY
+		dialog --backtitle "[T1900] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
 						
 		response=$?
 						
-		# T1710 NO
+		# T1910 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[T1710] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[T1910] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
 			echo "H" > /tmp/value
 						
-		# T1720 YES
+		# T1920 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[T1720] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[T1920] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json
 			echo "M" > /tmp/value
 							
-		# T17X0 EXIT
+		# T19X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[T17X0] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
+			dialog --backtitle "[T19X0] EASYEPG SIMPLE XMLTV GRABBER > TVPLAYER SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
 			echo "H" > /tmp/value
 		fi
 	

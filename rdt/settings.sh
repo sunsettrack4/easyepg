@@ -131,8 +131,14 @@ do
 		echo '	6 "EPISODE FORMAT (currently: onscreen)" \' >> /tmp/menu
 	fi
 	
-	# R1700 DELETE INSTANCE
-	echo '	7 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
+	# R1700 RUN XML SCRIPT
+	echo '	7 "RUN XML SCRIPT" \' >> /tmp/menu
+	
+	# R3800 DELETE CACHE FILES
+	echo '	8 "DELETE CACHE FILES" \' >> /tmp/menu
+	
+	# R1900 DELETE INSTANCE
+	echo '	9 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 	
@@ -417,34 +423,93 @@ do
 		fi
 	
 	
-	# #######################
-	# R1700 DELETE INSTANCE #
-	# #######################
+	# ######################
+	# R1700 RUN XML SCRIPT #
+	# ######################
 	
 	elif grep -q "7" /tmp/value
 	then
-		# R1700 MENU OVERLAY
-		dialog --backtitle "[R1700] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+		clear
+		
+		echo ""
+		echo " --------------------------------------------"
+		echo " RADIOTIMES EPG SIMPLE XMLTV GRABBER         "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		bash rdt.sh && cd - > /dev/null
+		
+		cp rdt/uk/radiotimes.xml xml/radiotimes_uk.xml 2> /dev/null
+		
+		cd - > /dev/null
+		
+		read -n 1 -s -r -p "Press any key to continue..."
+		echo "H" > /tmp/value
+	
+	
+	# ##########################
+	# R1800 DELETE CACHE FILES #
+	# ##########################
+	
+	elif grep -q "8" /tmp/value
+	then
+		# R1800 MENU OVERLAY
+		dialog --backtitle "[R1800] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "WARNING" --yesno "Do you want to delete the cache?" 5 50
 						
 		response=$?
 						
-		# R1710 NO
+		# R1810 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[R1710] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[R1810] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service not deleted!" 5 32
 			echo "H" > /tmp/value
 						
-		# R1720 YES
+		# R1820 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[R1720] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[R1820] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service deleted!" 5 30
+			rm -rf cache/* init.txt 2> /dev/null
+			echo "H" > /tmp/value
+							
+		# R18X0 EXIT
+		elif [ $response = 255 ]
+		then
+			dialog --backtitle "[R18X0] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Cache not deleted!" 5 30
+			echo "H" > /tmp/value
+		fi
+	
+	
+	# #######################
+	# R1900 DELETE INSTANCE #
+	# #######################
+	
+	elif grep -q "9" /tmp/value
+	then
+		# R1900 MENU OVERLAY
+		dialog --backtitle "[R1900] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+						
+		response=$?
+						
+		# R1910 NO
+		if [ $response = 1 ]
+		then
+			dialog --backtitle "[R1910] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			echo "H" > /tmp/value
+						
+		# R1920 YES
+		elif [ $response = 0 ] 
+		then
+			dialog --backtitle "[R1920] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json
 			echo "M" > /tmp/value
 							
-		# R17X0 EXIT
+		# R19X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[R17X0] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
+			dialog --backtitle "[R19X0] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
 			echo "H" > /tmp/value
 		fi
 	

@@ -285,8 +285,14 @@ do
 		echo '	6 "EPISODE FORMAT (currently: onscreen)" \' >> /tmp/menu
 	fi
 	
-	# Z3700 DELETE INSTANCE
-	echo '	7 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
+	# Z3700 RUN XML SCRIPT
+	echo '	7 "RUN XML SCRIPT" \' >> /tmp/menu
+	
+	# Z3800 DELETE CACHE FILES
+	echo '	8 "DELETE CACHE FILES" \' >> /tmp/menu
+	
+	# Z3900 DELETE INSTANCE
+	echo '	9 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 	
@@ -576,34 +582,94 @@ do
 		fi
 	
 	
-	# #######################
-	# Z3700 DELETE INSTANCE #
-	# #######################
+	# ######################
+	# Z3700 RUN XML SCRIPT #
+	# ######################
 	
 	elif grep -q "7" /tmp/value
 	then
-		# Z3700 MENU OVERLAY
-		dialog --backtitle "[Z3700] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+		clear
+		
+		echo ""
+		echo " --------------------------------------------"
+		echo " ZATTOO EPG SIMPLE XMLTV GRABBER             "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		bash ztt.sh && cd - > /dev/null
+		
+		cp ztt/de/zattoo.xml xml/zattoo_de.xml 2> /dev/null
+		cp ztt/ch/zattoo.xml xml/zattoo_ch.xml 2> /dev/null
+		
+		cd - > /dev/null
+		
+		read -n 1 -s -r -p "Press any key to continue..."
+		echo "H" > /tmp/value
+	
+	
+	# ##########################
+	# Z3800 DELETE CACHE FILES #
+	# ##########################
+	
+	elif grep -q "8" /tmp/value
+	then
+		# Z3800 MENU OVERLAY
+		dialog --backtitle "[Z3800] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "WARNING" --yesno "Do you want to delete the cache?" 5 50
 						
 		response=$?
 						
-		# Z3710 NO
+		# Z3810 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[Z3710] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[Z3810] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service not deleted!" 5 32
 			echo "H" > /tmp/value
 						
-		# Z3720 YES
+		# Z3820 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[Z3720] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[Z3820] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service deleted!" 5 30
+			rm -rf cache/* init.txt 2> /dev/null
+			echo "H" > /tmp/value
+							
+		# Z38X0 EXIT
+		elif [ $response = 255 ]
+		then
+			dialog --backtitle "[Z38X0] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Cache not deleted!" 5 30
+			echo "H" > /tmp/value
+		fi
+	
+	
+	# #######################
+	# Z3900 DELETE INSTANCE #
+	# #######################
+	
+	elif grep -q "9" /tmp/value
+	then
+		# Z3900 MENU OVERLAY
+		dialog --backtitle "[Z3900] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+						
+		response=$?
+						
+		# Z3910 NO
+		if [ $response = 1 ]
+		then
+			dialog --backtitle "[Z3910] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			echo "H" > /tmp/value
+						
+		# Z3920 YES
+		elif [ $response = 0 ] 
+		then
+			dialog --backtitle "[Z3920] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json
 			echo "M" > /tmp/value
 							
-		# Z37X0 EXIT
+		# Z39X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[Z37X0] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
+			dialog --backtitle "[Z39X0] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
 			echo "H" > /tmp/value
 		fi
 	

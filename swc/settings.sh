@@ -137,8 +137,11 @@ do
 		echo '	6 "EPISODE FORMAT (currently: onscreen)" \' >> /tmp/menu
 	fi
 	
-	# S1700 DELETE INSTANCE
-	echo '	7 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
+	# S1700 RUN XML SCRIPT
+	echo '	7 "RUN XML SCRIPT" \' >> /tmp/menu
+	
+	# S1900 DELETE INSTANCE
+	echo '	9 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 	
@@ -435,34 +438,61 @@ do
 		fi
 	
 	
-	# #######################
-	# S1700 DELETE INSTANCE #
-	# #######################
+	# ######################
+	# S1700 RUN XML SCRIPT #
+	# ######################
 	
 	elif grep -q "7" /tmp/value
 	then
-		# S1700 MENU OVERLAY
-		dialog --backtitle "[S1700] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+		clear
+		
+		echo ""
+		echo " --------------------------------------------"
+		echo " SWISSCOM EPG SIMPLE XMLTV GRABBER           "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		bash swc.sh && cd - > /dev/null
+		
+		cp swc/ch/swisscom.xml xml/swisscom_ch.xml 2> /dev/null
+		
+		cd - > /dev/null
+		
+		read -n 1 -s -r -p "Press any key to continue..."
+		echo "H" > /tmp/value
+		
+	
+	# #######################
+	# S1900 DELETE INSTANCE #
+	# #######################
+	
+	elif grep -q "9" /tmp/value
+	then
+		# S1900 MENU OVERLAY
+		dialog --backtitle "[S1900] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
 						
 		response=$?
 						
-		# S1710 NO
+		# S1910 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[S1710] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[S1910] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
 			echo "H" > /tmp/value
 						
-		# S1720 YES
+		# S1920 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[S1720] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[S1920] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json
 			echo "M" > /tmp/value
 							
-		# S17X0 EXIT
+		# S19X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[S17X0] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
+			dialog --backtitle "[S19X0] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
 			echo "H" > /tmp/value
 		fi
 	

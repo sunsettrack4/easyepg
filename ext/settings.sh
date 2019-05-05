@@ -137,8 +137,11 @@ do
 	# X1200 FILE PATH
 	echo '	2 "MODIFY FILE PATH" \' >> /tmp/menu
 	
-	# X1300 DELETE INSTANCE
-	echo '	7 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
+	# X1300 RUN XML SCRIPT
+	echo '	3 "RUN XML SCRIPT" \' >> /tmp/menu
+	
+	# X1900 DELETE INSTANCE
+	echo '	9 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 	
@@ -326,34 +329,63 @@ do
 		rm /tmp/setupname
 	
 	
+	# ######################
+	# X1300 RUN XML SCRIPT #
+	# ######################
+	
+	elif grep -q "3" /tmp/value
+	then
+		clear
+		
+		echo ""
+		echo " --------------------------------------------"
+		echo " EXTERNAL EPG SIMPLE XMLTV GRABBER            "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		bash ext.sh && cd - > /dev/null
+		
+		cp ext/oa/external.xml xml/external_oa.xml 2> /dev/null
+		cp ext/ob/external.xml xml/external_ob.xml 2> /dev/null
+		cp ext/oc/external.xml xml/external_oc.xml 2> /dev/null
+		
+		cd - > /dev/null
+		
+		read -n 1 -s -r -p "Press any key to continue..."
+		echo "H" > /tmp/value
+		
+	
 	# #######################
-	# X1700 DELETE INSTANCE #
+	# X1900 DELETE INSTANCE #
 	# #######################
 	
-	elif grep -q "7" /tmp/value
+	elif grep -q "9" /tmp/value
 	then
-		# X1700 MENU OVERLAY
-		dialog --backtitle "[H1700] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+		# X1900 MENU OVERLAY
+		dialog --backtitle "[X1900] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
 						
 		response=$?
 						
-		# X1710 NO
+		# X1910 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[H1710] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[X1910] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
 			echo "H" > /tmp/value
 						
-		# X1720 YES
+		# X1920 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[H1720] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[X1920] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json settings.json ext_file.xml 2> /dev/null
 			echo "M" > /tmp/value
 							
-		# X17X0 EXIT
+		# X19X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[H17X0] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
+			dialog --backtitle "[X19X0] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
 			echo "H" > /tmp/value
 		fi
 	

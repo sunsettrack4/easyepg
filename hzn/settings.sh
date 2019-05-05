@@ -180,8 +180,11 @@ do
 		echo '	6 "EPISODE FORMAT (currently: onscreen)" \' >> /tmp/menu
 	fi
 	
-	# H1700 DELETE INSTANCE
-	echo '	7 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
+	# H1700 RUN XML SCRIPT
+	echo '	7 "RUN XML SCRIPT" \' >> /tmp/menu
+	
+	# H1900 DELETE INSTANCE
+	echo '	9 "REMOVE GRABBER INSTANCE" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 	
@@ -470,34 +473,70 @@ do
 		fi
 	
 	
-	# #######################
-	# H1700 DELETE INSTANCE #
-	# #######################
+	# ######################
+	# H1700 RUN XML SCRIPT #
+	# ######################
 	
 	elif grep -q "7" /tmp/value
 	then
-		# H1700 MENU OVERLAY
-		dialog --backtitle "[H1700] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+		clear
+		
+		echo ""
+		echo " --------------------------------------------"
+		echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		bash hzn.sh && cd - > /dev/null
+		
+		cp hzn/de/horizon.xml xml/horizon_de.xml 2> /dev/null
+		cp hzn/at/horizon.xml xml/horizon_at.xml 2> /dev/null
+		cp hzn/ch/horizon.xml xml/horizon_ch.xml 2> /dev/null
+		cp hzn/nl/horizon.xml xml/horizon_nl.xml 2> /dev/null
+		cp hzn/pl/horizon.xml xml/horizon_pl.xml 2> /dev/null
+		cp hzn/ie/horizon.xml xml/horizon_ie.xml 2> /dev/null
+		cp hzn/sk/horizon.xml xml/horizon_sk.xml 2> /dev/null
+		cp hzn/cz/horizon.xml xml/horizon_cz.xml 2> /dev/null
+		cp hzn/hu/horizon.xml xml/horizon_hu.xml 2> /dev/null
+		cp hzn/ro/horizon.xml xml/horizon_ro.xml 2> /dev/null
+		
+		cd - > /dev/null
+		
+		read -n 1 -s -r -p "Press any key to continue..."
+		echo "H" > /tmp/value
+	
+	
+	# #######################
+	# H1900 DELETE INSTANCE #
+	# #######################
+	
+	elif grep -q "9" /tmp/value
+	then
+		# H1900 MENU OVERLAY
+		dialog --backtitle "[H1900] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
 						
 		response=$?
 						
-		# H1710 NO
+		# H1910 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[H1710] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[H1910] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
 			echo "H" > /tmp/value
 						
-		# H1720 YES
+		# H1920 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[H1720] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[H1920] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json
 			echo "M" > /tmp/value
 							
-		# H17X0 EXIT
+		# H19X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[H17X0] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
+			dialog --backtitle "[H19X0] EASYEPG SIMPLE XMLTV GRABBER > HORIZON SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
 			echo "H" > /tmp/value
 		fi
 	
