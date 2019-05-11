@@ -165,9 +165,19 @@ else
 		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY PROGRAMME DATA!" >> errorlog
 	fi
 	
-	if ! grep -q "<channel id=" external.xml
+	if ! grep "<channel id=" external.xml > /tmp/id_check
 	then
 		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY CHANNEL DATA!" >> errorlog
+	fi
+	
+	uniq -d /tmp/id_check > /tmp/id_checked
+	if [ -s /tmp/id_checked ]
+	then
+		echo "[ EPG ERROR ] XMLTV FILE CONTAINS DUPLICATED CHANNEL IDs!" >> errorlog
+		sed -i 's/.*/[ DUPLICATE ] &/g' /tmp/id_checked && cat /tmp/id_checked >> errorlog
+		rm /tmp/id_check /tmp/id_checked 2> /dev/null
+	else
+		rm /tmp/id_check /tmp/id_checked 2> /dev/null
 	fi
 	
 	if [ -e errorlog ]

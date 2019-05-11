@@ -653,7 +653,7 @@ do
 			# M1112 AUSTRIA
 			if [ ! -d hzn/at ]
 			then
-				echo '	2 "[AT] UPC Austria" \' >> /tmp/menu
+				echo '	2 "[AT] Magenta T" \' >> /tmp/menu
 			fi
 			
 			# M1113 SWITZERLAND
@@ -1650,7 +1650,7 @@ do
 			# M1212 AUSTRIA
 			if [ -d hzn/at ]
 			then
-				echo '	2 "[AT] UPC Austria" \' >> /tmp/menu
+				echo '	2 "[AT] Magenta T" \' >> /tmp/menu
 			fi
 			
 			# M1213 SWITZERLAND

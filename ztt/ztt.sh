@@ -17,7 +17,7 @@
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with zattoo_tvh. If not, see <http://www.gnu.org/licenses/>.
+#  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 
 # ################
@@ -1256,8 +1256,6 @@ then
 	done < "$input"
 	
 	echo ""
-	echo "Channel IDs updated, affected EPG cache data removed."
-	echo ""
 	echo "======================================================="
 	echo ""
 	
@@ -1841,9 +1839,19 @@ else
 		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY PROGRAMME DATA!" >> errorlog
 	fi
 	
-	if ! grep -q "<channel id=" zattoo.xml
+	if ! grep "<channel id=" zattoo.xml > /tmp/id_check
 	then
 		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY CHANNEL DATA!" >> errorlog
+	fi
+	
+	uniq -d /tmp/id_check > /tmp/id_checked
+	if [ -s /tmp/id_checked ]
+	then
+		echo "[ EPG ERROR ] XMLTV FILE CONTAINS DUPLICATED CHANNEL IDs!" >> errorlog
+		sed -i 's/.*/[ DUPLICATE ] &/g' /tmp/id_checked && cat /tmp/id_checked >> errorlog
+		rm /tmp/id_check /tmp/id_checked 2> /dev/null
+	else
+		rm /tmp/id_check /tmp/id_checked 2> /dev/null
 	fi
 	
 	if [ -e errorlog ]
