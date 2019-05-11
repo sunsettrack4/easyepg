@@ -51,14 +51,7 @@ sleep 0.5s
 mkdir xml 2> /dev/null && chmod 0777 xml 2> /dev/null
 mkdir combine 2> /dev/null && chmod 0777 combine 2> /dev/null
 
-chmod 0777 hzn 2> /dev/null && chmod 0777 hzn/* 2> /dev/null
-chmod 0777 ztt 2> /dev/null && chmod 0777 ztt/* 2> /dev/null
-chmod 0777 swc 2> /dev/null && chmod 0777 swc/* 2> /dev/null
-chmod 0777 tvp 2> /dev/null && chmod 0777 tvp/* 2> /dev/null
-chmod 0777 tkm 2> /dev/null && chmod 0777 tkm/* 2> /dev/null
-chmod 0777 rdt 2> /dev/null && chmod 0777 rdt/* 2> /dev/null
-chmod 0777 wpu 2> /dev/null && chmod 0777 wpu/* 2> /dev/null
-chmod 0777 ext 2> /dev/null && chmod 0777 ext/* 2> /dev/null
+chmod -R 0777 . 2> /dev/null
 
 if [ ! -e hzn/ch_json2xml.pl ]
 then
