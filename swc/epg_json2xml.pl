@@ -370,24 +370,16 @@ foreach my $attributes ( $data->{attributes} ) {
 									
 						# CATEGORIES (USE ONE CATEGORY ONLY) (condition) (language) (settings)
 						if ( @relations ) {
-							
-							# DEFINE CATEGORY PARAMETERS
-							my $genretype    = "Genre";
-							my $genre_location;
 						
-							while( my( $genre_id, $genre ) = each( @relations ) ) {		# SEARCH FOR CATEGORY
-								if( $genre->{'Kind'} eq $genretype ) {
-									$genre_location = $genre_id;
-									last;
-								}
-							}
-							if( defined $genre_location) {
-								if ( $setup_genre eq $enabled ) {
-									if ( defined $eit->{ $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} } ) {
-										print "  <category lang=\"" . $languageVER . "\">" . $eit->{ $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} } . "</category>\n";
+							foreach my $relations ( @relations ) {
+								my $role = $relations->{'Role'};
+								
+								if( defined $role and $role eq "Genre" ) {
+									if ( defined $eit->{ $relations->{'TargetIdentifier'} } ) {
+										print "  <category lang=\"" . $languageVER . "\">" . $eit->{ $relations->{'TargetIdentifier'} } . "</category>\n";
 									} else {
-										print "  <category lang=\"" . $languageVER . "\">" . $broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'} . "</category>\n";
-										print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$broadcastitems->{'Relations'}[$genre_location]{'TargetIdentifier'}" . "\n";
+										print "  <category lang=\"" . $languageVER . "\">" . $relations->{'TargetIdentifier'} . "</category>\n";
+										print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . $relations->{'TargetIdentifier'} . "\n";
 									}
 								}
 							}

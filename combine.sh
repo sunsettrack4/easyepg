@@ -1201,21 +1201,24 @@ then
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl ]
 						then
 							cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
-							rm Readme age.php country.php imdb.class.php imdbmapper.pl poster.php rating.php url.php year.php
+							rm imdbmapper.pl 2> /dev/null
 							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER deleted!" 5 35
 							cd - > /dev/null
 						else
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/Readme > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/Readme
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/age.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/age.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/country.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/country.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdb.class.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdb.class.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdbmapper.pl > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/poster.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/poster.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/rating.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/url.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/url.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/year.php > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/year.php
+							mkdir imdb 2> /dev/null && chmod 0777 imdb 2> /dev/null
 							
-							sed -i "17s/\/my\/path\/to\/php\/helperscripts/combine\/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/g" combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl
+							touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/Readme > imdb/Readme
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/age.php > imdb/age.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/country.php > imdb/country.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdb.class.php > imdb/imdb.class.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdbmapper.pl > imdb/imdbmapper.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/poster.php > imdb/poster.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/rating.php > imdb/imdbmapper.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/url.php > imdb/url.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/year.php > imdb/year.php
+							
+							sed -i "17s/\/home\/takealug\/EPG\/takealug\/imdbmapper/imdb/g" imdb/imdbmapper.pl
 							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER added!" 5 35
 						fi
 					fi
@@ -1322,7 +1325,7 @@ then
 				then
 					echo ""
 					echo " --------------------------------------------"
-					echo " CREATING CUSTOMIZED XMLTV FILES             "
+					echo " CREATING CUSTOMIZED XMLTV FILE              "
 					echo " --------------------------------------------"
 					echo ""
 					sleep 2s
@@ -1330,6 +1333,7 @@ then
 
 				while [ -s /tmp/combinefolders ]
 				do
+					echo $(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) > /tmp/combinefolders
 					folder=$(sed -n "1p" /tmp/combinefolders)
 
 					printf "Creating XML file: $folder.xml ..."
@@ -1719,10 +1723,10 @@ then
 								bash combine/$folder/setup.sh
 							fi
 							
-							if [ -s combine/$folder/imdbmapper.pl ]
+							if [ -e combine/$folder/imdbmapper.pl ]
 							then
 								printf "\n\n --------------------------------------\n\nRunning addon: IMDB MAPPER for $folder.xml ...\n\n"
-								perl combine/$folder/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+								perl imdb/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
 								printf "\n\nDONE!\n\n"
 							fi
 							

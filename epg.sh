@@ -1044,7 +1044,7 @@ do
 				mkdir ztt/de
 				chmod 0777 ztt/de
 				echo '{"country":"DE","language":"de"}' > ztt/de/init.json
-				sed '138,172s/XX/DE/g' ztt/settings.sh > ztt/de/settings.sh
+				sed 's/\[XX\]/[DE]/g' ztt/settings.sh > ztt/de/settings.sh
 				cp ztt/ztt.sh ztt/de/ztt.sh
 				cp ztt/compare_crid.pl ztt/de/
 				cp ztt/save_page.js ztt/de/
@@ -1073,7 +1073,7 @@ do
 				mkdir ztt/ch
 				chmod 0777 ztt/ch
 				echo '{"country":"CH","language":"de"}' > ztt/ch/init.json
-				sed '138,172s/XX/CH/g' ztt/settings.sh > ztt/ch/settings.sh
+				sed 's/\[XX\]/[CH]/g' ztt/settings.sh > ztt/ch/settings.sh
 				cp ztt/ztt.sh ztt/ch/ztt.sh
 				cp ztt/compare_crid.pl ztt/ch/
 				cp ztt/save_page.js ztt/ch/
@@ -2970,10 +2970,10 @@ do
 				bash combine/$folder/setup.sh
 			fi
 			
-			if [ -s combine/$folder/imdbmapper.pl ]
+			if [ -e combine/$folder/imdbmapper.pl ]
 			then
 				printf "\n\n --------------------------------------\n\nRunning addon: IMDB MAPPER for $folder.xml ...\n\n"
-				perl combine/$folder/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+				perl imdb/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
 				printf "\n\nDONE!\n\n"
 			fi
 			
