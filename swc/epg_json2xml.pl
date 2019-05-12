@@ -310,7 +310,7 @@ foreach my $attributes ( $data->{attributes} ) {
 									foreach my $relations ( @relations ) {
 										my $role = $relations->{'Role'};
 										
-										if( $role eq "Director" ) {
+										if( defined $role eq "Director" ) {
 											my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $dir_fname = $director->{'FirstName'};
 											   $dir_fname =~ s/\&/\&amp;/g;
@@ -328,7 +328,7 @@ foreach my $attributes ( $data->{attributes} ) {
 											}
 										}
 										
-										if( $role eq "Actor" ) {
+										if( defined $role eq "Actor" ) {
 											my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $act_fname = $actor->{'FirstName'};
 											   $act_fname =~ s/\&/\&amp;/g;
