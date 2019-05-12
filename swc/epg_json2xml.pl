@@ -236,11 +236,13 @@ foreach my $attributes ( $data->{attributes} ) {
 							
 						# TITLE (language)
 						$title =~ s/\&/\&amp;/g;
+						$title =~ s/<[^>]*>//g;
 						print "  <title lang=\"" . $languageVER . "\">" . $title . "</title>\n";
 					
 						# SUBTITLE (condition) (language)
 						if( defined $subtitle ) {
 							$subtitle =~ s/\&/\&amp;/g;
+							$subtitle =~ s/<[^>]*>//g;
 							print "  <sub-title lang=\"" . $languageVER . "\">" . $subtitle . "</sub-title>\n";
 						}
 							
@@ -261,7 +263,7 @@ foreach my $attributes ( $data->{attributes} ) {
 									foreach my $relations ( @relations ) {
 										my $role = $relations->{'Role'};
 										
-										if( $role eq "Director" ) {
+										if( defined $role eq "Director" ) {
 											my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $dir_fname = $director->{'FirstName'};
 											my $dir_lname = $director->{'LastName'};
@@ -281,7 +283,7 @@ foreach my $attributes ( $data->{attributes} ) {
 											}
 										}
 										
-										if( $role eq "Actor" ) {
+										if( defined $role eq "Actor" ) {
 											my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $act_fname = $actor->{'FirstName'};
 											my $act_lname = $actor->{'LastName'};

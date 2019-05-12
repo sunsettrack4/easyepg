@@ -194,11 +194,13 @@ foreach my $attributes ( $data->{attributes} ) {
 			
 			# TITLE (language)
 			$title =~ s/\&/\&amp;/g;
+			$title =~ s/<[^>]*>//g;
 			print "  <title lang=\"$languageVER\">$title</title>\n";
 			
 			# SUBTITLE (condition) (language)
 			if( defined $subtitle ) {
 				$subtitle =~ s/\&/\&amp;/g;
+				$subtitle =~ s/<[^>]*>//g;
 				print "  <sub-title lang=\"$languageVER\">$subtitle</sub-title>\n";
 			}
 			
