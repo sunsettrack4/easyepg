@@ -263,7 +263,7 @@ foreach my $attributes ( $data->{attributes} ) {
 									foreach my $relations ( @relations ) {
 										my $role = $relations->{'Role'};
 										
-										if( defined $role eq "Director" ) {
+										if( defined $role and $role eq "Director" ) {
 											my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $dir_fname = $director->{'FirstName'};
 											my $dir_lname = $director->{'LastName'};
@@ -283,7 +283,7 @@ foreach my $attributes ( $data->{attributes} ) {
 											}
 										}
 										
-										if( defined $role eq "Actor" ) {
+										if( defined $role and $role eq "Actor" ) {
 											my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $act_fname = $actor->{'FirstName'};
 											my $act_lname = $actor->{'LastName'};
@@ -312,7 +312,7 @@ foreach my $attributes ( $data->{attributes} ) {
 									foreach my $relations ( @relations ) {
 										my $role = $relations->{'Role'};
 										
-										if( defined $role eq "Director" ) {
+										if( defined $role and $role eq "Director" ) {
 											my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $dir_fname = $director->{'FirstName'};
 											   $dir_fname =~ s/\&/\&amp;/g;
@@ -330,7 +330,7 @@ foreach my $attributes ( $data->{attributes} ) {
 											}
 										}
 										
-										if( defined $role eq "Actor" ) {
+										if( defined $role and $role eq "Actor" ) {
 											my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $act_fname = $actor->{'FirstName'};
 											   $act_fname =~ s/\&/\&amp;/g;
