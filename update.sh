@@ -75,8 +75,8 @@ echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/cid_json.pl 2> /dev/n
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/chlist_printer.pl 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/compare_menu.pl 2> /dev/null
 
-sed 's/\[XX\]/[DE]/g' easyepg/ztt/settings.sh > ztt/de/settings.sh 2> /dev/null
-sed 's/\[XX\]/[CH]/g' easyepg/ztt/settings.sh > ztt/ch/settings.sh 2> /dev/null
+sed 's/\[XX\]/[DE]/g;s/XXXX/DE/g' easyepg/ztt/settings.sh > ztt/de/settings.sh 2> /dev/null
+sed 's/\[XX\]/[CH]/g;s/XXXX/CH/g' easyepg/ztt/settings.sh > ztt/ch/settings.sh 2> /dev/null
 
 
 # SWISSCOM

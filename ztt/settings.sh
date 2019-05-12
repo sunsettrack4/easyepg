@@ -142,7 +142,7 @@ do
 
 	if grep -q '"success": true' /tmp/login.txt
 	then
-		if grep -q '"service_region_country": "XX"' /tmp/login.txt
+		if grep -q '"service_region_country": "XXXX"' /tmp/login.txt
 		then
 			rm /tmp/cookie_list
 			sed '/Set-cookie/!d' /tmp/login.txt > /tmp/workfile
