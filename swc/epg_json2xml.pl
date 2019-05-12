@@ -269,12 +269,11 @@ foreach my $attributes ( $data->{attributes} ) {
 											my $dir_lname = $director->{'LastName'};
 											
 											if( defined $dir_lname ) {
+												$dir_lname =~ s/\&/\&amp;/g;
 												if( defined $dir_fname) {
 													$dir_fname =~ s/\&/\&amp;/g;
-													$dir_lname =~ s/\&/\&amp;/g;
 													print "    <director>" . $dir_fname . " " . $dir_lname . "</director>\n";
 												} else {
-													$dir_lname =~ s/\&/\&amp;/g;
 													print "    <director>" . $dir_lname . "</director>\n";
 												}
 											} elsif( defined $dir_fname ) {
@@ -289,12 +288,11 @@ foreach my $attributes ( $data->{attributes} ) {
 											my $act_lname = $actor->{'LastName'};
 											
 											if( defined $act_lname ) {
+												$act_lname =~ s/\&/\&amp;/g;
 												if( defined $act_fname) {
 													$act_fname =~ s/\&/\&amp;/g;
-													$act_lname =~ s/\&/\&amp;/g;
 													print "    <actor>" . $act_fname . " " . $act_lname . "</actor>\n";
 												} else {
-													$act_lname =~ s/\&/\&amp;/g;
 													print "    <actor>" . $act_lname . "</actor>\n";
 												}
 											} elsif( defined $act_fname ) {
@@ -315,17 +313,18 @@ foreach my $attributes ( $data->{attributes} ) {
 										if( defined $role and $role eq "Director" ) {
 											my $director  = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $dir_fname = $director->{'FirstName'};
-											   $dir_fname =~ s/\&/\&amp;/g;
 											my $dir_lname = $director->{'LastName'};
-											   $dir_lname =~ s/\&/\&amp;/g;
 											
 											if( defined $dir_lname ) {
+												$dir_lname =~ s/\&/\&amp;/g;
 												if( defined $dir_fname) {
+													$dir_fname =~ s/\&/\&amp;/g;
 													print "    <director>" . $dir_fname . " " . $dir_lname . "</director>\n";
 												} else {
 													print "    <director>" . $dir_lname . "</director>\n";
 												}
 											} elsif( defined $dir_fname ) {
+												$dir_fname =~ s/\&/\&amp;/g;
 												print "    <director>" . $dir_fname . "</director>\n";
 											}
 										}
@@ -333,17 +332,18 @@ foreach my $attributes ( $data->{attributes} ) {
 										if( defined $role and $role eq "Actor" ) {
 											my $actor     = $relations->{'TargetNode'}{'Content'}{'Description'};
 											my $act_fname = $actor->{'FirstName'};
-											   $act_fname =~ s/\&/\&amp;/g;
 											my $act_lname = $actor->{'LastName'};
-											   $act_lname =~ s/\&/\&amp;/g;
 											
 											if( defined $act_lname ) {
+												$act_lname =~ s/\&/\&amp;/g;
 												if( defined $act_fname) {
+													$act_fname =~ s/\&/\&amp;/g;
 													print "    <actor>" . $act_fname . " " . $act_lname . "</actor>\n";
 												} else {
 													print "    <actor>" . $act_lname . "</actor>\n";
 												}
 											} elsif( defined $act_fname ) {
+												$act_fname =~ s/\&/\&amp;/g;
 												print "    <actor>" . $act_fname . "</actor>\n";
 											}
 										}
