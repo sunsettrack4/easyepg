@@ -1147,7 +1147,7 @@ then
 						then
 							touch /tmp/menu
 						else
-							dialog --backtitle "[M132I] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "INFO" --msgbox "New channel list saved!" 5 30
+							dialog --backtitle "[M132I] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "INFO" --msgbox "New channel list saved!\nPlease note that the combined XML file must be created / updated to save the new channel list as text file!" 7 60
 						fi
 					elif [ -e /tmp/error ]
 					then
@@ -1263,10 +1263,11 @@ then
 				
 				if [ -e xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml ]
 				then
-					grep -E "<display-name|<channel id=" xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml | \
+					grep -E "<display-name|<channel id=|<!-- CHANNEL LIST" xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml | \
 					sed ':a $!N;s/\n  <display-name/<display-name/;ta P;D' | \
 					sed 's/\(<channel id=.*\)\(<display-name.*\)/\2\1/g' | \
-					sed 's/<display-name lang="de">//g;s/<\/display-name><channel id="/ : /g;s/">//g' \
+					sed 's/<display-name lang="de">//g;s/<\/display-name><channel id="/ : /g;s/">//g' | \
+					sed 's/\&amp;/\&/g' \
 						> xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).txt
 					
 					dialog --backtitle "[M1325] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > CHANNEL LIST" --title "CHANNEL LIST AS TEXTFILE" --msgbox "Okay! Channel list created!" 5 40
