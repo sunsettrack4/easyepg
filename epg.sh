@@ -2624,6 +2624,7 @@ do
 				
 				sed 's/fileNAME/horizon_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_de_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: UNITYMEDIA GERMANY -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2636,12 +2637,13 @@ do
 			then
 				sed 's/fileNAME/horizon_at.xml/g' ch_combine.pl > /tmp/ch_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_at_channels.json/g" /tmp/ch_combine.pl
-				printf "\n<!-- CHANNEL LIST: UPC AUSTRIA  -->\n\n" >> /tmp/combined_channels
+				printf "\n<!-- CHANNEL LIST: MAGENTA T  -->\n\n" >> /tmp/combined_channels
 				perl /tmp/ch_combine.pl >> /tmp/combined_channels
 				
 				sed 's/fileNAME/horizon_at.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_at_channels.json/g" /tmp/prog_combine.pl
-				printf "\n<!-- PROGRAMMES: UPC AUSTRIA -->\n\n" >> /tmp/combined_programmes
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+				printf "\n<!-- PROGRAMMES: MAGENTA T -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
 		fi
@@ -2659,6 +2661,7 @@ do
 				
 				sed 's/fileNAME/horizon_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_ch_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: UPC SWITZERLAND -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2676,6 +2679,7 @@ do
 				
 				sed 's/fileNAME/horizon_nl.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_nl_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: ZIGGO NETHERLANDS -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2693,6 +2697,7 @@ do
 				
 				sed 's/fileNAME/horizon_pl.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_pl_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: HORIZON POLAND -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2710,6 +2715,7 @@ do
 				
 				sed 's/fileNAME/horizon_ie.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_ie_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: VIRGIN MEDIA IRELAND -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2727,6 +2733,7 @@ do
 				
 				sed 's/fileNAME/horizon_sk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_sk_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: HORIZON SLOVAKIA -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2744,6 +2751,7 @@ do
 				
 				sed 's/fileNAME/horizon_cz.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_cz_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: HORIZON CZECH REPUBLIC -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2761,6 +2769,7 @@ do
 				
 				sed 's/fileNAME/horizon_hu.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_hu_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: HORIZON HUNGARY -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2778,6 +2787,7 @@ do
 				
 				sed 's/fileNAME/horizon_ro.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/hzn_ro_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: HORIZON ROMANIA -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2795,6 +2805,7 @@ do
 				
 				sed 's/fileNAME/zattoo_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/ztt_de_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: ZATTOO GERMANY -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2812,6 +2823,7 @@ do
 				
 				sed 's/fileNAME/zattoo_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/ztt_ch_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: ZATTOO SWITZERLAND -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2829,6 +2841,7 @@ do
 				
 				sed 's/fileNAME/swisscom_ch.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/swc_ch_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: SWISSCOM SWITZERLAND -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2846,6 +2859,7 @@ do
 				
 				sed 's/fileNAME/tvplayer_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/tvp_uk_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: TVPLAYER UK -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2863,6 +2877,7 @@ do
 				
 				sed 's/fileNAME/magentatv_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/tkm_de_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: MAGENTA TV DE -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2880,6 +2895,7 @@ do
 				
 				sed 's/fileNAME/radiotimes_uk.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/rdt_uk_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: RADIOTIMES UK -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2897,6 +2913,7 @@ do
 				
 				sed 's/fileNAME/waipu_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/wpu_de_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: WAIPU.TV DE -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2914,6 +2931,7 @@ do
 				
 				sed 's/fileNAME/external_oa.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/ext_oa_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 1 -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2931,6 +2949,7 @@ do
 				
 				sed 's/fileNAME/external_ob.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/ext_ob_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 2 -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
@@ -2948,6 +2967,7 @@ do
 				
 				sed 's/fileNAME/external_oc.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/ext_oc_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: EXTERNAL SOURCE SLOT 3 -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
