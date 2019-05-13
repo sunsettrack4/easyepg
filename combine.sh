@@ -1214,7 +1214,7 @@ then
 							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdb.class.php > imdb/imdb.class.php
 							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdbmapper.pl > imdb/imdbmapper.pl
 							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/poster.php > imdb/poster.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/rating.php > imdb/imdbmapper.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/rating.php > imdb/rating.php
 							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/url.php > imdb/url.php
 							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/year.php > imdb/year.php
 							
