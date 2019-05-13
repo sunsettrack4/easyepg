@@ -2985,9 +2985,11 @@ do
 			rm /tmp/combined_programmes
 			sed -i '1d' /tmp/combinefolders
 			
-			if [ -s combine/$folder/setup.sh ]
+			if [ -s combine/$folder/pre_setup.sh ]
 			then
-				bash combine/$folder/setup.sh
+				printf "\n\n --------------------------------------\n\nRunning PRE SCRIPT for $folder.xml ...\n\n"
+				bash combine/$folder/pre_setup.sh
+				printf "\n\nDONE!\n\n"
 			fi
 			
 			if [ -e combine/$folder/imdbmapper.pl ]
@@ -3001,6 +3003,13 @@ do
 			then
 				printf "\n\n --------------------------------------\n\nRunning addon: RATING MAPPER for $folder.xml ...\n\n"
 				perl combine/$folder/ratingmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+				printf "\n\nDONE!\n\n"
+			fi
+			
+			if [ -s combine/$folder/setup.sh ]
+			then
+				printf "\n\n --------------------------------------\n\nRunning POST SCRIPT for $folder.xml ...\n\n"
+				bash combine/$folder/setup.sh
 				printf "\n\nDONE!\n\n"
 			fi
 			

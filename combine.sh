@@ -418,61 +418,64 @@ then
 			# M1322 ADDON SCRIPTS
 			echo '	2 "USE ADDON SCRIPTS" \' >> /tmp/menu
 			
-			# M1323 POST SCRIPTS
-			echo '	3 "ADD/MODIFY POST SHELL SCRIPT" \' >> /tmp/menu
+			# M1323 PRE SCRIPTS
+			echo '	3 "ADD/MODIFY PRE SHELL SCRIPT" \' >> /tmp/menu
 			
-			# M1324 CREATE CHANNEL LIST
+			# M1324 POST SCRIPTS
+			echo '	4 "ADD/MODIFY POST SHELL SCRIPT" \' >> /tmp/menu
+			
+			# M1325 CREATE CHANNEL LIST
 			if [ -e xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml ]
 			then
-				echo '	4 "CREATE CHANNEL LIST AS TXT FILE" \' >> /tmp/menu
+				echo '	5 "CREATE CHANNEL LIST AS TXT FILE" \' >> /tmp/menu
 			fi
 			
-			# M1325 TIME PERIOD
+			# M1326 TIME PERIOD
 			if grep -q '"day": "10"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 10 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 10 days)" \' >> /tmp/menu
 			elif grep -q '"day": "11"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 11 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 11 days)" \' >> /tmp/menu
 			elif grep -q '"day": "12"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 12 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 12 days)" \' >> /tmp/menu
 			elif grep -q '"day": "13"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 13 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 13 days)" \' >> /tmp/menu
 			elif grep -q '"day": "14"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 14 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 14 days)" \' >> /tmp/menu
 			elif grep -q '"day": "0"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (disabled)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (disabled)" \' >> /tmp/menu
 			elif grep -q '"day": "1"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 1 day)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 1 day)" \' >> /tmp/menu
 			elif grep -q '"day": "2"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 2 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 2 days)" \' >> /tmp/menu
 			elif grep -q '"day": "3"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 3 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 3 days)" \' >> /tmp/menu
 			elif grep -q '"day": "4"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 4 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 4 days)" \' >> /tmp/menu
 			elif grep -q '"day": "5"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 5 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 5 days)" \' >> /tmp/menu
 			elif grep -q '"day": "6"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 6 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 6 days)" \' >> /tmp/menu
 			elif grep -q '"day": "7"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 7 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 7 days)" \' >> /tmp/menu
 			elif grep -q '"day": "8"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 8 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 8 days)" \' >> /tmp/menu
 			elif grep -q '"day": "9"' combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/settings.json
 			then
-				echo '	5 "TIME PERIOD (currently: 9 days)" \' >> /tmp/menu
+				echo '	6 "TIME PERIOD (currently: 9 days)" \' >> /tmp/menu
 			fi	
 			
 			# M1327 RUN COMBINE SCRIPT
@@ -1226,16 +1229,36 @@ then
 				echo "B" > /tmp/value
 			elif grep -q "3" /tmp/setupvalue
 			then
-				# #####################
-				# M1323 SHELL SCRIPT  #
-				# #####################
+				# ##########################
+				# M1323 PRE SHELL SCRIPT   #
+				# ##########################
 				
-				nano combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/setup.sh
+				nano combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/pre_setup.sh
+				
+				if [ ! -s combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/pre_setup.sh ]
+				then
+					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/pre_setup.sh 2> /dev/null
+				fi
+				
 				echo "B" > /tmp/value
 			elif grep -q "4" /tmp/setupvalue
 			then
+				# ##########################
+				# M1324 POST SHELL SCRIPT  #
+				# ##########################
+				
+				nano combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/setup.sh
+				
+				if [ ! -s combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/setup.sh ]
+				then
+					rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/setup.sh 2> /dev/null
+				fi
+				
+				echo "B" > /tmp/value
+			elif grep -q "5" /tmp/setupvalue
+			then
 				# ###########################
-				# M1324 CREATE CHANNEL LIST #
+				# M1325 CREATE CHANNEL LIST #
 				# ###########################
 				
 				if [ -e xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml ]
@@ -1246,21 +1269,21 @@ then
 					sed 's/<display-name lang="de">//g;s/<\/display-name><channel id="/ : /g;s/">//g' \
 						> xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).txt
 					
-					dialog --backtitle "[M1324] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > CHANNEL LIST" --title "CHANNEL LIST AS TEXTFILE" --msgbox "Okay! Channel list created!" 5 40
+					dialog --backtitle "[M1325] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > CHANNEL LIST" --title "CHANNEL LIST AS TEXTFILE" --msgbox "Okay! Channel list created!" 5 40
 					echo "B" > /tmp/value
 				fi
-			elif grep -q "5" /tmp/setupvalue
+			elif grep -q "6" /tmp/setupvalue
 			then
 				# ##########################
-				# M1325 MODIFY TIME PERIOD #
+				# M1326 MODIFY TIME PERIOD #
 				# ##########################
 				
 				echo "X" > /tmp/value
 		
 				while grep -q "X" /tmp/value
 				do
-					# M1325 MENU OVERLAY
-					dialog --backtitle "[M1325] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > TIME PERIOD" --title "EPG CREATOR" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
+					# M1326 MENU OVERLAY
+					dialog --backtitle "[M1326] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > TIME PERIOD" --title "EPG CREATOR" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
 									
 					sed -i 's/.*/epg&-/g' /tmp/value
 					
@@ -1306,7 +1329,7 @@ then
 						dialog --backtitle "[M132E] EASYEPG SIMPLE XMLTV GRABBER > SWISSCOM SETTINGS > TIME PERIOD" --title "ERROR" --msgbox "Wrong input detected!" 5 30 
 						echo "X" > /tmp/value
 					
-					# S12X0 EXIT
+					# M132X EXIT
 					else
 						echo "B" > /tmp/value
 					fi
@@ -1718,9 +1741,11 @@ then
 							rm /tmp/combined_programmes
 							sed -i '1d' /tmp/combinefolders
 							
-							if [ -s combine/$folder/setup.sh ]
+							if [ -s combine/$folder/pre_setup.sh ]
 							then
-								bash combine/$folder/setup.sh
+								printf "\n\n --------------------------------------\n\nRunning PRE SCRIPT for $folder.xml ...\n\n"
+								bash combine/$folder/pre_setup.sh
+								printf "\n\nDONE!\n\n"
 							fi
 							
 							if [ -e combine/$folder/imdbmapper.pl ]
@@ -1734,6 +1759,13 @@ then
 							then
 								printf "\n\n --------------------------------------\n\nRunning addon: RATING MAPPER for $folder.xml ...\n\n"
 								perl combine/$folder/ratingmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+								printf "\n\nDONE!\n\n"
+							fi
+							
+							if [ -s combine/$folder/setup.sh ]
+							then
+								printf "\n\n --------------------------------------\n\nRunning POST SCRIPT for $folder.xml ...\n\n"
+								bash combine/$folder/setup.sh
 								printf "\n\nDONE!\n\n"
 							fi
 							
