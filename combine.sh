@@ -1266,7 +1266,7 @@ then
 					grep -E "<display-name|<channel id=|<!-- CHANNEL LIST" xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).xml | \
 					sed ':a $!N;s/\n  <display-name/<display-name/;ta P;D' | \
 					sed 's/\(<channel id=.*\)\(<display-name.*\)/\2\1/g' | \
-					sed 's/<display-name lang="de">//g;s/<\/display-name><channel id="/ : /g;s/">//g' | \
+					sed 's/<display-name lang="[a-za-z]">//g;s/<\/display-name><channel id="/ : /g;s/">//g' | \
 					sed 's/\&amp;/\&/g' \
 						> xml/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine).txt
 					
