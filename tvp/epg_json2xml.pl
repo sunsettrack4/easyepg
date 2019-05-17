@@ -190,6 +190,7 @@ foreach my $attributes ( @attributes ) {
 						# TITLE (language)
 						$title =~ s/\&/\&amp;/g;
 						$title =~ s/<[^>]*>//g;
+						$title =~ s/[<>]//g;
 						
 						print "<title lang=\"$languageVER\">$title</title>";
 						
@@ -197,6 +198,7 @@ foreach my $attributes ( @attributes ) {
 						if( defined $subtitle ) {
 							$subtitle =~ s/\&/\&amp;/g;				# REQUIRED TO READ XML FILE CORRECTLY
 							$subtitle =~ s/<[^>]*>//g;				# REMOVE XML STRINGS WITHIN JSON VALUE
+							$subtitle =~ s/[<>]//g;
 							print "<sub-title lang=\"$languageVER\">$subtitle</sub-title>";
 						}
 						
@@ -204,6 +206,7 @@ foreach my $attributes ( @attributes ) {
 						if( defined $desc ) {
 							$desc =~ s/\&/\&amp;/g;					# REQUIRED TO READ XML FILE CORRECTLY
 							$desc =~ s/<[^>]*>//g;					# REMOVE XML STRINGS WITHIN JSON VALUE
+							$desc =~ s/[<>]//g;
 							$desc =~ s/\n//g;						# DO NOT PRINT LINE BREAKS
 							print "<desc lang=\"$languageVER\">$desc</desc>";
 						}

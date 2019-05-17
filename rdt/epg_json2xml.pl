@@ -219,15 +219,18 @@ foreach my $maniattributes ( @maniattributes ) {
 					if( defined $display_title ) {
 						$display_title =~ s/\&/\&amp;/g;
 						$display_title =~ s/<[^>]*>//g;
+						$display_title =~ s/[<>]//g;
 						print "  <title lang=\"" . $languageVER . "\">" . $display_title . "</title>\n";
 					} elsif( defined $medium_title ) {
 						$medium_title =~ s/\&/\&amp;/g;
 						$medium_title =~ s/<[^>]*>//g;
+						$medium_title =~ s/[<>]//g;
 						print "  <title lang=\"" . $languageVER . "\">" . $medium_title . "</title>\n";
 					} else {
 						$title =~ s/\&#39;/'/g;
 						$title =~ s/\&/\&amp;/g;
 						$title =~ s/<[^>]*>//g;
+						$title =~ s/[<>]//g;
 						print "  <title lang=\"" . $languageVER . "\">" . $title . "</title>\n";
 					}
 						
@@ -236,6 +239,7 @@ foreach my $maniattributes ( @maniattributes ) {
 					if( defined $subtitle ) {
 						$subtitle =~ s/\&/\&amp;/g;
 						$subtitle =~ s/<[^>]*>//g;
+						$subtitle =~ s/[<>]//g;
 						print "  <sub-title lang=\"" . $languageVER . "\">" . $subtitle . "</sub-title>\n";
 					}
 					
@@ -245,15 +249,18 @@ foreach my $maniattributes ( @maniattributes ) {
 					if( defined $long_desc ) {
 						$long_desc =~ s/\&/\&amp;/g;
 						$long_desc =~ s/<[^>]*>//g;
+						$long_desc =~ s/[<>]//g;
 						print "  <desc lang=\"" . $languageVER . "\">" . $long_desc . "</desc>\n";
 					} elsif( defined $medium_desc ) {
 						$medium_desc =~ s/\&/\&amp;/g;
 						$medium_desc =~ s/<[^>]*>//g;
+						$medium_desc =~ s/[<>]//g;
 						print "  <desc lang=\"" . $languageVER . "\">" . $medium_desc . "</desc>\n";
 					} elsif( defined $desc ) {
 						$desc =~ s/\&#39;/'/g;
 						$desc =~ s/\&/\&amp;/g;
 						$desc =~ s/<[^>]*>//g;
+						$desc =~ s/[<>]//g;
 						print "  <desc lang=\"" . $languageVER . "\">" . $desc . "</desc>\n";
 					}
 						
