@@ -100,8 +100,8 @@ then
 	session=$(<user/session)
 	printf "\rLogin to Zattoo webservice... OK!\n\n"
 else
-	rm -rf user/userfile
-	printf "\rLogin to Zattoo webservice... FAILED!\n"
+	printf "\rLogin to Zattoo webservice... FAILED!\n\n"
+	printf "[ LOGIN ERROR ] Please check your credentials!\n\n"
 	exit 1
 fi
 

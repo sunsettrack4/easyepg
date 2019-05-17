@@ -62,9 +62,9 @@ then
 	session=$(curl -s -X POST -H "User-Agent: WAIPU_USER_AGENT" -H "Authorization: Bearer $(<user/session)" -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode "$(sed '2d' user/userfile)" --data-urlencode "$(sed '1d' user/userfile)" --data-urlencode "grant_type=password" https://auth.waipu.tv/oauth/token 2>/dev/null | jq -r '.access_token')
 	printf "\rLogin to waipu.tv webservice... OK!\n\n"
 else
-	rm -rf user/userfile
-	printf "\rLogin to waipu.tv webservice... FAILED!"
-	sleep 2s
+	printf "\rLogin to waipu.tv webservice... FAILED!\n\n"
+	printf "[ LOGIN ERROR ] Please check your credentials!\n\n"
+	exit 0
 fi
 
 
