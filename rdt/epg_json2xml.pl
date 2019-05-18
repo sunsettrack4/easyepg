@@ -152,7 +152,6 @@ foreach my $maniattributes ( @maniattributes ) {
 					
 			# DEFINE IMAGE
 			my $image = $manilistings->{'Image'};
-			$image    =~ s/\&.*//g;
 						
 			# DEFINE TITLE
 			my $title = $manilistings->{'Title'};
@@ -191,11 +190,6 @@ foreach my $maniattributes ( @maniattributes ) {
 					print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 				}
 				
-				# IMAGE (condition)
-				if( defined $image ) {
-					print "  <icon src=\"" . $image . "\" />\n";
-				}
-				
 				# ###############
 				# EPG ROUTINE 1 #
 				# ###############
@@ -221,6 +215,16 @@ foreach my $maniattributes ( @maniattributes ) {
 					my $epg_attributes = decode_json($json_epg);
 							
 					if( defined $epg_attributes ) {
+						
+						# IMAGE (condition)
+						my $adv_image = $epg_attributes->{'image'};
+						if( defined $adv_image ) {
+							$adv_image    =~ s/\&.*//g;
+							print "  <icon src=\"" . $adv_image . "\" />\n";
+						} elsif( defined $image ) {
+							$image    =~ s/\&.*//g;
+							print "  <icon src=\"" . $image . "\" />\n";
+						}
 						
 						# TITLE (condition)
 						my $display_title = $epg_attributes->{'display_title'}->{'title'};
@@ -332,6 +336,12 @@ foreach my $maniattributes ( @maniattributes ) {
 				#
 				
 				} else {
+					
+					# IMAGE (condition)
+					if( defined $image ) {
+						$image    =~ s/\&.*//g;
+						print "  <icon src=\"" . $image . "\" />\n";
+					}
 					
 					# TITLE
 					$title =~ s/\&#39;/'/g;
