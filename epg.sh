@@ -456,6 +456,8 @@ then
 	perldoc -l Time::Piece >/dev/null 2>&1 || { printf "\nTime::Piece module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Time::Seconds >/dev/null 2>&1 || { printf "\nTime::Seconds module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l utf8 >/dev/null 2>&1 || { printf "\nuft8 module for perl is requried but not installed!" >&2; ERROR2="true"; }
+	perldoc -l DateTime >/dev/null 2>&1 || { printf "\nDateTime module for perl is requried but not installed!" >&2; ERROR2="true"; }
+	perldoc -l DateTime::Format::DateParse >/dev/null 2>&1 || { printf "\nDateTime::Format::DateParse module for perl is requried but not installed!" >&2; ERROR2="true"; }
 else
 	printf "\nperl-doc is required but it's not installed!"
 	ERROR2="true"

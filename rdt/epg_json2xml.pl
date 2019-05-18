@@ -36,6 +36,8 @@ use LWP::Simple;
 use HTML::TreeBuilder;
 use Data::Dumper;
 use Time::Piece;
+use DateTime;
+use DateTime::Format::DateParse;
 
 # READ JSON INPUT FILE: EPG MANIFEST WORKFILE
 my $json_mani;
@@ -140,15 +142,33 @@ foreach my $maniattributes ( @maniattributes ) {
 		
 		foreach my $manilistings ( @manilistings ) {
 	
-			# DEFINE TIMES
+			# DEFINE START TIME
 			my $start = $manilistings->{'StartTimeMF'};
+			$start    =~ s/Z//g;
+			$start    =~ s/ /T/g;
+			my $startUK  = DateTime::Format::DateParse->parse_datetime($start, 'Europe/London');
+			$startUK->set_time_zone('UTC');
+			my $s_YMD = $startUK->ymd;
+			$s_YMD    =~ s/-//g;
+			my $s_HMS = $startUK->hms;
+			$s_HMS    =~ s/://g;
+			my $startUTC = $s_YMD . $s_HMS;
+			
+			# DEFINE END TIME
 			my $end   = $manilistings->{'EndTimeMF'};
-			$start    =~ s/[-:Z ]//g;
-			$end      =~ s/[-:Z ]//g; 
+			$end      =~ s/Z//g;
+			$end      =~ s/ /T/g;
+			my $endUK = DateTime::Format::DateParse->parse_datetime($end, 'Europe/London');
+			$endUK->set_time_zone('UTC');
+			my $e_YMD = $endUK->ymd;
+			$e_YMD    =~ s/-//g;
+			my $e_HMS = $endUK->hms;
+			$e_HMS    =~ s/://g;
+			my $endUTC = $e_YMD . $e_HMS;
 							
 			# CONVERT TO XMLTV DATE FORMAT
-			my $startTIME = $start . ' +0000';
-			my $endTIME   = $end . ' +0000';
+			my $startTIME = $startUTC . ' +0000';
+			my $endTIME   = $endUTC . ' +0000';
 					
 			# DEFINE IMAGE
 			my $image = $manilistings->{'Image'};
