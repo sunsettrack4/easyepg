@@ -1009,6 +1009,7 @@ then
 					if [ -s /tmp/chduplicates ]
 					then
 						dialog --backtitle "[M132E] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "ERROR" --msgbox "Duplicated Channel IDs exist in this setup!\nPlease remove the duplicated entries from setup.\n\nList of duplicated Channel IDs:\n\n$(</tmp/chduplicates)" 12 55 2> /tmp/value
+						rm /tmp/channels 2> /dev/null
 					else
 						rm /tmp/chduplicates 2> /dev/null
 					fi
@@ -1018,6 +1019,23 @@ then
 						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[RADIOTIMES [A-Z][A-Z]\]|\[WAIPU.TV [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
+							
+							if [ -s /tmp/channels ]
+							then
+								sed 's/"\\\[/\n&/g' /tmp/channels > /tmp/channelslist
+								sed -i 's/.*\\\] //g;s/".*//g' /tmp/channelslist
+								sort /tmp/channelslist | uniq -d > /tmp/svduplicates
+								
+								if [ -s /tmp/svduplicates ]
+								then
+									dialog --backtitle "[M132W] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "WARNING" --msgbox "Duplicated Channel IDs still exist in this setup!\nPlease remove the duplicated entries from setup.\n\nList of duplicated Channel IDs:\n\n$(</tmp/svduplicates)" 12 55 2> /tmp/value
+									rm /tmp/channels 2> /dev/null
+									touch /tmp/warning
+								fi
+								
+								rm /tmp/channelslist /tmp/svduplicates
+							fi
+							
 							rm /tmp/menu
 						else
 							dialog --backtitle "[M132F] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "FATAL ERROR" --msgbox "Channel setup based on non-existing XML files! Setup files deleted!" 6 50
@@ -1152,6 +1170,10 @@ then
 					elif [ -e /tmp/error ]
 					then
 						rm /tmp/error
+					elif [ -e /tmp/warning ]
+					then
+						rm /tmp/warning
+						touch /tmp/menu
 					else
 						dialog --backtitle "[M132I] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "INFO" --msgbox "Channel list unchanged!\nPlease note that at least 1 channel must be included in channel list!" 7 50
 					fi
