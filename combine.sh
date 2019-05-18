@@ -1008,8 +1008,11 @@ then
 					
 					if [ -s /tmp/chduplicates ]
 					then
-						dialog --backtitle "[M132E] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "ERROR" --msgbox "Duplicated Channel IDs exist in this setup!\nPlease remove the duplicated entries from setup.\n\nList of duplicated Channel IDs:\n\n$(</tmp/chduplicates)" 12 55 2> /tmp/value
-						rm /tmp/channels 2> /dev/null
+						dialog --backtitle "[M132F] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "FATAL ERROR" --msgbox "Duplicated Channel IDs exist in this setup!\nPlease create a new setup to proceed!" 7 55 2> /tmp/value
+						rm /tmp/menu /tmp/channels 2> /dev/null
+						rm -rf combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) 2> /dev/null
+						echo "C" > /tmp/value
+						exit 0
 					else
 						rm /tmp/chduplicates 2> /dev/null
 					fi
@@ -1028,12 +1031,12 @@ then
 								
 								if [ -s /tmp/svduplicates ]
 								then
-									dialog --backtitle "[M132W] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "WARNING" --msgbox "Duplicated Channel IDs still exist in this setup!\nPlease remove the duplicated entries from setup.\n\nList of duplicated Channel IDs:\n\n$(</tmp/svduplicates)" 12 55 2> /tmp/value
+									dialog --backtitle "[M132W] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > MODIFY" --title "ERROR" --msgbox "Duplicated Channel IDs exist in this setup!\nPlease remove the duplicated entries from setup.\n\nList of duplicated Channel IDs:\n\n$(</tmp/svduplicates)" 12 55 2> /tmp/value
 									rm /tmp/channels 2> /dev/null
 									touch /tmp/warning
 								fi
 								
-								rm /tmp/channelslist /tmp/svduplicates
+								rm /tmp/channelslist /tmp/svduplicates 2> /dev/null
 							fi
 							
 							rm /tmp/menu
