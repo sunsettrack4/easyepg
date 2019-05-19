@@ -1046,7 +1046,7 @@ do
 				mkdir ztt/de
 				chmod 0777 ztt/de
 				echo '{"country":"DE","language":"de"}' > ztt/de/init.json
-				sed 's/\[XX\]/[DE]/g' ztt/settings.sh > ztt/de/settings.sh
+				sed 's/\[XX\]/[DE]/g;s/XXXX/DE/g' ztt/settings.sh > ztt/de/settings.sh
 				cp ztt/ztt.sh ztt/de/ztt.sh
 				cp ztt/compare_crid.pl ztt/de/
 				cp ztt/save_page.js ztt/de/
@@ -1075,7 +1075,7 @@ do
 				mkdir ztt/ch
 				chmod 0777 ztt/ch
 				echo '{"country":"CH","language":"de"}' > ztt/ch/init.json
-				sed 's/\[XX\]/[CH]/g' ztt/settings.sh > ztt/ch/settings.sh
+				sed 's/\[XX\]/[CH]/g;s/XXXX/CH/g' ztt/settings.sh > ztt/ch/settings.sh
 				cp ztt/ztt.sh ztt/ch/ztt.sh
 				cp ztt/compare_crid.pl ztt/ch/
 				cp ztt/save_page.js ztt/ch/

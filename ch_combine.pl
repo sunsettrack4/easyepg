@@ -91,6 +91,8 @@ foreach my $configdata ( @configdata ) {
 			# CHANNEL ID + NAME
 			print "<channel id=\"" . $channel_id . "\">\n";
 			print "  <display-name lang=\"" . $ch_lang . "\">" . $ch_name . "<\/display-name>\n<\/channel>\n";
+		
 		}
+
 	}
 }

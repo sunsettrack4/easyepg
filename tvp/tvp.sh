@@ -105,9 +105,7 @@ then
 	do
 		echo "$var"
 	done < "$input"
-	
-	echo ""
-	echo "Channel IDs updated!                                   "
+
 	echo ""
 	echo "======================================================="
 	echo ""

@@ -252,10 +252,10 @@ printf "\rCreating EPG manifest file... "
 rm /tmp/manifile.json 2> /dev/null
 cat mani/* > /tmp/manifile.json
 sed -i 's/}\]}}/}]}/g' /tmp/manifile.json
-jq -s '.' /tmp/manifile.json > /tmp/epg_workfile 2>/tmp/errors.txt
+jq -s '.' /tmp/manifile.json > /tmp/epg_workfile 2>>/tmp/errors.txt
 sed -i '1s/\[/{ "attributes":[/g;$s/\]/&}/g' /tmp/epg_workfile
 
-perl compare_crid.pl > day/daydlnew_1 2>/tmp/errors.txt
+perl compare_crid.pl > day/daydlnew_1 2>>/tmp/errors.txt
 sort -u day/daydlnew_1 > day/daydlnew_sorted && mv day/daydlnew_sorted day/daydlnew_1
 cp day/daydlnew_1 day/day1 2> /dev/null
 

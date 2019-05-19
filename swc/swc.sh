@@ -249,7 +249,7 @@ printf "\rCreating EPG manifest file... "
 
 rm /tmp/manifile.json 2> /dev/null
 cat mani/* > /tmp/manifile.json
-jq -s '.' /tmp/manifile.json 2>/tmp/errors.txt > /tmp/epg_workfile 
+jq -s '.' /tmp/manifile.json 2>>/tmp/errors.txt > /tmp/epg_workfile 
 sed -i '1s/\[/{ "attributes":[/g;$s/\]/&}/g' /tmp/epg_workfile
 
 echo "DONE!" && printf "\n"

@@ -92,31 +92,35 @@ foreach my $attributes ( @attributes )  {
 				my $pid  = $programmes->{'EpisodeId'};
 				my $spec = $programmes->{'Specialisation'};
 				
-				# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
-				if( $new_id eq $old_id ) {
+				if( defined $new_id ) {
 					
-					if( $cid eq $new_id and defined $spec ) {
-						if( $spec eq "tv" ) {
-							print $pid . "_TV\n";
-						} elsif( $spec eq "film" ) {
-							print $pid . "_MV\n";
+					# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
+					if( $new_id eq $old_id ) {
+						
+						if( $cid eq $new_id and defined $spec ) {
+							if( $spec eq "tv" ) {
+								print $pid . "_TV\n";
+							} elsif( $spec eq "film" ) {
+								print $pid . "_MV\n";
+							}
+						}
+				
+					# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
+					} elsif( defined $new_id ) {
+						print STDERR "[ CHLIST INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
+						
+						if ( $cid eq $new_id and defined $spec ) {
+							if( $spec eq "tv" ) {
+								print $pid . "_TV\n";
+							} elsif( $spec eq "film" ) {
+								print $pid . "_MV\n";
+							}
 						}
 					}
 				
-				# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
-				} elsif( defined $new_id ) {
-					print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
-					
-					if ( $cid eq $new_id and defined $spec ) {
-						if( $spec eq "tv" ) {
-							print $pid . "_TV\n";
-						} elsif( $spec eq "film" ) {
-							print $pid . "_MV\n";
-						}
-					}
-					
+				# CHANNEL NOT FOUND	
 				} else {
-					print STDERR "[ WARNING ] CHANNEL $configname not found in channel list!\n";
+					print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 				}
 			}
 		}

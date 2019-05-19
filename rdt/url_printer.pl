@@ -128,6 +128,6 @@ foreach my $configname ( @configname ) {
 		}
 	
 	} else {
-		print STDERR "[ WARNING ] CHANNEL $configname not found in channel list!\n";
+		print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 	}
 }

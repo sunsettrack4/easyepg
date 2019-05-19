@@ -59,7 +59,8 @@ my $settings_data  = decode_json($settings);
 my $day_setting  = $settings_data->{'settings'}{'day'};
 
 # SET DATE VALUES
-my $time1   = Time::Piece->new;
+my $time0   = Time::Piece->new;
+my $time1   = $time0 - 3600;
 my $time2   = $time1 + 86400;
 my $time3   = $time1 + 172800;
 my $time4   = $time1 + 259200;
@@ -91,7 +92,7 @@ my @configname  = @{ $channels_data->{'config'} };
 
 foreach my $configname ( @configname ) {
 	
-	# XXFINE IDs
+	# DEFINE IDs
 	my $new_id = $new_name2id->{$configname};
 			
 	# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
@@ -121,6 +122,6 @@ foreach my $configname ( @configname ) {
 		}
 	
 	} else {
-		print STDERR "[ WARNING ] CHANNEL $configname not found in channel list!\n";
+		print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 	}
 }

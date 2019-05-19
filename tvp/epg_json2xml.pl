@@ -169,93 +169,95 @@ foreach my $attributes ( @attributes ) {
 					my $new_id = $new_name2id->{$cidEXT};
 				
 					# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition) (settings)
-					if( $new_id eq $cid ) {
-						if( $setup_cid eq $enabled ) {
-							if( defined $rytec->{$cidEXT} ) {
-								print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $rytec->{$cidEXT} . "\">";
+					if( defined $new_id ) {
+						if( $new_id eq $cid ) {
+							if( $setup_cid eq $enabled ) {
+								if( defined $rytec->{$cidEXT} ) {
+									print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $rytec->{$cidEXT} . "\">";
+								} else {
+									print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $cidEXT . "\">";
+									print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT . "\n";
+								}
 							} else {
 								print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $cidEXT . "\">";
-								print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT . "\n";
 							}
-						} else {
-							print "<programme start=\"$start\" stop=\"$end\" channel=\"" . $cidEXT . "\">";
-						}
-					
-						# IMAGE (condition)
-						if( defined $image ) {
-							$image =~ s/width=720\&//g;
-							print "<icon src=\"" . $image . "\" />";
-						}
 						
-						# TITLE (language)
-						$title =~ s/\&/\&amp;/g;
-						$title =~ s/<[^>]*>//g;
-						$title =~ s/[<>]//g;
-						
-						print "<title lang=\"$languageVER\">$title</title>";
-						
-						# SUBTITLE (condition) (language)
-						if( defined $subtitle ) {
-							$subtitle =~ s/\&/\&amp;/g;				# REQUIRED TO READ XML FILE CORRECTLY
-							$subtitle =~ s/<[^>]*>//g;				# REMOVE XML STRINGS WITHIN JSON VALUE
-							$subtitle =~ s/[<>]//g;
-							print "<sub-title lang=\"$languageVER\">$subtitle</sub-title>";
-						}
-						
-						# DESCRIPTION (condition) (language)
-						if( defined $desc ) {
-							$desc =~ s/\&/\&amp;/g;					# REQUIRED TO READ XML FILE CORRECTLY
-							$desc =~ s/<[^>]*>//g;					# REMOVE XML STRINGS WITHIN JSON VALUE
-							$desc =~ s/[<>]//g;
-							$desc =~ s/\n//g;						# DO NOT PRINT LINE BREAKS
-							print "<desc lang=\"$languageVER\">$desc</desc>";
-						}
-						
-						# CATEGORIES (USE MOST DETAILLED CATEGORY) (condition) (language)
-						if ( defined $genre ) {
-							if ( $setup_genre eq $enabled ) {
-								if ( defined $eit->{ $genre } ) {
-									print "<category lang=\"$languageVER\">" . $eit->{ $genre } . "</category>";
+							# IMAGE (condition)
+							if( defined $image ) {
+								$image =~ s/width=720\&//g;
+								print "<icon src=\"" . $image . "\" />";
+							}
+							
+							# TITLE (language)
+							$title =~ s/\&/\&amp;/g;
+							$title =~ s/<[^>]*>//g;
+							$title =~ s/[<>]//g;
+							
+							print "<title lang=\"$languageVER\">$title</title>";
+							
+							# SUBTITLE (condition) (language)
+							if( defined $subtitle ) {
+								$subtitle =~ s/\&/\&amp;/g;				# REQUIRED TO READ XML FILE CORRECTLY
+								$subtitle =~ s/<[^>]*>//g;				# REMOVE XML STRINGS WITHIN JSON VALUE
+								$subtitle =~ s/[<>]//g;
+								print "<sub-title lang=\"$languageVER\">$subtitle</sub-title>";
+							}
+							
+							# DESCRIPTION (condition) (language)
+							if( defined $desc ) {
+								$desc =~ s/\&/\&amp;/g;					# REQUIRED TO READ XML FILE CORRECTLY
+								$desc =~ s/<[^>]*>//g;					# REMOVE XML STRINGS WITHIN JSON VALUE
+								$desc =~ s/[<>]//g;
+								$desc =~ s/\n//g;						# DO NOT PRINT LINE BREAKS
+								print "<desc lang=\"$languageVER\">$desc</desc>";
+							}
+							
+							# CATEGORIES (USE MOST DETAILLED CATEGORY) (condition) (language)
+							if ( defined $genre ) {
+								if ( $setup_genre eq $enabled ) {
+									if ( defined $eit->{ $genre } ) {
+										print "<category lang=\"$languageVER\">" . $eit->{ $genre } . "</category>";
+									} else {
+										print "<category lang=\"$languageVER\">$genre</category>";
+										print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre" . "\n";;
+									}
 								} else {
 									print "<category lang=\"$languageVER\">$genre</category>";
-									print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST: " . "$genre" . "\n";;
 								}
-							} else {
-								print "<category lang=\"$languageVER\">$genre</category>";
 							}
-						}
-						
-						# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
-						if( $setup_episode eq $xmltv_ns ) {
-							if( defined $series ) {
-								my $XMLseries  = $series - 1;
-								if( defined $episode ) {
+							
+							# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
+							if( $setup_episode eq $xmltv_ns ) {
+								if( defined $series ) {
+									my $XMLseries  = $series - 1;
+									if( defined $episode ) {
+										my $XMLepisode = $episode - 1;
+										print "<episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>";
+									} else {
+										print "<episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>";
+									}
+								} elsif( defined $episode ) {
 									my $XMLepisode = $episode - 1;
-									print "<episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>";
-								} else {
-									print "<episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>";
+									print "<episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>";
 								}
-							} elsif( defined $episode ) {
-								my $XMLepisode = $episode - 1;
-								print "<episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>";
 							}
-						}
-						
-						# SEASON/EPISODE (ONSCREEN) (condition) (settings)
-						if( $setup_episode eq $onscreen ) {
-							if( defined $series ) {
-								if( defined $episode ) {
-									print "<episode-num system=\"onscreen\">S$series E$episode</episode-num>";
-								} else {
-									print "<episode-num system=\"onscreen\">S$series</episode-num>";
+							
+							# SEASON/EPISODE (ONSCREEN) (condition) (settings)
+							if( $setup_episode eq $onscreen ) {
+								if( defined $series ) {
+									if( defined $episode ) {
+										print "<episode-num system=\"onscreen\">S$series E$episode</episode-num>";
+									} else {
+										print "<episode-num system=\"onscreen\">S$series</episode-num>";
+									}
+								} elsif( defined $episode ) {
+									print "<episode-num system=\"onscreen\">E$episode</episode-num>";
 								}
-							} elsif( defined $episode ) {
-								print "<episode-num system=\"onscreen\">E$episode</episode-num>";
 							}
+							
+							# END OF PROGRAMME
+							print "</programme>\n";
 						}
-						
-						# END OF PROGRAMME
-						print "</programme>\n";
 					}
 				}
 			}
