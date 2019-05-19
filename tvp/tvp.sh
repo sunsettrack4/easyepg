@@ -91,16 +91,16 @@ echo  "DONE!" && printf "\n"
 
 curl -s https://tvplayer.com/tvguide?date=$date1 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' > /tmp/chlist
 perl chlist_printer.pl > /tmp/compare.json
-perl compare_menu.pl 2>/tmp/errors.txt > /tmp/xxx
+perl compare_menu.pl 2>errors.txt > /tmp/xxx
 
-sort -u /tmp/errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt /tmp/errors.txt
+sort -u errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt errors.txt
 
-if [ -s /tmp/errors.txt ]
+if [ -s errors.txt ]
 then
 	echo "================= CHANNEL LIST: LOG ==================="
 	echo ""
 	
-	input="/tmp/errors.txt"
+	input="errors.txt"
 	while IFS= read -r var
 	do
 		echo "$var"
@@ -112,7 +112,7 @@ then
 	
 	cp /tmp/chlist chlist_old
 else
-	rm /tmp/errors.txt 2> /dev/null
+	rm errors.txt 2> /dev/null
 fi
 
 

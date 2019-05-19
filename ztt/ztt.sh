@@ -932,7 +932,7 @@ do
 		rm day/daydlnew_${time}_${part} day/datafile_${time}_${part} 2> /dev/null
 		touch day/day${time}
 		
-		cat /tmp/errors_${time}_${part}.txt >> /tmp/errors.txt 2> /dev/null
+		cat /tmp/errors_${time}_${part}.txt >> errors.txt 2> /dev/null
 	done
 done
 
@@ -1241,15 +1241,15 @@ echo "DONE!" && printf "\n"
 # SHOW ERROR MESSAGE + ABORT PROCESS IF CHANNEL IDs WERE CHANGED
 #
 
-sed -i '/Died at \/tmp\/compare_crid_day/d' /tmp/errors.txt
-sort -u /tmp/errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt /tmp/errors.txt
+sed -i '/Died at \/tmp\/compare_crid_day/d' errors.txt
+sort -u errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt errors.txt
 
-if [ -s /tmp/errors.txt ]
+if [ -s errors.txt ]
 then
 	echo "================= CHANNEL LIST: LOG ==================="
 	echo ""
 	
-	input="/tmp/errors.txt"
+	input="errors.txt"
 	while IFS= read -r var
 	do
 		echo "$var"
@@ -1261,7 +1261,7 @@ then
 	
 	cp /tmp/chlist chlist_old
 else
-	rm /tmp/errors.txt 2> /dev/null
+	rm errors.txt 2> /dev/null
 fi
 
 

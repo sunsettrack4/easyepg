@@ -107,8 +107,8 @@ date8=$(date -d '7 days' '+%Y-%m-%d')
 if grep -q -E '"day": "1"' settings.json 2> /dev/null
 then
 	rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
-	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date2"'T05:59:59' > /tmp/chlist.gz 2>/tmp/errors.txt
-	gzip -d /tmp/chlist.gz 2>/tmp/errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>/tmp/errors.txt && jq '.' /tmp/chlist > workfile 2>/tmp/errors.txt
+	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date2"'T05:59:59' > /tmp/chlist.gz 2>errors.txt
+	gzip -d /tmp/chlist.gz 2>errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>errors.txt && jq '.' /tmp/chlist > workfile 2>errors.txt
 	
 
 # ##################
@@ -118,8 +118,8 @@ then
 elif grep -q -E '"day": "2"' settings.json 2> /dev/null
 then
 	rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
-	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date3"'T05:59:59' > /tmp/chlist.gz 2>>/tmp/errors.txt
-	gzip -d /tmp/chlist.gz 2>/tmp/errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>/tmp/errors.txt && jq '.' /tmp/chlist > workfile 2>/tmp/errors.txt
+	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date3"'T05:59:59' > /tmp/chlist.gz 2>>errors.txt
+	gzip -d /tmp/chlist.gz 2>errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>errors.txt && jq '.' /tmp/chlist > workfile 2>errors.txt
 
 
 # ##################
@@ -129,8 +129,8 @@ then
 elif grep -q -E '"day": "3"' settings.json 2> /dev/null
 then
 	rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
-	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date4"'T05:59:59' > /tmp/chlist.gz 2>>/tmp/errors.txt
-	gzip -d /tmp/chlist.gz 2>/tmp/errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>/tmp/errors.txt && jq '.' /tmp/chlist > workfile 2>/tmp/errors.txt
+	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date4"'T05:59:59' > /tmp/chlist.gz 2>>errors.txt
+	gzip -d /tmp/chlist.gz 2>errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>errors.txt && jq '.' /tmp/chlist > workfile 2>errors.txt
 
 
 # ##################
@@ -140,8 +140,8 @@ then
 elif grep -q -E '"day": "4"' settings.json 2> /dev/null
 then
 	rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
-	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date5"'T05:59:59' > /tmp/chlist.gz 2>>/tmp/errors.txt
-	gzip -d /tmp/chlist.gz 2>/tmp/errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>/tmp/errors.txt && jq '.' /tmp/chlist > workfile 2>/tmp/errors.txt
+	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date5"'T05:59:59' > /tmp/chlist.gz 2>>errors.txt
+	gzip -d /tmp/chlist.gz 2>errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>errors.txt && jq '.' /tmp/chlist > workfile 2>errors.txt
 
 
 # ##################
@@ -151,8 +151,8 @@ then
 elif grep -q -E '"day": "5"' settings.json 2> /dev/null
 then
 	rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
-	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date6"'T05:59:59' > /tmp/chlist.gz 2>>/tmp/errors.txt
-	gzip -d /tmp/chlist.gz 2>/tmp/errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>/tmp/errors.txt && jq '.' /tmp/chlist > workfile 2>/tmp/errors.txt
+	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date6"'T05:59:59' > /tmp/chlist.gz 2>>errors.txt
+	gzip -d /tmp/chlist.gz 2>errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>errors.txt && jq '.' /tmp/chlist > workfile 2>errors.txt
 
 
 # ##################
@@ -162,8 +162,8 @@ then
 elif grep -q -E '"day": "6"' settings.json 2> /dev/null
 then
 	rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
-	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date7"'T05:59:59' > /tmp/chlist.gz 2>>/tmp/errors.txt
-	gzip -d /tmp/chlist.gz 2>/tmp/errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>/tmp/errors.txt && jq '.' /tmp/chlist > workfile 2>/tmp/errors.txt
+	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date7"'T05:59:59' > /tmp/chlist.gz 2>>errors.txt
+	gzip -d /tmp/chlist.gz 2>errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>errors.txt && jq '.' /tmp/chlist > workfile 2>errors.txt
 
 
 # ##################
@@ -173,28 +173,28 @@ then
 elif grep -q -E '"day": "7"' settings.json 2> /dev/null
 then
 	rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
-	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date8"'T05:59:59' > /tmp/chlist.gz 2>>/tmp/errors.txt
-	gzip -d /tmp/chlist.gz 2>/tmp/errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>/tmp/errors.txt && jq '.' /tmp/chlist > workfile 2>/tmp/errors.txt
+	curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T06:00:00&stopTime='"$date8"'T05:59:59' > /tmp/chlist.gz 2>>errors.txt
+	gzip -d /tmp/chlist.gz 2>errors.txt && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist 2>errors.txt && jq '.' /tmp/chlist > workfile 2>errors.txt
 fi
 	
 echo "DONE!" && printf "\n"
 
 perl chlist_printer.pl > /tmp/compare.json
-perl compare_menu.pl > /dev/null 2> /tmp/errors.txt
+perl compare_menu.pl > /dev/null 2> errors.txt
 
 
 #
 # SHOW ERROR MESSAGE + ABORT PROCESS IF CHANNEL IDs WERE CHANGED
 #
 
-sort -u /tmp/errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt /tmp/errors.txt
+sort -u errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt errors.txt
 
-if [ -s /tmp/errors.txt ]
+if [ -s errors.txt ]
 then
 	echo "================= CHANNEL LIST: LOG ==================="
 	echo ""
 	
-	input="/tmp/errors.txt"
+	input="errors.txt"
 	while IFS= read -r var
 	do
 		echo "$var"
@@ -206,7 +206,7 @@ then
 	
 	cp /tmp/chlist chlist_old
 else
-	rm /tmp/errors.txt 2> /dev/null
+	rm errors.txt 2> /dev/null
 fi
 
 

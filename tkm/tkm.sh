@@ -101,7 +101,7 @@ jq '.' /tmp/chlist > /tmp/workfile
 
 printf "\rChecking manifest files... "
 perl chlist_printer.pl > /tmp/compare.json
-perl url_printer.pl 2>/tmp/errors.txt | sed '/DUMMY/d' > mani/common
+perl url_printer.pl 2>errors.txt | sed '/DUMMY/d' > mani/common
 
 printf "\n$(echo $(wc -l < mani/common)) manifest file(s) to be downloaded!\n\n"
 
@@ -277,7 +277,7 @@ printf "\rCreating EPG manifest file... "
 rm /tmp/manifile.json 2> /dev/null
 cat mani/* > /tmp/manifile.json
 sed -i 's/}\]}}/}]}/g' /tmp/manifile.json
-jq -s '.' /tmp/manifile.json > /tmp/epg_workfile 2>>/tmp/errors.txt
+jq -s '.' /tmp/manifile.json > /tmp/epg_workfile 2>>errors.txt
 sed -i '/"genres":/{s/"genres": "/"genres": ["/g;s/",/"]/g;s/,/","/g;s/\]/&,/g}' /tmp/epg_workfile
 sed -i '1s/\[/{ "attributes":[/g;$s/\]/&}/g' /tmp/epg_workfile
 
@@ -288,14 +288,14 @@ echo "DONE!" && printf "\n"
 # SHOW ERROR MESSAGE + ABORT PROCESS IF CHANNEL IDs WERE CHANGED
 #
 
-sort -u /tmp/errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt /tmp/errors.txt
+sort -u errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt errors.txt
 
-if [ -s /tmp/errors.txt ]
+if [ -s errors.txt ]
 then
 	echo "================= CHANNEL LIST: LOG ==================="
 	echo ""
 	
-	input="/tmp/errors.txt"
+	input="errors.txt"
 	while IFS= read -r var
 	do
 		echo "$var"
@@ -307,7 +307,7 @@ then
 	
 	cp /tmp/chlist chlist_old
 else
-	rm /tmp/errors.txt 2> /dev/null
+	rm errors.txt 2> /dev/null
 fi
 
 
