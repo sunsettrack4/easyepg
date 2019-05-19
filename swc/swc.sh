@@ -276,7 +276,6 @@ then
 	echo "======================================================="
 	echo ""
 	
-	rm /tmp/errors.txt 2> /dev/null
 	cp /tmp/chlist chlist_old
 else
 	rm /tmp/errors.txt 2> /dev/null
