@@ -223,6 +223,7 @@ do
 		printf "\rLoading channel configuration..."
 		perl cid_json.pl > /tmp/chvalues
 		sed -i '/{/d;/}/d;s/.*":"//g;s/",//g;/DUMMY/d' /tmp/chvalues
+		sed -i 's///g;s///g' /tmp/chvalues
 		sort -u /tmp/chvalues > /tmp/chvalues_sorted && mv /tmp/chvalues_sorted /tmp/chvalues
 		
 		if [ ! -e channels.json ]

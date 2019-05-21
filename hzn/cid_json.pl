@@ -61,9 +61,12 @@ foreach my $channels ( @channels ) {
         # DEFINE CHANNEL NAME
 		my $cname   = $item->{'title'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+		$cname =~ s///g;		 # REMOVE "SELECTED AREA"
+		$cname =~ s///g;
 		
 		# DEFINE CHANNEL ID
 		my $cid     = $item->{'id'};
+		
         
         # ###################
 		# PRINT JSON OUTPUT #

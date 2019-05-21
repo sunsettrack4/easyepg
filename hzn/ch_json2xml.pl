@@ -102,6 +102,8 @@ foreach my $channels ( @channels ) {
         # DEFINE CHANNEL ID + NAME
 		my $cname   = $item->{'title'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+		$cname =~ s///g;		 # REMOVE "SELECTED AREA"
+		$cname =~ s///g;
         
         # DEFINE LANGUAGE VERSION
         my $languageVER =  $initdata->{'language'};
