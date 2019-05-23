@@ -2998,7 +2998,7 @@ do
 			if [ -e combine/$folder/run.pl ]
 			then
 				printf "\n\n --------------------------------------\n\nRunning addon: IMDB MAPPER for $folder.xml ...\n\n"
-				perl imdb/run.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+				perl imdb/run.pl combine/$folder/$folder.xml  combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
 				printf "\n\nDONE!\n\n"
 			fi
 			
