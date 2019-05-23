@@ -447,6 +447,7 @@ command -v cpan >/dev/null 2>&1 || { printf "\ncpan is required but it's not ins
 command -v jq >/dev/null 2>&1 || { printf "\njq is required but it's not installed!" >&2; ERROR2="true"; }
 command -v php >/dev/null 2>&1 || { printf "\nphp is required but it's not installed!" >&2; ERROR2="true"; }
 command -v git >/dev/null 2>&1 || { printf "\ngit is required but it's not installed!" >&2; ERROR2="true"; }
+command -v xml_split >/dev/null 2>&1 || { printf "\nxml_split is required but it's not installed!" >&2; ERROR2="true"; }
 
 if command -v perldoc >/dev/null
 then
@@ -2994,10 +2995,10 @@ do
 				printf "\n\nDONE!\n\n"
 			fi
 			
-			if [ -e combine/$folder/imdbmapper.pl ]
+			if [ -e combine/$folder/run.pl ]
 			then
 				printf "\n\n --------------------------------------\n\nRunning addon: IMDB MAPPER for $folder.xml ...\n\n"
-				perl imdb/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+				perl imdb/run.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
 				printf "\n\nDONE!\n\n"
 			fi
 			

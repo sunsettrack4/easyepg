@@ -1203,7 +1203,7 @@ then
 						echo '	1 "Insert: RATING MAPPER" \' >> /tmp/addonmenu
 					fi
 					
-					if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl ]
+					if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/run.pl ]
 					then
 						echo '	2 "Remove: IMDB MAPPER" \' >> /tmp/addonmenu
 					else
@@ -1226,27 +1226,27 @@ then
 						fi
 					elif grep -q "2" /tmp/addonvalue
 					then
-						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl ]
+						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/run.pl ]
 						then
 							cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
-							rm imdbmapper.pl 2> /dev/null
+							rm run.pl 2> /dev/null
 							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER deleted!" 5 35
 							cd - > /dev/null
 						else
 							mkdir imdb 2> /dev/null && chmod 0777 imdb 2> /dev/null
 							
-							touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/imdbmapper.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/Readme > imdb/Readme
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/age.php > imdb/age.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/country.php > imdb/country.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdb.class.php > imdb/imdb.class.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/imdbmapper.pl > imdb/imdbmapper.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/poster.php > imdb/poster.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/rating.php > imdb/rating.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/url.php > imdb/url.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/imdbmapper/year.php > imdb/year.php
-							
-							sed -i "22s/\/home\/takealug\/EPG\/takealug\/imdbmapper/imdb/g" imdb/imdbmapper.pl
+							touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/run.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/Readme > imdb/Readme
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/age.php > imdb/age.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/country.php > imdb/country.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/imdb.class.php > imdb/imdb.class.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/run.pl > imdb/run.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/poster.php > imdb/poster.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/rating.php > imdb/rating.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/url.php > imdb/url.php
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/imdbtask_1.pl > imdb/imdbtask_1.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/imdbtask_2.pl > imdb/imdbtask_2.pl
+
 							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER added!" 5 35
 						fi
 					fi
@@ -1774,10 +1774,10 @@ then
 								printf "\n\nDONE!\n\n"
 							fi
 							
-							if [ -e combine/$folder/imdbmapper.pl ]
+							if [ -e combine/$folder/run.pl ]
 							then
 								printf "\n\n --------------------------------------\n\nRunning addon: IMDB MAPPER for $folder.xml ...\n\n"
-								perl imdb/imdbmapper.pl combine/$folder/$folder.xml > combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
+								perl imdb/run.pl combine/$folder/$folder.xml combine/$folder/$folder_1.xml && mv combine/$folder/$folder_1.xml combine/$folder/$folder.xml
 								printf "\n\nDONE!\n\n"
 							fi
 							
