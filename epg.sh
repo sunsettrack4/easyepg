@@ -447,7 +447,7 @@ command -v cpan >/dev/null 2>&1 || { printf "\ncpan is required but it's not ins
 command -v jq >/dev/null 2>&1 || { printf "\njq is required but it's not installed!" >&2; ERROR2="true"; }
 command -v php >/dev/null 2>&1 || { printf "\nphp is required but it's not installed!" >&2; ERROR2="true"; }
 command -v git >/dev/null 2>&1 || { printf "\ngit is required but it's not installed!" >&2; ERROR2="true"; }
-command -v xml_split >/dev/null 2>&1 || { printf "\nxml_split is required but it's not installed!" >&2; ERROR2="true"; }
+command -v xml_split >/dev/null 2>&1 || { printf "\nxml-twig-tools is required but it's not installed!" >&2; ERROR2="true"; }
 
 if command -v perldoc >/dev/null
 then
