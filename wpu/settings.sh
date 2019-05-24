@@ -261,7 +261,13 @@ do
 		date1=$(date '+%Y-%m-%d')
 		rm /tmp/chlist /tmp/chlist.gz chlist 2> /dev/null
 		curl -s -X GET -H "Host: epg.waipu.tv" -H "Connection: keep-alive" -H "Accept: application/vnd.waipu.epg-channels-and-programs-v1+json" -H "Origin: https://play.waipu.tv" -H "Authorization: Bearer $session" -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36" -H "Referer: https://play.waipu.tv/programm" -H "Accept-Encoding: gzip, deflate, br" -H "Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7" 'https://epg.waipu.tv/api/programs?includeRunningAtStartTime=true&startTime='"$date1"'T00:00:00&stopTime='"$date1"'T00:00:01' > /tmp/chlist.gz
-		gzip -d /tmp/chlist.gz && sed -i 's/.*/{"attributes":&}/g' /tmp/chlist && jq '.' /tmp/chlist > chlist
+		
+		if ! gzip -d /tmp/chlist.gz 2> /dev/null
+		then
+			mv /tmp/chlist.gz /tmp/chlist
+		fi
+		
+		sed -i 's/.*/{"attributes":&}/g' /tmp/chlist && jq '.' /tmp/chlist > chlist
 
 		printf "\rLoading channel configuration..."
 		perl cid_json.pl > /tmp/chvalues
