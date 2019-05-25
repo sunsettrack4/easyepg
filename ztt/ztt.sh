@@ -1549,7 +1549,7 @@ perl cid_json.pl > ztt_cid.json && rm chlist
 # COMBINING ALL EPG PARTS TO ONE FILE
 printf "\rCopying JSON files to common file...                 "
 
-cat cache/new/* > workfile 2> /dev/null
+find cache/new/ -type f -exec cat {} + > workfile 2> /dev/null
 
 # SORT BY CID AND START TIME
 printf "\rSorting data by channel ID and start time...         "
