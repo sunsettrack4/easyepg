@@ -207,7 +207,7 @@ foreach my $attributes ( $data->{attributes} ) {
 			}
 			
 			# DESCRIPTION (condition) (language)
-			if( defined $desc ) {
+			if( defined $desc and $desc ne "" ) {
 				$desc =~ s/\&/\&amp;/g;					# REQUIRED TO READ XML FILE CORRECTLY
 				$desc =~ s/<[^>]*>//g;					# REMOVE XML STRINGS WITHIN JSON VALUE
 				$desc =~ s/[<>]//g;
@@ -243,7 +243,7 @@ foreach my $attributes ( $data->{attributes} ) {
 			}
 			
 			# COUNTRY (condition)
-			if( defined $country ) {
+			if( defined $country and $country ne "" ) {
 				print "  <country>" . $country . "</country>\n";
 			}
 			
