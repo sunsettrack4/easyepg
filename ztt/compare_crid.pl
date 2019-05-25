@@ -75,6 +75,9 @@ foreach my $channels ( @channels )  {
 	
 	foreach my $programs ( @programs ) {
 		my $id = $programs->{'id'};
+		my $st  = $programs->{'s'};
+		my $en  = $programs->{'e'};
+		my $im  = $programs->{'i_t'};
 
 		foreach my $configname ( @configname ) {
 		
@@ -89,6 +92,18 @@ foreach my $channels ( @channels )  {
 					
 					if( $oid eq $new_id ) {
 						print $id . "\n";
+					
+						open(my $fh, '>>', '/tmp/duplicate_checker');
+						
+						print $fh "$id $st $en";
+						
+						if( defined $im ) {
+							print $fh " $im\n";
+						} else {
+							print $fh "\n";
+						}
+						
+						close $fh;
 					}
 			
 				# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
