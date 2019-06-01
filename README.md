@@ -11,6 +11,15 @@ This tool provides high-quality EPG data from different IPTV/OTT sources.
 * Run additional scripts after final XML file creation
 * Update the XML files automatically via crontab
 
+#### Supported TV providers
+* Horizon (DE,AT,CH,NL,PL,IE,SK,CZ,HU,RO)
+* Zattoo (DE,CH)
+* Magenta TV (DE)
+* WaipuTV (DE)
+* Swisscom (CH)
+* Radiotimes (UK)
+* tvPlayer (UK)
+
 #### Supported platforms
 * any Linux-based OS, e.g. Ubuntu, Debian
 
