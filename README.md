@@ -33,7 +33,7 @@ Please run the commands below to setup the script. "Sudo" is not required on use
 
 ```bash
 # Install all recommended applications to setup the epg environment completely:
-sudo apt-get install phantomjs dialog curl wget libxml2-utils perl perl-doc cpan jq php git xml-twig-tool
+sudo apt-get install phantomjs dialog curl wget libxml2-utils perl perl-doc jq php git xml-twig-tools
 
 # Install CPAN and the required modules to parse JSON files
 sudo cpan App:cpanminus

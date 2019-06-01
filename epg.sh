@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.3.7 BETA - 2019/05/25            "
+echo " Release v0.3.8 BETA - 2019/06/01            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -477,8 +477,8 @@ fi
 
 if ! ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null 2> /dev/null
 then
-	printf "\n\n[ FATAL ERROR ] Internet connection is not available - Stop.\n"
-	exit 1
+	printf "\n\n[ WARNING ] Internet connection check failed!      \n"
+	sleep 2s
 fi
 
 
@@ -491,7 +491,7 @@ then
 	printf "\n\n[ FATAL ERROR ] Script environment is broken - Stop.\n"
 	exit 1
 else
-	printf " OK!\n\n"
+	printf "\n\nSETUP OK!"
 	sleep 1s
 fi
 
