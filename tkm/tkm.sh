@@ -321,6 +321,27 @@ echo "- FILE CREATION PROCESS -" && echo ""
 
 rm workfile chlist 2> /dev/null
 
+# REFRESH COOKIE
+rm /tmp/cookie 2> /dev/null
+
+# AUTH
+curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"userId":"Guest","mac":"00:00:00:00:00:00"}' 'https://web.magentatv.de/EPG/JSON/Login' > /dev/null
+
+# LOGIN
+curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"terminalid":"00:00:00:00:00:00","mac":"00:00:00:00:00:00","terminaltype":"WEBTV","utcEnable":1,"timezone":"UTC","userType":3,"terminalvendor":"Unknown","preSharedKeyID":"PC01P00002","cnonce":"5c6ff0b9e4e5efb1498e7eaa8f54d9fb"}' 'https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup' > /dev/null
+
+# GET SESSION ID
+grep "CSRFSESSION" /tmp/cookie > /tmp/session && sed -i 's/\(.*\)\(CSRFSESSION\)	\(.*\)/X_CSRFToken: \3/g' /tmp/session
+
+if ! grep -q "X_CSRFToken" /tmp/session
+then
+	echo " FAILED" && printf "\n"
+	exit 0
+else
+	echo " OK" && printf "\n"
+	session=$(</tmp/session)
+fi
+
 # DOWNLOAD CHANNEL LIST + RYTEC/EIT CONFIG FILES (JSON)
 printf "\rRetrieving channel list and config files...          "
 curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -X POST -H "$session" -d '{"properties":[{"name":"logicalChannel","include":"/channellist/logicalChannel/contentId,/channellist/logicalChannel/type,/channellist/logicalChannel/name,/channellist/logicalChannel/chanNo,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href,/channellist/logicalChannel/foreignsn,/channellist/logicalChannel/externalCode,/channellist/logicalChannel/sysChanNo,/channellist/logicalChannel/physicalChannels/physicalChannel/mediaId,/channellist/logicalChannel/physicalChannels/physicalChannel/fileFormat,/channellist/logicalChannel/physicalChannels/physicalChannel/definition"}],"metaDataVer":"Channel/1.1","channelNamespace":"2","filterlist":[{"key":"IsHide","value":"-1"}],"returnSatChannel":0}' "https://web.magentatv.de/EPG/JSON/AllChannel?SID=first" > /tmp/chlist
