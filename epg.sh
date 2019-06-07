@@ -449,10 +449,16 @@ command -v php >/dev/null 2>&1 || { printf "\nphp is required but it's not insta
 command -v git >/dev/null 2>&1 || { printf "\ngit is required but it's not installed!" >&2; ERROR2="true"; }
 command -v xml_split >/dev/null 2>&1 || { printf "\nxml-twig-tools is required but it's not installed!" >&2; ERROR2="true"; }
 
+if ! php -m |grep curl >/dev/null 2>&1
+then
+        printf "\nphp-curl is required but it's not installed!" >&2; ERROR2="true";
+fi
+
 if command -v perldoc >/dev/null
 then
 	perldoc -l JSON >/dev/null 2>&1 || { printf "\nJSON module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l XML::Rules >/dev/null 2>&1 || { printf "\nXML::Rules module for perl is requried but not installed!" >&2; ERROR2="true"; }
+	perldoc -l XML::DOM >/dev/null 2>&1 || { printf "\nXML::DOM module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Data::Dumper >/dev/null 2>&1 || { printf "\nData::Dumper module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Time::Piece >/dev/null 2>&1 || { printf "\nTime::Piece module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l Time::Seconds >/dev/null 2>&1 || { printf "\nTime::Seconds module for perl is requried but not installed!" >&2; ERROR2="true"; }
