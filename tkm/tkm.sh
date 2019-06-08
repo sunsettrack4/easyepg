@@ -322,6 +322,7 @@ echo "- FILE CREATION PROCESS -" && echo ""
 rm workfile chlist 2> /dev/null
 
 # REFRESH COOKIE
+printf "\rRefreshing cookie data..."
 rm /tmp/cookie 2> /dev/null
 
 # AUTH
