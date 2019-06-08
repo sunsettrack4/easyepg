@@ -42,12 +42,13 @@ Please run the commands below to setup the script. "Sudo" is not required on use
 
 ```bash
 # Install all recommended applications to setup the epg environment completely:
-sudo apt-get install phantomjs dialog curl wget libxml2-utils perl perl-doc jq php git xml-twig-tools
+sudo apt-get install cron phantomjs dialog curl wget libxml2-utils perl nano perl-doc jq php php-curl git xml-twig-tools unzip liblocal-lib-perl cpanminus build-essential inetutils-ping 
 
 # Install CPAN and the required modules to parse JSON files
 sudo cpan App:cpanminus
 sudo cpanm install JSON
 sudo cpanm install XML::Rules
+sudo cpanm install XML::DOM
 sudo cpanm install Data::Dumper
 sudo cpanm install Time::Piece
 sudo cpanm install Time::Seconds
