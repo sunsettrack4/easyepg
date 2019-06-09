@@ -1247,6 +1247,12 @@ then
 							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/year.php > imdb/year.php
 							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/imdbtask.pl > imdb/imdbtask.pl
 							
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/worker1.pl > imdb/worker1.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/worker2.pl > imdb/worker2.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/prozes.pl > imdb/prozes.pl
+							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/bar.sh > imdb/bar.sh
+						
+							
 							chmod 0777 imdb/* 2> /dev/null
 
 							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER added!" 5 35
