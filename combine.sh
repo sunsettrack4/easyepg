@@ -1207,7 +1207,7 @@ then
 					then
 						echo '	2 "Remove: IMDB MAPPER" \' >> /tmp/addonmenu
 					else
-						echo '	2 "Insert: IMDB MAPPER" \' >> /tmp/addonmenu
+						echo '	2 "Imdb SUB-MENU" \' >> /tmp/addonmenu
 					fi
 					
 					echo "2>/tmp/addonvalue" >> /tmp/addonmenu
@@ -1233,29 +1233,75 @@ then
 							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER deleted!" 5 35
 							cd - > /dev/null
 						else
-							mkdir imdb 2> /dev/null && chmod 0777 imdb 2> /dev/null
-							
-							touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/run.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/Readme > imdb/Readme
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/age.php > imdb/age.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/country.php > imdb/country.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/imdb.class.php > imdb/imdb.class.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/run.pl > imdb/run.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/poster.php > imdb/poster.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/rating.php > imdb/rating.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/url.php > imdb/url.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/year.php > imdb/year.php
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/imdbtask.pl > imdb/imdbtask.pl
-							
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/worker1.pl > imdb/worker1.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/worker2.pl > imdb/worker2.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/prozes.pl > imdb/prozes.pl
-							curl -s https://raw.githubusercontent.com/DeBaschdi/EPGScripts/master/new_imdbmapper/bar.sh > imdb/bar.sh
-						
-							
-							chmod 0777 imdb/* 2> /dev/null
 
-							dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS" --title "ADDON SETUP" --msgbox "Addon IMDB MAPPER added!" 5 35
+						# ######################
+						# M1322.1 IMDB SUB-MENU#
+						# ######################
+
+
+								echo 'dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS > IMDB SETUP" --title "IMDB SETUP" --menu "Please choose the following options:\n[1] 4C: Use 4 Threads\n[2] 8C: Use 8 Threads" 12 70 10 \' > /tmp/imdbmenu
+								
+								if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/run.pl ]
+								then
+									echo '	2 "Remove: IMDB MAPPER" \' >> /tmp/imdbnmenu
+								else
+									echo '	1 "Insert: IMDB MAPPER 4C" \' >> /tmp/imdbmenu
+									echo '	2 "Insert: IMDB MAPPER 8C" \' >> /tmp/imdbmenu
+								fi
+					
+								echo "2>/tmp/imdbvalue" >> /tmp/imdbmenu
+					
+								bash /tmp/imdbmenu
+
+								if grep -q "1" /tmp/imdbvalue
+								then
+									mkdir imdb 2> /dev/null && chmod 0777 imdb 2> /dev/null
+							
+									touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/run.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/Readme > imdb/Readme
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/age.php > imdb/age.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/country.php > imdb/country.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/imdb.class.php > imdb/imdb.class.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/run.pl > imdb/run.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/poster.php > imdb/poster.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/rating.php > imdb/rating.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/url.php > imdb/url.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/year.php > imdb/year.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/imdbtask.pl > imdb/imdbtask.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/worker1.pl > imdb/worker1.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/worker2.pl > imdb/worker2.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/prozes.pl > imdb/prozes.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/4C/bar.sh > imdb/bar.sh
+						
+									chmod 0777 imdb/* 2> /dev/null
+
+									dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS > IMDB SETUP" --title "IMDB SETUP" --msgbox "IMDB MAPPER 4C added!" 5 35
+								
+								elif grep -q "2" /tmp/imdbvalue
+								then
+									mkdir imdb 2> /dev/null && chmod 0777 imdb 2> /dev/null
+							
+									touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/run.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/Readme > imdb/Readme
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/age.php > imdb/age.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/country.php > imdb/country.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/imdb.class.php > imdb/imdb.class.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/run.pl > imdb/run.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/poster.php > imdb/poster.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/rating.php > imdb/rating.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/url.php > imdb/url.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/year.php > imdb/year.php
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/imdbtask.pl > imdb/imdbtask.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/worker1.pl > imdb/worker1.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/worker2.pl > imdb/worker2.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/prozes.pl > imdb/prozes.pl
+									curl -s https://raw.githubusercontent.com/DeBaschdi/imdbmapper/8C/bar.sh > imdb/bar.sh
+													
+									chmod 0777 imdb/* 2> /dev/null
+
+									dialog --backtitle "[M1322] EASYEPG SIMPLE XMLTV GRABBER > XML FILE CREATION > ADDONS > IMDB SETUP" --title "IMDB SETUP" --msgbox "IMDB MAPPER 8C added!" 5 35
+
+								fi	
 						fi
 					fi
 				done

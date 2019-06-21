@@ -73,14 +73,13 @@ rm day/epgdata 2> /dev/null
 
 printf "\rDownloading EPG manifest files... "
 
-if grep -q '"day": "[1-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date1 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi &
-if grep -q '"day": "[2-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date2 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi &
-if grep -q '"day": "[3-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date3 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi &
-if grep -q '"day": "[4-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date4 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi &
-if grep -q '"day": "[5-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date5 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi &
-if grep -q '"day": "[6-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date6 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi &
-if grep -q '"day": "[7]"'   settings.json; then curl -s https://tvplayer.com/tvguide?date=$date7 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi &
-wait
+if grep -q '"day": "[1-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date1 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
+if grep -q '"day": "[2-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date2 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
+if grep -q '"day": "[3-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date3 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
+if grep -q '"day": "[4-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date4 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
+if grep -q '"day": "[5-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date5 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
+if grep -q '"day": "[6-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date6 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
+if grep -q '"day": "[7]"'   settings.json; then curl -s https://tvplayer.com/tvguide?date=$date7 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
 
 echo  "DONE!" && printf "\n"
 
