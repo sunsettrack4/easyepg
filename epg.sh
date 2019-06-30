@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.3.8 BETA - 2019/06/01            "
+echo " Release v0.3.9 BETA - 2019/06/30            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -383,6 +383,48 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e tvs/ch_json2xml.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/chlist_printer.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/cid_json.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/compare_menu.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/epg_json2xml.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/settings.sh ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/tvs.sh ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/tvs.sh"
+	ERROR="true"
+fi
+
 if [ ! -e ext/ch_ext.pl ]
 then
 	printf "\nMissing file in External folder: ext/ch_ext.pl"
@@ -513,6 +555,7 @@ ls -l tvp/ >>  /tmp/providerlist
 ls -l tkm/ >>  /tmp/providerlist
 ls -l rdt/ >>  /tmp/providerlist
 ls -l wpu/ >>  /tmp/providerlist
+ls -l tvs/ >>  /tmp/providerlist
 ls -l ext/ >>  /tmp/providerlist
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
@@ -549,6 +592,7 @@ do
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
 	ls -l wpu/ >>  /tmp/providerlist
+	ls -l tvs/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -563,6 +607,7 @@ do
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
 	ls -l wpu/ >>  /tmp/providerlist
+	ls -l tvs/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -580,6 +625,7 @@ do
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
 	ls -l wpu/ >>  /tmp/providerlist
+	ls -l tvs/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -628,6 +674,9 @@ do
 		# M1170 WAIPU.TV
 		echo '	7 "WAIPU.TV" \' >> /tmp/menu
 		
+		# M1180 TV-SPIELFILM
+		echo '	8 "TV-SPIELFILM" \' >> /tmp/menu
+
 		# M11+0 EXTERNAL
 		echo '	+ "EXTERNAL" \' >> /tmp/menu
 
@@ -1439,6 +1488,70 @@ do
 				echo "M" > /tmp/value
 			fi
 		
+		# #################
+		# M1180 TVS		  #
+		# #################
+
+		elif grep -q "8" /tmp/value
+		then
+			# M1180 MENU OVERLAY
+			echo 'dialog --backtitle "[M1150] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TV-SPIELFILM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1181 DE
+			if [ ! -d tvs/de ]
+			then
+				echo '	1 "[DE] TV-SPIELFILM" \' >> /tmp/menu
+			fi
+			
+			# M115E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M115E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TV-SPIELFILM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+				
+				
+			# #######################
+			# M1181 TV-SPIELFILM DE #
+			# #######################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir tvs/de
+				chmod 0777 tvs/de
+				echo '{"country":"DE","language":"de"}' > tvs/de/init.json
+				cp tvs/settings.sh tvs/de/settings.sh
+				cp tvs/tvs.sh tvs/de/tvs.sh
+				cp tvs/epg_json2xml.pl tvs/de/
+				cp tvs/ch_json2xml.pl tvs/de/
+				cp tvs/cid_json.pl tvs/de/
+				cp tvs/chlist_printer.pl tvs/de/
+				cp tvs/compare_menu.pl tvs/de/
+				cp tvs/url_printer.pl tvs/de/
+				cd tvs/de && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tvs/de/channels.json ]
+				then
+					rm -rf tvs/de
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M115X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
 		
 		# #################
 		# M11+0 EXTERNAL  #
@@ -1620,6 +1733,12 @@ do
 		if ls -l wpu/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	7 "WAIPU.TV" \' >> /tmp/menu
+		fi
+
+		# M1280 TV-SPIELFILM
+		if ls -l tvs/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	8 "TV-SPIELFILM" \' >> /tmp/menu
 		fi
 		
 		# M12+0 EXTERNAL
@@ -2264,6 +2383,60 @@ do
 				echo "M" > /tmp/value
 			fi
 		
+		# ######################
+		# M1280 TV-SPIELFILM   #
+		# ######################
+		
+		elif grep -q "8" /tmp/value
+		then
+			# M1270 MENU OVERLAY
+			echo 'dialog --backtitle "[M1270] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TV-SPIELFILM" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1281 TV-SPIELFILM  DE
+			if [ -d tvs/de ]
+			then
+				echo '	1 "[DE] TV-SPIELFILM " \' >> /tmp/menu
+			fi
+			
+			# M127E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M127E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TV-SPIELFILM " --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ######################
+			# M1281 TV-SPIELFILM   #
+			# ######################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd tvs/de
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tvs/de/channels.json ]
+				then
+					rm -rf tvs/de xml/tv-spielfilm_de.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M128X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
 		
 		# ######################
 		# M12+0 EXTERNAL       #
@@ -2573,6 +2746,20 @@ then
 		sleep 2s
 		
 		cd wpu/de 2> /dev/null && bash wpu.sh && cd - > /dev/null && cp wpu/de/waipu.xml xml/waipu_de.xml 2> /dev/null
+	fi
+
+	if ls -l tvs/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " TV-SPIELFILM EPG SIMPLE XMLTV GRABBER       "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd tvs/de 2> /dev/null && bash tvs.sh && cd - > /dev/null && cp tvs/de/tv-spielfilm.xml xml/tv-spielfilm_de.xml 2> /dev/null
 	fi
 	
 	if ls -l ext/ | grep -q '^d'
@@ -2928,6 +3115,24 @@ do
 			fi
 		fi
 		
+		# TV-SPIELFILM
+		if [ -s combine/$folder/tvs_de_channels.json ]
+		then
+			if [ -s xml/tv-spielfilm_de.xml ]
+			then
+				sed 's/fileNAME/tv-spielfilm_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvs_de_channels.json/g" /tmp/ch_combine.pl
+				printf "\n<!-- CHANNEL LIST: TV-SPIELFILM DE -->\n\n" >> /tmp/combined_channels
+				perl /tmp/ch_combine.pl >> /tmp/combined_channels
+				
+				sed 's/fileNAME/tv-spielfilm_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvs_de_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+				printf "\n<!-- PROGRAMMES: TV-SPIELFILM DE -->\n\n" >> /tmp/combined_programmes
+				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+			fi
+		fi
+
 		# EXTERNAL SLOT 1
 		if [ -s combine/$folder/ext_oa_channels.json ]
 		then

@@ -152,6 +152,20 @@ echo "wpu/ wpu/de/" | xargs -n 1 cp -v easyepg/wpu/cid_json.pl 2> /dev/null
 echo "wpu/ wpu/de/" | xargs -n 1 cp -v easyepg/wpu/chlist_printer.pl 2> /dev/null
 echo "wpu/ wpu/de/" | xargs -n 1 cp -v easyepg/wpu/compare_menu.pl 2> /dev/null
 
+# TV-Spielfilm
+echo "Updating TV-Spielfilm..."
+
+mkdir tkm 2> /dev/null
+
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/tvs.sh 2> /dev/null
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/settings.sh 2> /dev/null
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/epg_json2xml.pl 2> /dev/null
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/ch_json2xml.pl 2> /dev/null
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/cid_json.pl 2> /dev/null
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/chlist_printer.pl 2> /dev/null
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/compare_menu.pl 2> /dev/null
+echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/url_printer.pl 2> /dev/null
+
 
 # EXTERNAL
 echo "Updating External..."
