@@ -155,7 +155,7 @@ echo "wpu/ wpu/de/" | xargs -n 1 cp -v easyepg/wpu/compare_menu.pl 2> /dev/null
 # TV-Spielfilm
 echo "Updating TV-Spielfilm..."
 
-mkdir tkm 2> /dev/null
+mkdir tvs 2> /dev/null
 
 echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/tvs.sh 2> /dev/null
 echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/settings.sh 2> /dev/null
