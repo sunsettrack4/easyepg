@@ -403,7 +403,7 @@ do
 		
 		echo ""
 		echo " --------------------------------------------"
-		echo " TELEKOM EPG SIMPLE XMLTV GRABBER            "
+		echo " TV-SPIELFILM EPG SIMPLE XMLTV GRABBER       "
 		echo "                             "
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
@@ -412,7 +412,7 @@ do
 		
 		bash tvs.sh && cd - > /dev/null
 		
-		cp tvs/de/tv-spielfilm.xml xml/tv-spielfilmtv_de.xml 2> /dev/null
+		cp tvs/de/tv-spielfilm.xml xml/tv-spielfilm_de.xml 2> /dev/null
 		
 		cd - > /dev/null
 		
