@@ -270,8 +270,8 @@ foreach my $attributes ( @attributes ) {
 			# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
 			if( $setup_episode eq $xmltv_ns ) {
 				if( defined $series ) {
+						$series =~ s/^[ \t]*//g;
 						$series =~ s/\/.*//g;
-						$series =~ s/\ .*//g;
 						$series =~ s/\(.*//g;
 						$series =~ s/a.*//g;
 						$series =~ s/b.*//g;
@@ -281,8 +281,8 @@ foreach my $attributes ( @attributes ) {
 						$series =~ s/\-.*//g;
 					my $XMLseries  = $series - 1;
 					if( defined $episode ) {
+						$episode =~ s/^[ \t]*//g;
 						$episode =~ s/\/.*//g;
-						$episode =~ s/\ .*//g;
 						$episode =~ s/\(.*//g;
 						$episode =~ s/a.*//g;
 						$episode =~ s/b.*//g;
@@ -295,8 +295,8 @@ foreach my $attributes ( @attributes ) {
 						print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
 					}
 				} elsif( defined $episode ) {
+					$episode =~ s/^[ \t]*//g;
 					$episode =~ s/\/.*//g;
-					$episode =~ s/\ .*//g;
 					$episode =~ s/\(.*//g;
 					$episode =~ s/a.*//g;
 					$episode =~ s/b.*//g;
@@ -312,8 +312,8 @@ foreach my $attributes ( @attributes ) {
 			# SEASON/EPISODE (ONSCREEN) (condition) (settings)
 			if( $setup_episode eq $onscreen ) {
 				if( defined $series ) {
+						$series =~ s/^[ \t]*//g;
 						$series =~ s/\/.*//g;
-						$series =~ s/\ .*//g;
 						$series =~ s/\(.*//g;
 						$series =~ s/a.*//g;
 						$series =~ s/b.*//g;
@@ -322,8 +322,8 @@ foreach my $attributes ( @attributes ) {
 						$series =~ s/\!.*//g;
 						$series =~ s/\-.*//g;
 					if( defined $episode ) {
+						$episode =~ s/^[ \t]*//g;
 						$episode =~ s/\/.*//g;
-						$episode =~ s/\ .*//g;
 						$episode =~ s/\(.*//g;
 						$episode =~ s/a.*//g;
 						$episode =~ s/b.*//g;
@@ -336,8 +336,8 @@ foreach my $attributes ( @attributes ) {
 						print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
 					}
 				} elsif( defined $episode ) {
+					$episode =~ s/^[ \t]*//g;
 					$episode =~ s/\/.*//g;
-					$episode =~ s/\ .*//g;
 					$episode =~ s/\(.*//g;
 					$episode =~ s/a.*//g;
 					$episode =~ s/b.*//g;
