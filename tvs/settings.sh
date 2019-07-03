@@ -233,7 +233,7 @@ do
 		while grep -q "X" /tmp/value
 		do
 			# E1200 MENU OVERLAY
-			dialog --backtitle "[E1200] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
+			dialog --backtitle "[E1200] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
 							
 			sed -i 's/.*/epg&-/g' /tmp/value
 			
@@ -242,7 +242,7 @@ do
 			then
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=0" >> /tmp/settings_new
-				dialog --backtitle "[E1210] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber disabled!" 5 26 
+				dialog --backtitle "[E1210] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber disabled!" 5 26 
 				echo "H" > /tmp/value
 			
 			# E1220 INPUT: 1 DAY
@@ -250,7 +250,7 @@ do
 			then
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=1" >> /tmp/settings_new
-				dialog --backtitle "[E1220] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for 1 day!" 5 42
+				dialog --backtitle "[E1220] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for 1 day!" 5 42
 				echo "H" > /tmp/value
 				
 			# E1230 INPUT: 2-9 DAYS
@@ -259,7 +259,7 @@ do
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=$(</tmp/value)" >> /tmp/settings_new
-				dialog --backtitle "[E1230] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
+				dialog --backtitle "[E1230] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
 			# E1240 INPUT: 10-14 DAYS
@@ -268,13 +268,13 @@ do
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=$(</tmp/value)" >> /tmp/settings_new
-				dialog --backtitle "[E1240] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
+				dialog --backtitle "[E1240] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
 			# E1250 WRONG INPUT
 			elif [ -s /tmp/value ]
 			then
-				dialog --backtitle "[E1250] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > TIME PERIOD" --title "ERROR" --msgbox "Wrong input detected!" 5 30 
+				dialog --backtitle "[E1250] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "ERROR" --msgbox "Wrong input detected!" 5 30 
 				echo "X" > /tmp/value
 			
 			# E12X0 EXIT
