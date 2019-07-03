@@ -56,7 +56,22 @@ do
 
 	# E1200 TIME PERIOD
 
-	if grep -q "day=1" /tmp/settings_new
+	if grep -q "day=10" /tmp/settings_new
+	then
+		echo '	2 "TIME PERIOD (currently: 10 days)" \' >> /tmp/menu
+	elif grep -q "day=11" /tmp/settings_new
+	then
+		echo '	2 "TIME PERIOD (currently: 11 days)" \' >> /tmp/menu 
+	elif grep -q "day=12" /tmp/settings_new
+	then
+		echo '	2 "TIME PERIOD (currently: 12 days)" \' >> /tmp/menu
+	elif grep -q "day=13" /tmp/settings_new
+	then
+		echo '	2 "TIME PERIOD (currently: 13 days)" \' >> /tmp/menu
+	elif grep -q "day=14" /tmp/settings_new
+	then
+		echo '	2 "TIME PERIOD (currently: 14 days)" \' >> /tmp/menu
+	elif grep -q "day=1" /tmp/settings_new
 	then
 		echo '	2 "TIME PERIOD (currently: 1 day)" \' >> /tmp/menu
 	elif grep -q "day=2" /tmp/settings_new
@@ -77,6 +92,12 @@ do
 	elif grep -q "day=7" /tmp/settings_new
 	then
 		echo '	2 "TIME PERIOD (currently: 7 days)" \' >> /tmp/menu 
+	elif grep -q "day=8" /tmp/settings_new
+	then
+		echo '	2 "TIME PERIOD (currently: 8 days)" \' >> /tmp/menu 
+	elif grep -q "day=9" /tmp/settings_new
+	then
+		echo '	2 "TIME PERIOD (currently: 9 days)" \' >> /tmp/menu 
 	elif grep -q "day=0" /tmp/settings_new
 	then
 		echo '	2 "TIME PERIOD (currently: disabled)" \' >> /tmp/menu 
@@ -212,7 +233,7 @@ do
 		while grep -q "X" /tmp/value
 		do
 			# E1200 MENU OVERLAY
-			dialog --backtitle "[E1200] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-7=enable)" 10 46 2>/tmp/value
+			dialog --backtitle "[E1200] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
 							
 			sed -i 's/.*/epg&-/g' /tmp/value
 			
@@ -232,13 +253,22 @@ do
 				dialog --backtitle "[E1220] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for 1 day!" 5 42
 				echo "H" > /tmp/value
 				
-			# E1230 INPUT: 2-7 DAYS
-			elif grep -q "epg[2-7]-" /tmp/value
+			# E1230 INPUT: 2-9 DAYS
+			elif grep -q "epg[2-9]-" /tmp/value
 			then
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=$(</tmp/value)" >> /tmp/settings_new
 				dialog --backtitle "[E1230] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
+				echo "H" > /tmp/value
+			
+			# E1240 INPUT: 10-14 DAYS
+			elif grep -q "epg1[0-4]-" /tmp/value
+			then
+				sed -i 's/epg//g;s/-//g' /tmp/value
+				sed -i '/day=/d' /tmp/settings_new
+				echo "day=$(</tmp/value)" >> /tmp/settings_new
+				dialog --backtitle "[E1240] EASYEPG SIMPLE XMLTV GRABBER > TV-SPIELFILM SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
 			# E1250 WRONG INPUT
