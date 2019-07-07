@@ -157,6 +157,7 @@ done
 
 printf "\rDownloading manifest files..."
 echo ""
+printf "\rProgress [                    ]    0%% "
 
 status_manifest_download &
 
