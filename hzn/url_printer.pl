@@ -100,25 +100,25 @@ foreach my $configname ( @configname ) {
 			
 		# DAY 1
 		if( $day_setting == 1 ) {
-			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date2 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date2 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-2
 		} elsif( $day_setting == 2 ) {
-			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date3 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date3 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-3
 		} elsif( $day_setting == 3 ) {
-			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date4 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date4 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-4
 		} elsif( $day_setting == 4 ) {
-			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date5 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date5 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-5
 		} elsif( $day_setting == 5 ) {
-			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date6 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date6 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-6
 		} elsif( $day_setting == 6 ) {
-			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date7 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date7 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-7
 		} elsif( $day_setting == 7 ) {
-			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date8 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date8 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		}
 	
 	} else {
