@@ -63,6 +63,7 @@ foreach my $channels ( @channels ) {
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		$cname =~ s///g;		 # REMOVE "SELECTED AREA"
 		$cname =~ s///g;
+		$cname =~ s/\ \ /\ /g;
 		
 		# DEFINE CHANNEL ID
 		my $cid     = $item->{'id'};
