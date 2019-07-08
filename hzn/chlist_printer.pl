@@ -119,7 +119,7 @@ foreach my $newchannels ( @newchannels_id2name ) {
 		$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		$newcname =~ s///g;		# REMOVE "SELECTED AREA"
 		$newcname =~ s///g;
-		
+		$newcname =~ s/\ \ /\ /g;
 		# DEFINE NEW CHANNEL ID
 		my $newcid     = $newitem->{'id'};
 		
@@ -153,7 +153,8 @@ foreach my $oldchannels ( @oldchannels_name2id ) {
 		$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		$oldcname =~ s///g;		# REMOVE "SELECTED AREA"
 		$oldcname =~ s///g;
-		
+		$oldcname =~ s/\ \ /\ /g;
+
 		# DEFINE OLD CHANNEL ID
 		my $oldcid     = $olditem->{'id'};
 							
@@ -182,7 +183,8 @@ foreach my $oldchannels ( @oldchannels_id2name ) {
 		$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		$oldcname =~ s///g;		# REMOVE "SELECTED AREA"
 		$oldcname =~ s///g;
-		
+		$oldcname =~ s/\ \ /\ /g;
+
 		# DEFINE OLD CHANNEL ID
 		my $oldcid     = $olditem->{'id'};
 							
