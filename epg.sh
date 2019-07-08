@@ -598,7 +598,9 @@ ls -l tkm/ >>  /tmp/providerlist
 ls -l rdt/ >>  /tmp/providerlist
 ls -l wpu/ >>  /tmp/providerlist
 ls -l tvs/ >>  /tmp/providerlist
+ls -l vdf/ >>  /tmp/providerlist
 ls -l ext/ >>  /tmp/providerlist
+
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
 	dialog --backtitle "[M1W00] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --infobox "Please press any button to enter the main menu.\n\nThe script will proceed in 5 seconds." 7 50
