@@ -166,6 +166,20 @@ echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/chlist_printer.pl 2> /dev/nul
 echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/compare_menu.pl 2> /dev/null
 echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/url_printer.pl 2> /dev/null
 
+# VODAFONE
+echo "Updating VODAFONE..."
+
+mkdir vdf 2> /dev/null
+
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/vdf.sh 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/settings.sh 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/epg_json2xml.pl 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/ch_json2xml.pl 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/compare_crid.pl 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/cid_json.pl 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/chlist_printer.pl 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/compare_menu.pl 2> /dev/null
+echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/url_printer.pl 2> /dev/null
 
 # EXTERNAL
 echo "Updating External..."
