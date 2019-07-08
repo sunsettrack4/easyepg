@@ -116,8 +116,8 @@ foreach my $attributes ( @attributes ) {
         # ####################
         
         # DEFINE TIMES AND CHANNEL ID
-        my $start = $attributes->{'start_date_time'};
-        my $end   = $attributes->{'end_date_time'};
+        my $start = $attributes->{'gmt_start_date_time'};
+        my $end   = $attributes->{'gmt_end_date_time'};
         my $cid   = $attributes->{'channelId'};
         
         # CONVERT FROM TIMESTAMP TO XMLTV DATE FORMAT
