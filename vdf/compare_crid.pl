@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ###############################
-# SWISSCOM CHANNEL LIST CREATOR #
+# VODAFONE CHANNEL LIST CREATOR #
 # ###############################
 
 use strict;
