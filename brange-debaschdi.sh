@@ -177,6 +177,8 @@ echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/epg_ext.pl 2>
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ch_ext.pl 2> /dev/null
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/compare_menu.pl 2> /dev/null
 
+echo "CLEAN"
+rm -rf easyepg/
 
 # DONE
 echo "UPDATE FINISHED!"
