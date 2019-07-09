@@ -134,7 +134,7 @@ function status_manifest_download {
 
 			df=$(find mani/ -type f | wc -l) ;
 			ftd=$(wc -l < mani/common) ;
-			status=$(expr $df \* 100 / $ftd) ;
+			status=$(expr $df \* 100 / $ftd - 2) ;
 			if [[ $status -gt 100 || $status -eq 100 ]]; then status="100"; fi
 			if [[ $status -gt 0 && $status -lt 5 || $status -eq 0 ]]; then bar="$z0"; elif [[ $status -gt 5 && $status -lt 10 ]]; then bar="$z5"; elif [[ $status -gt 10 && $status -lt 15 ]] ; then bar="$z10"; elif [[ $status -gt 15 && $status -lt 20 ]] ; then bar="$z15"; elif [[ $status -gt 20 && $status -lt 25 ]] ; then bar="$z20"; elif [[ $status -gt 25 && $status -lt 30 ]] ; then bar="$z25"; elif [[ $status -gt 30 && $status -lt 35 ]] ; then bar="$z30"; elif [[ $status -gt 35 && $status -lt 40 ]] ; then bar="$z35"; elif [[ $status -gt 40 && $status -lt 45 ]] ; then bar="$z40"; elif [[ $status -gt 40 && $status -lt 50 ]] ; then bar="$z45"; elif [[ $status -gt 50 && $status -lt 55 ]] ; then bar="$z50"; elif [[ $status -gt 55 && $status -lt 60 ]] ; then bar="$z55"; elif [[ $status -gt 60 && $status -lt 65 ]] ; then bar="$z60"; elif [[ $status -gt 60 && $status -lt 70 ]] ; then bar="$z65"; elif [[ $status -gt 70 && $status -lt 75 ]] ; then bar="$z70"; elif [[ $status -gt 70 && $status -lt 80 ]] ; then bar="$z75"; elif [[ $status -gt 80 && $status -lt 85 ]] ; then bar="$z80"; elif [[ $status -gt 85 && $status -lt 90 ]] ; then bar="$z85"; elif [[ $status -gt 90 && $status -lt 95 ]] ; then bar="$z90"; elif [[ $status -gt 95 && $status -lt 100 ]] ; then bar="$z95"; elif [ $status -eq 100 ] ; then bar="$z100";fi
 			printf "\rProgress $bar  $status%% ";                                  
