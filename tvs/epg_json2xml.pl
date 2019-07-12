@@ -27,14 +27,17 @@
 
 use strict;
 use warnings;
-use POSIX qw/strftime/;
-
+ 
 binmode STDOUT, ":utf8";
 use utf8;
  
 use JSON;
+use LWP::Simple;
+use HTML::TreeBuilder;
 use Data::Dumper;
 use Time::Piece;
+use DateTime;
+use DateTime::Format::DateParse;
  
 # READ JSON INPUT FILE: EPG WORKFILE
 my $json;
@@ -121,20 +124,36 @@ foreach my $attributes ( @attributes ) {
         my $end   = $broadcast->{'timeend'};
         my $cid   = $broadcast->{'broadcasterId'};
 		$cid =~ s/\&/\&amp;/g;
-        
-        # CONVERT FROM TIMESTAMP TO XMLTV DATE FORMAT
-		my $gmt = strftime("%z", localtime);
 
 		$start = localtime($start)->strftime('%F %T');
-		$start =~ s/://g;
-		$start =~ s/-//g;
-		$start =~ s/ //g;
-
 		$end = localtime($end)->strftime('%F %T');
-		$end   =~ s/://g;
-		$end   =~ s/-//g;
-		$end   =~ s/ //g;
+
+		# DEFINE START TIME
+		$start    =~ s/Z//g;
+		$start    =~ s/ /T/g;
+		my $startGER  = DateTime::Format::DateParse->parse_datetime($start, 'Europe/Berlin');
+		$startGER->set_time_zone('UTC');
+		my $s_YMD = $startGER->ymd;
+		$s_YMD    =~ s/-//g;
+		my $s_HMS = $startGER->hms;
+		$s_HMS    =~ s/://g;
+		my $startUTC = $s_YMD . $s_HMS;
 		
+		# DEFINE END TIME
+		$end      =~ s/Z//g;
+		$end      =~ s/ /T/g;
+		my $endGER = DateTime::Format::DateParse->parse_datetime($end, 'Europe/Berlin');
+		$endGER->set_time_zone('UTC');
+		my $e_YMD = $endGER->ymd;
+		$e_YMD    =~ s/-//g;
+		my $e_HMS = $endGER->hms;
+		$e_HMS    =~ s/://g;
+		my $endUTC = $e_YMD . $e_HMS;
+		
+		# CONVERT TO XMLTV DATE FORMAT
+		my $startTIME = $startUTC . ' +0000';
+		my $endTIME   = $endUTC . ' +0000';
+
 		# DEFINE PROGRAM STRINGS
 		my $title     = $broadcast->{'title'};
 		my $subtitle  = $broadcast->{'episodeTitle'}; 
@@ -184,16 +203,16 @@ foreach my $attributes ( @attributes ) {
 			if( defined $cidEXT->{$cid} ) {
 				if( $setup_cid eq $enabled ) {
 					if( defined $rytec->{$cidEXT->{$cid}} ) {
-						print "<programme start=\"$start $gmt\" stop=\"$end $gmt\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+						print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
 					} else {
-						print "<programme start=\"$start $gmt\" stop=\"$end $gmt\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+						print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
 						print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
 					}
 				} else {
-					print "<programme start=\"$start $gmt\" stop=\"$end $gmt\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+					print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"" . $cidEXT->{$cid} . "\">\n";
 				}
 			} else {
-				print "<programme start=\"$start $gmt\" stop=\"$end $gmt\" channel=\"$cid\">\n";
+				print "<programme start=\"$startTIME\" stop=\"$endTIME\" channel=\"$cid\">\n";
 				print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 			}
 			
