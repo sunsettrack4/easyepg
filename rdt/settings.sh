@@ -464,13 +464,13 @@ do
 		# R1810 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[R1810] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[R1810] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Cache not deleted!" 5 32
 			echo "H" > /tmp/value
 						
 		# R1820 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[R1820] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[R1820] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Cache deleted!" 5 30
 			rm -rf cache/* init.txt 2> /dev/null
 			echo "H" > /tmp/value
 							
