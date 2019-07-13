@@ -232,7 +232,7 @@ foreach my $maniattributes ( @maniattributes ) {
 					
 				if( defined $json_epg ) {
 				
-					my $epg_attributes = decode_json($json_epg);
+					my $epg_attributes = eval { decode_json($json_epg) };
 							
 					if( defined $epg_attributes ) {
 						
@@ -404,7 +404,7 @@ foreach my $maniattributes ( @maniattributes ) {
 				
 				if( defined $json_epg ) {
 				
-					my $epg_attributes = decode_json($json_epg);
+					my $epg_attributes = eval { decode_json($json_epg) };
 					
 					if( defined $epg_attributes ) {
 						
