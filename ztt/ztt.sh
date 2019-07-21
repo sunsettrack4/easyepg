@@ -91,10 +91,9 @@ curl -i -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "Accept:
 if grep -q '"success": true' /tmp/login.txt
 then
 	rm /tmp/cookie_list
-	sed '/Set-cookie/!d' /tmp/login.txt > /tmp/workfile
+	sed '/[Ss]et-cookie: beaker.session.id/!d' /tmp/login.txt > /tmp/workfile
 	sed -i 's/expires.*//g' /tmp/workfile
-	sed -i 's/Set-cookie: //g' /tmp/workfile
-	sed -i 's/Set-cookie: //g' /tmp/workfile
+	sed -i 's/[Ss]et-cookie: //g' /tmp/workfile
 	tr -d '\n' < /tmp/workfile > user/session
 	sed -i 's/; Path.*//g' user/session
 	session=$(<user/session)

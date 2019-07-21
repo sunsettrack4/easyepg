@@ -532,6 +532,7 @@ command -v jq >/dev/null 2>&1 || { printf "\njq is required but it's not install
 command -v php >/dev/null 2>&1 || { printf "\nphp is required but it's not installed!" >&2; ERROR2="true"; }
 command -v git >/dev/null 2>&1 || { printf "\ngit is required but it's not installed!" >&2; ERROR2="true"; }
 command -v xml_split >/dev/null 2>&1 || { printf "\nxml-twig-tools is required but it's not installed!" >&2; ERROR2="true"; }
+command -v pwd >/dev/null 2>&1 || { printf "\npwd is required but it's not installed!" >&2; ERROR2="true"; }
 
 if ! php -m |grep curl >/dev/null 2>&1
 then
@@ -559,6 +560,13 @@ then
 	printf "\n\n[ FATAL ERROR ] Required applications are missing - Stop.\n"
 	exit 1
 fi
+
+
+#
+# SET OLDPWD VALUE
+#
+
+cd $(pwd)
 
 
 #
