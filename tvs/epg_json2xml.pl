@@ -270,12 +270,13 @@ foreach my $attributes ( @attributes ) {
 			
 			# CATEGORIES (USE ONE CATEGORY ONLY) (condition) (language) (settings)
 			if ( defined $genre ) {
+				$genre =~ s/\&/\&amp;/g;
 				if ( $setup_genre eq $enabled ) {
 					if ( defined $eit->{ $genre } ) {
 						print "  <category lang=\"$languageVER\">" . $eit->{ $genre } . "</category>\n";
 					} else {
 						print "  <category lang=\"$languageVER\">$genre</category>\n";
-						print STDERR "            " . "$genre" . "\n";;
+						print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . "$genre" . "\n";;
 					}
 				}elsif ( $setup_genre eq $disabled ) {
 					print "  <category lang=\"$languageVER\">$genre</category>\n";
@@ -283,46 +284,51 @@ foreach my $attributes ( @attributes ) {
 			}
 
 
-			
-			
+			# SEASON/EPISODE REQUIED TO READ XML CORRECTLY
+			if( defined $series ) {
+				$series =~ s/^[ \t]*//g;
+				$series =~ s/\/.*//g;
+				$series =~ s/\(.*//g;
+				$series =~ s/a.*//g;
+				$series =~ s/b.*//g;
+				$series =~ s/\+.*//g;
+				$series =~ s/\;.*//g;
+				$series =~ s/\!.*//g;
+				$series =~ s/\-.*//g;
+				$series =~ s/,.*//g;
+				$series =~ s/[^0-9#\.\-_]//g;
+				if ( $series eq '') {
+					undef $series;
+				}	
+			}
+			if( defined $episode ) {
+				$episode =~ s/^[ \t]*//g;
+				$episode =~ s/\/.*//g;
+				$episode =~ s/\(.*//g;
+				$episode =~ s/a.*//g;
+				$episode =~ s/b.*//g;
+				$episode =~ s/\+.*//g;
+				$episode =~ s/\;.*//g;
+				$episode =~ s/\!.*//g;
+				$episode =~ s/\-.*//g;
+				$episode =~ s/,.*//g;
+				$episode =~ s/[^0-9#\.\-_]//g;
+				if ( $episode eq '') {
+					undef $episode;
+				}	
+			}
 			
 			# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
 			if( $setup_episode eq $xmltv_ns ) {
 				if( defined $series ) {
-						$series =~ s/^[ \t]*//g;
-						$series =~ s/\/.*//g;
-						$series =~ s/\(.*//g;
-						$series =~ s/a.*//g;
-						$series =~ s/b.*//g;
-						$series =~ s/\+.*//g;
-						$series =~ s/\;.*//g;
-						$series =~ s/\!.*//g;
-						$series =~ s/\-.*//g;
 					my $XMLseries  = $series - 1;
 					if( defined $episode ) {
-						$episode =~ s/^[ \t]*//g;
-						$episode =~ s/\/.*//g;
-						$episode =~ s/\(.*//g;
-						$episode =~ s/a.*//g;
-						$episode =~ s/b.*//g;
-						$episode =~ s/\+.*//g;
-						$episode =~ s/\;.*//g;
-						$episode =~ s/\!.*//g;
 						my $XMLepisode = $episode - 1;
 						print "  <episode-num system=\"xmltv_ns\">$XMLseries . $XMLepisode . </episode-num>\n";
 					} else {
 						print "  <episode-num system=\"xmltv_ns\">$XMLseries . 0 . </episode-num>\n";
 					}
-				} elsif( defined $episode ) {
-					$episode =~ s/^[ \t]*//g;
-					$episode =~ s/\/.*//g;
-					$episode =~ s/\(.*//g;
-					$episode =~ s/a.*//g;
-					$episode =~ s/b.*//g;
-					$episode =~ s/\+.*//g;
-					$episode =~ s/\;.*//g;
-					$episode =~ s/\!.*//g;
-					$episode =~ s/\-.*//g;				
+				} elsif( defined $episode ) {				
 					my $XMLepisode = $episode - 1;
 					print "  <episode-num system=\"xmltv_ns\">0 . $XMLepisode . </episode-num>\n";
 				}
@@ -331,39 +337,12 @@ foreach my $attributes ( @attributes ) {
 			# SEASON/EPISODE (ONSCREEN) (condition) (settings)
 			if( $setup_episode eq $onscreen ) {
 				if( defined $series ) {
-						$series =~ s/^[ \t]*//g;
-						$series =~ s/\/.*//g;
-						$series =~ s/\(.*//g;
-						$series =~ s/a.*//g;
-						$series =~ s/b.*//g;
-						$series =~ s/\+.*//g;
-						$series =~ s/\;.*//g;
-						$series =~ s/\!.*//g;
-						$series =~ s/\-.*//g;
 					if( defined $episode ) {
-						$episode =~ s/^[ \t]*//g;
-						$episode =~ s/\/.*//g;
-						$episode =~ s/\(.*//g;
-						$episode =~ s/a.*//g;
-						$episode =~ s/b.*//g;
-						$episode =~ s/\+.*//g;
-						$episode =~ s/\;.*//g;
-						$episode =~ s/\!.*//g;
-						$episode =~ s/\-.*//g;
 						print "  <episode-num system=\"onscreen\">S$series E$episode</episode-num>\n";
 					} else {
 						print "  <episode-num system=\"onscreen\">S$series</episode-num>\n";
 					}
 				} elsif( defined $episode ) {
-					$episode =~ s/^[ \t]*//g;
-					$episode =~ s/\/.*//g;
-					$episode =~ s/\(.*//g;
-					$episode =~ s/a.*//g;
-					$episode =~ s/b.*//g;
-					$episode =~ s/\+.*//g;
-					$episode =~ s/\;.*//g;
-					$episode =~ s/\!.*//g;
-					$episode =~ s/\-.*//g;
 					print "  <episode-num system=\"onscreen\">E$episode</episode-num>\n";
 				}
 			}
