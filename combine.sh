@@ -229,6 +229,18 @@ then
 				sed 's/<channel id="/"[WAIPU.TV DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 			
+			if [ -e xml/tv-spielfilm_de.xml ]
+			then
+				grep 'channel id=' xml/tv-spielfilm_de.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[TV-SPIELFILM DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+
+			if [ -e xml/vodafone_de.xml ]
+			then
+				grep 'channel id=' xml/vodafone_de.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[VODAFONE DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+
 			if [ -e xml/external_oa.xml ]
 			then
 				grep 'channel id=' xml/external_oa.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
@@ -256,7 +268,7 @@ then
 				rm /tmp/setupname /tmp/chduplicates 2> /dev/null
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
-				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
+				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[TV-SPIELFILM [A-Z][A-Z]\] /\n/g;s/"\[TV-SPIELFILM [A-Z][A-Z]\] //g;s/ "\[VODAFONE [A-Z][A-Z]\] /\n/g;s/"\[VODAFONE [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
 				sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
 				
 				if [ -s /tmp/chduplicates ]
@@ -276,7 +288,7 @@ then
 		if [ -s /tmp/channels ]
 		then
 			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
+			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[TV-SPIELFILM/\n"\[TV-SPIELFILM/g;s/ "\[VODAFONE/\n"\[VODAFONE/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
 			then
@@ -365,6 +377,16 @@ then
 					grep "WAIPU.TV DE" /tmp/channels | sed '/WAIPU.TV DE/s/\[WAIPU.TV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/wpu_de_channels.json
 				fi
 				
+				if [ -e xml/tv-spielfilm_de.xml ]
+				then
+					grep "TV-SPIELFILM DE" /tmp/channels | sed '/TV-SPIELFILM DE/s/\[TV-SPIELFILM DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvs_de_channels.json
+				fi
+
+				if [ -e xml/vodafone_de.xml ]
+				then
+					grep "VODAFONE DE" /tmp/channels | sed '/VODAFONE DE/s/\[VODAFONE DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/vdf_de_channels.json
+				fi
+
 				if [ -e xml/external_oa.xml ]
 				then
 					grep "EXTERNAL OA" /tmp/channels | sed '/EXTERNAL OA/s/\[EXTERNAL OA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/ext_oa_channels.json
@@ -926,6 +948,56 @@ then
 					
 					cd - > /dev/null
 					
+					# TV-SPIELFILM DE
+					if [ -e xml/tv-spielfilm_de.xml ]
+					then
+						grep 'channel id=' xml/tv-spielfilm_de.xml > /tmp/xmlch_tvsde
+						sed -i 's/<channel id="/[TV-SPIELFILM DE] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_tvsde
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvs_de_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvs_de_channels.json /tmp/xmlch_tvsde
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e tvs_de_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' tvs_de_channels.json > /tmp/channels_tvsde && cat /tmp/channels_tvsde >> /tmp/xmlch2
+						sed -i 's/.*/[TV-SPIELFILM DE] &/g' /tmp/channels_tvsde
+						
+						comm -12 <(sort -u /tmp/xmlch_tvsde) <(sort -u /tmp/channels_tvsde) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_tvsde) <(sort -u /tmp/channels_tvsde) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+
+					# VODAFONE DE
+					if [ -e xml/vodafone_de.xml ]
+					then
+						grep 'channel id=' xml/vodafone_de.xml > /tmp/xmlch_vdfde
+						sed -i 's/<channel id="/[VODAFONE DE] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_vdfde
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/vdf_de_channels.json 2> /dev/null
+					fi
+					
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/vdf_de_channels.json /tmp/xmlch_vdfde
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+					
+					if [ -e vdf_de_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' vdf_de_channels.json > /tmp/channels_vdfde && cat /tmp/channels_vdfde >> /tmp/xmlch2
+						sed -i 's/.*/[VODAFONE DE] &/g' /tmp/channels_vdfde
+						
+						comm -12 <(sort -u /tmp/xmlch_vdfde) <(sort -u /tmp/channels_vdfde) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_vdfde) <(sort -u /tmp/channels_vdfde) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+					
+					cd - > /dev/null
+
 					# EXTERNAL SLOT 1
 					if [ -e xml/external_oa.xml ]
 					then
@@ -1019,7 +1091,7 @@ then
 					
 					if [ -e /tmp/menu ]
 					then
-						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[RADIOTIMES [A-Z][A-Z]\]|\[WAIPU.TV [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
+						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[RADIOTIMES [A-Z][A-Z]\]|\[WAIPU.TV [A-Z][A-Z]\]|\[TV-SPIELFILM [A-Z][A-Z]\]|\[VODAFONE [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
 							
@@ -1055,9 +1127,9 @@ then
 					if [ -s /tmp/channels ]
 					then
 						sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
+						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[TV-SPIELFILM [A-Z][A-Z]\] /\n/g;s/"\[TV-SPIELFILM [A-Z][A-Z]\] //g;s/ "\[VODAFONE [A-Z][A-Z]\] /\n/g;s/"\[VODAFONE [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
 							
-						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g;' /tmp/channels
+						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[TV-SPIELFILM/\n"\[TV-SPIELFILM/g;s/ "\[VODAFONE/\n"\[VODAFONE/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g;' /tmp/channels
 						
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) ]
 						then
@@ -1146,6 +1218,16 @@ then
 								grep "WAIPU.TV DE" /tmp/channels | sed '/WAIPU.TV DE/s/\[WAIPU.TV DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/wpu_de_channels.json
 							fi
 							
+							if [ -e xml/tv-spielfilm_de.xml ]
+							then
+								grep "TV-SPIELFILM DE" /tmp/channels | sed '/TV-SPIELFILM DE/s/\[TV-SPIELFILM DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvs_de_channels.json
+							fi
+
+							if [ -e xml/vodafone_de.xml ]
+							then
+								grep "VODAFONE DE" /tmp/channels | sed '/VODAFONE DE/s/\[VODAFONE DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/vdf_de_channels.json
+							fi
+
 							if [ -e xml/external_oa.xml ]
 							then
 								grep "EXTERNAL OA" /tmp/channels | sed '/EXTERNAL OA/s/\[EXTERNAL OA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/ext_oa_channels.json
@@ -1755,6 +1837,42 @@ then
 							fi
 						fi
 						
+						# TV-SPIELFILM DE
+						if [ -s combine/$folder/tvs_de_channels.json ]
+						then
+							if [ -s xml/tv-spielfilm_de.xml ]
+							then
+								sed 's/fileNAME/tv-spielfilm_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+								sed -i "s/channelsFILE/$folder\/tvs_de_channels.json/g" /tmp/ch_combine.pl
+								printf "\n<!-- CHANNEL LIST: TV-SPIELFILM DE -->\n\n" >> /tmp/combined_channels
+								perl /tmp/ch_combine.pl >> /tmp/combined_channels
+								
+								sed 's/fileNAME/tv-spielfilm_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+								sed -i "s/channelsFILE/$folder\/tvs_de_channels.json/g" /tmp/prog_combine.pl
+								sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+								printf "\n<!-- PROGRAMMES: TV-SPIELFILM DE -->\n\n" >> /tmp/combined_programmes
+								perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+							fi
+						fi
+
+						# VODAFONE DE
+						if [ -s combine/$folder/vdf_de_channels.json ]
+						then
+							if [ -s xml/vodafone_de.xml ]
+							then
+								sed 's/fileNAME/vodafone_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+								sed -i "s/channelsFILE/$folder\/vdf_de_channels.json/g" /tmp/ch_combine.pl
+								printf "\n<!-- CHANNEL LIST: VODAFONE DE -->\n\n" >> /tmp/combined_channels
+								perl /tmp/ch_combine.pl >> /tmp/combined_channels
+								
+								sed 's/fileNAME/vodafone_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+								sed -i "s/channelsFILE/$folder\/vdf_de_channels.json/g" /tmp/prog_combine.pl
+								sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+								printf "\n<!-- PROGRAMMES: VODAFONE DE -->\n\n" >> /tmp/combined_programmes
+								perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+							fi
+						fi
+
 						# EXTERNAL SLOT 1
 						if [ -s combine/$folder/ext_oa_channels.json ]
 						then

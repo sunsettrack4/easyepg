@@ -16,6 +16,8 @@ This tool provides high-quality EPG data from different IPTV/OTT sources.
 * Zattoo (DE,CH)
 * Magenta TV (DE)
 * WaipuTV (DE)
+* TV-Spielfilm (DE)
+* Vodafone (DE)
 * Swisscom (CH)
 * Radiotimes (UK)
 * tvPlayer (UK)
@@ -60,13 +62,13 @@ sudo cpanm install utf8
 mkdir ~/easyepg
 
 # Download the .zip file and extract the files into your folder:
-wget https://github.com/sunsettrack4/easyepg/archive/v0.3.7.zip
+wget https://github.com/sunsettrack4/easyepg/archive/v0.4.0.zip
 
 # Unzip the file:
-unzip v0.3.7.zip
+unzip v0.4.0.zip
 
 # Move all script files to the created folder
-mv ~/easyepg-0.3.7/* ~/easyepg/
+mv ~/easyepg-0.4.0/* ~/easyepg/
 
 # Set system-wide permissions to the folder and its related files
 sudo chmod 0777 ~/easyepg

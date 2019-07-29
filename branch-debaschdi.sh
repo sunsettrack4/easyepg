@@ -1,27 +1,12 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/easyepg
-#
-#      Collaborators:
-#      - DeBaschdi ( https://github.com/DeBaschdi )
-#
-#  This Program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 3, or (at your option)
-#  any later version.
-#
-#  This Program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
+# #########################
+# USE BRANGE - DEBASCHDI  #
+# #########################
 
-# ################
-# UPDATE SCRIPT  #
-# ################
+# GIT CLONE
+
+git clone https://github.com/DeBaschdi/easyepg.git
 
 # MAIN
 echo "Updating main..."
@@ -192,7 +177,8 @@ echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/epg_ext.pl 2>
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ch_ext.pl 2> /dev/null
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/compare_menu.pl 2> /dev/null
 
+echo "CLEAN"
+rm -rf easyepg/
 
 # DONE
 echo "UPDATE FINISHED!"
- 

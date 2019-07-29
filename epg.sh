@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.3.8 BETA - 2019/06/01            "
+echo " Release v0.4.0 BETA - 2019/07/09            "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -383,6 +383,90 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e tvs/ch_json2xml.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/chlist_printer.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/cid_json.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/compare_menu.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/epg_json2xml.pl ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/settings.sh ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e tvs/tvs.sh ]
+then
+	printf "\nMissing file in TV-Spielfilm folder: tvs/tvs.sh"
+	ERROR="true"
+fi
+
+if [ ! -e vdf/ch_json2xml.pl ]
+then
+	printf "\nMissing file in VODAFONE folder: vdf/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e vdf/chlist_printer.pl ]
+then
+	printf "\nMissing file in VODAFONE folder: vdf/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e vdf/cid_json.pl ]
+then
+	printf "\nMissing file in VODAFONE folder: vdf/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e vdf/compare_menu.pl ]
+then
+	printf "\nMissing file in VODAFONE folder: vdf/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e vdf/epg_json2xml.pl ]
+then
+	printf "\nMissing file in VODAFONE folder: vdf/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e vdf/settings.sh ]
+then
+	printf "\nMissing file in VODAFONE folder: vdf/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e vdf/vdf.sh ]
+then
+	printf "\nMissing file in VODAFONE folder: vdf/vdf.sh"
+	ERROR="true"
+fi
+
 if [ ! -e ext/ch_ext.pl ]
 then
 	printf "\nMissing file in External folder: ext/ch_ext.pl"
@@ -521,7 +605,10 @@ ls -l tvp/ >>  /tmp/providerlist
 ls -l tkm/ >>  /tmp/providerlist
 ls -l rdt/ >>  /tmp/providerlist
 ls -l wpu/ >>  /tmp/providerlist
+ls -l tvs/ >>  /tmp/providerlist
+ls -l vdf/ >>  /tmp/providerlist
 ls -l ext/ >>  /tmp/providerlist
+
 if grep -q '^d' /tmp/providerlist 2> /dev/null
 then
 	dialog --backtitle "[M1W00] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --infobox "Please press any button to enter the main menu.\n\nThe script will proceed in 5 seconds." 7 50
@@ -557,6 +644,8 @@ do
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
 	ls -l wpu/ >>  /tmp/providerlist
+	ls -l tvs/ >>  /tmp/providerlist
+	ls -l vdf/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -571,6 +660,8 @@ do
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
 	ls -l wpu/ >>  /tmp/providerlist
+	ls -l tvs/ >>  /tmp/providerlist
+	ls -l vdf/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -588,6 +679,8 @@ do
 	ls -l tkm/ >>  /tmp/providerlist
 	ls -l rdt/ >>  /tmp/providerlist
 	ls -l wpu/ >>  /tmp/providerlist
+	ls -l tvs/ >>  /tmp/providerlist
+	ls -l vdf/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -613,7 +706,7 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# M1100 MENU OVERLAY
-		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 16 40 10 \' > /tmp/menu
+		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 18 40 11 \' > /tmp/menu
 
 		# M1110 HORIZON
 		echo '	1 "HORIZON" \' >> /tmp/menu
@@ -636,6 +729,12 @@ do
 		# M1170 WAIPU.TV
 		echo '	7 "WAIPU.TV" \' >> /tmp/menu
 		
+		# M1180 TV-SPIELFILM
+		echo '	8 "TV-SPIELFILM" \' >> /tmp/menu
+
+		# M1190 VODAFONE
+		echo '	9 "VODAFONE" \' >> /tmp/menu
+
 		# M11+0 EXTERNAL
 		echo '	+ "EXTERNAL" \' >> /tmp/menu
 
@@ -1447,7 +1546,137 @@ do
 				echo "M" > /tmp/value
 			fi
 		
-		
+		# #################
+		# M1180 TVS		  #
+		# #################
+
+		elif grep -q "8" /tmp/value
+		then
+			# M1180 MENU OVERLAY
+			echo 'dialog --backtitle "[M1150] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TV-SPIELFILM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1181 DE
+			if [ ! -d tvs/de ]
+			then
+				echo '	1 "[DE] TV-SPIELFILM" \' >> /tmp/menu
+			fi
+			
+			# M118E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M115E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TV-SPIELFILM" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+				
+				
+			# #######################
+			# M1181 TV-SPIELFILM DE #
+			# #######################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir tvs/de
+				chmod 0777 tvs/de
+				echo '{"country":"DE","language":"de"}' > tvs/de/init.json
+				cp tvs/settings.sh tvs/de/settings.sh
+				cp tvs/tvs.sh tvs/de/tvs.sh
+				cp tvs/epg_json2xml.pl tvs/de/
+				cp tvs/ch_json2xml.pl tvs/de/
+				cp tvs/cid_json.pl tvs/de/
+				cp tvs/chlist_printer.pl tvs/de/
+				cp tvs/compare_menu.pl tvs/de/
+				cp tvs/url_printer.pl tvs/de/
+				cd tvs/de && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tvs/de/channels.json ]
+				then
+					rm -rf tvs/de
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M115X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+
+		# #################
+		# M1190 VDF		  #
+		# #################
+
+		elif grep -q "9" /tmp/value
+		then
+			# M1180 MENU OVERLAY
+			echo 'dialog --backtitle "[M1150] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > VODAFONE" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
+			
+			# M1191 DE
+			if [ ! -d vdf/de ]
+			then
+				echo '	1 "[DE] VODAFONE" \' >> /tmp/menu
+			fi
+			
+			# M119E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M115E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > VODAFONE" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+				
+				
+			# #######################
+			# M1191 VODAFONE DE #
+			# #######################
+				
+			if grep -q "1" /tmp/value
+			then
+				mkdir vdf/de
+				chmod 0777 vdf/de
+				echo '{"country":"DE","language":"de"}' > vdf/de/init.json
+				cp vdf/settings.sh vdf/de/settings.sh
+				cp vdf/vdf.sh vdf/de/vdf.sh
+				cp vdf/epg_json2xml.pl vdf/de/
+				cp vdf/ch_json2xml.pl vdf/de/
+				cp vdf/compare_crid.pl vdf/de
+				cp vdf/cid_json.pl vdf/de/
+				cp vdf/chlist_printer.pl vdf/de/
+				cp vdf/compare_menu.pl vdf/de/
+				cp vdf/url_printer.pl vdf/de/
+				cd vdf/de && bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e vdf/de/channels.json ]
+				then
+					rm -rf vdf/de
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M115X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+
 		# #################
 		# M11+0 EXTERNAL  #
 		# #################
@@ -1628,6 +1857,18 @@ do
 		if ls -l wpu/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	7 "WAIPU.TV" \' >> /tmp/menu
+		fi
+
+		# M1280 TV-SPIELFILM
+		if ls -l tvs/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	8 "TV-SPIELFILM" \' >> /tmp/menu
+		fi
+
+		# M1290 VODAFONE
+		if ls -l vdf/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	9 "VODAFONE" \' >> /tmp/menu
 		fi
 		
 		# M12+0 EXTERNAL
@@ -2272,7 +2513,116 @@ do
 				echo "M" > /tmp/value
 			fi
 		
+		# ######################
+		# M1280 TV-SPIELFILM   #
+		# ######################
 		
+		elif grep -q "8" /tmp/value
+		then
+			# M1280 MENU OVERLAY
+			echo 'dialog --backtitle "[M1280] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TV-SPIELFILM" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1281 TV-SPIELFILM  DE
+			if [ -d tvs/de ]
+			then
+				echo '	1 "[DE] TV-SPIELFILM " \' >> /tmp/menu
+			fi
+			
+			# M128E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M128E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TV-SPIELFILM " --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ######################
+			# M1281 TV-SPIELFILM   #
+			# ######################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd tvs/de
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e tvs/de/channels.json ]
+				then
+					rm -rf tvs/de xml/tv-spielfilm_de.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M128X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+		
+		# ######################
+		# M1290 VODAFONE   #
+		# ######################
+		
+		elif grep -q "9" /tmp/value
+		then
+			# M1290 MENU OVERLAY
+			echo 'dialog --backtitle "[M1290] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > VODAFONE" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
+			
+			# M1291 VODAFONE  DE
+			if [ -d vdf/de ]
+			then
+				echo '	1 "[DE] VODAFONE " \' >> /tmp/menu
+			fi
+			
+			# M128E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M129E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > VODAFONE " --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+			
+			
+			# ######################
+			# M1291 VODAFONE       #
+			# ######################
+			
+			if grep -q "1" /tmp/value
+			then
+				cd vdf/de
+				bash settings.sh
+				cd - > /dev/null
+				
+				if [ ! -e vdf/de/channels.json ]
+				then
+					rm -rf vdf/de xml/vodafone_de.xml 2> /dev/null
+				fi
+				
+				echo "M" > /tmp/value
+			
+			
+			# ############
+			# M129X EXIT #
+			# ############
+			
+			else
+				echo "M" > /tmp/value
+			fi
+
 		# ######################
 		# M12+0 EXTERNAL       #
 		# ######################
@@ -2581,6 +2931,34 @@ then
 		sleep 2s
 		
 		cd wpu/de 2> /dev/null && bash wpu.sh && cd - > /dev/null && cp wpu/de/waipu.xml xml/waipu_de.xml 2> /dev/null
+	fi
+
+	if ls -l tvs/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " TV-SPIELFILM EPG SIMPLE XMLTV GRABBER       "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd tvs/de 2> /dev/null && bash tvs.sh && cd - > /dev/null && cp tvs/de/tv-spielfilm.xml xml/tv-spielfilm_de.xml 2> /dev/null
+	fi
+
+	if ls -l vdf/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " VODAFONE EPG SIMPLE XMLTV GRABBER           "
+		echo "                                             "
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+		
+		cd vdf/de 2> /dev/null && bash vdf.sh && cd - > /dev/null && cp vdf/de/vodafone.xml xml/vodafone_de.xml 2> /dev/null
 	fi
 	
 	if ls -l ext/ | grep -q '^d'
@@ -2936,6 +3314,42 @@ do
 			fi
 		fi
 		
+		# TV-SPIELFILM
+		if [ -s combine/$folder/tvs_de_channels.json ]
+		then
+			if [ -s xml/tv-spielfilm_de.xml ]
+			then
+				sed 's/fileNAME/tv-spielfilm_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvs_de_channels.json/g" /tmp/ch_combine.pl
+				printf "\n<!-- CHANNEL LIST: TV-SPIELFILM DE -->\n\n" >> /tmp/combined_channels
+				perl /tmp/ch_combine.pl >> /tmp/combined_channels
+				
+				sed 's/fileNAME/tv-spielfilm_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvs_de_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+				printf "\n<!-- PROGRAMMES: TV-SPIELFILM DE -->\n\n" >> /tmp/combined_programmes
+				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+			fi
+		fi
+
+		# VODAFONE
+		if [ -s combine/$folder/vdf_de_channels.json ]
+		then
+			if [ -s xml/vodafone_de.xml ]
+			then
+				sed 's/fileNAME/vodafone_de.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+				sed -i "s/channelsFILE/$folder\/vdf_de_channels.json/g" /tmp/ch_combine.pl
+				printf "\n<!-- CHANNEL LIST: VODAFONE DE -->\n\n" >> /tmp/combined_channels
+				perl /tmp/ch_combine.pl >> /tmp/combined_channels
+				
+				sed 's/fileNAME/vodafone_de.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+				sed -i "s/channelsFILE/$folder\/vdf_de_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+				printf "\n<!-- PROGRAMMES: VODAFONE DE -->\n\n" >> /tmp/combined_programmes
+				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+			fi
+		fi
+
 		# EXTERNAL SLOT 1
 		if [ -s combine/$folder/ext_oa_channels.json ]
 		then
