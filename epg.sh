@@ -251,6 +251,18 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e tkm/proxy.sh ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tkm/web_magentatv_de.php ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/chlist_printer.pl"
+	ERROR="true"
+fi
+
 if [ ! -e tkm/cid_json.pl ]
 then
 	printf "\nMissing file in MagentaTV folder: tkm/cid_json.pl"
@@ -277,9 +289,16 @@ fi
 
 if [ ! -e tkm/tkm.sh ]
 then
-	printf "\nMissing file in MagentaTV folder: tkm/swc.sh"
+	printf "\nMissing file in MagentaTV folder: tkm/tkm.sh"
 	ERROR="true"
 fi
+
+if [ ! -e tkm/web_magentatv_de.php ]
+then
+	printf "\nMissing file in MagentaTV folder: tkm/web_magentatv_de.php"
+	ERROR="true"
+fi
+
 
 if [ ! -e tkm/url_printer.pl ]
 then
@@ -1395,6 +1414,8 @@ do
 				cp tkm/chlist_printer.pl tkm/de/
 				cp tkm/compare_menu.pl tkm/de/
 				cp tkm/url_printer.pl tkm/de/
+				cp tkm/web_magentatv_de.php tkm/de/
+				cp tkm/proxy.sh tkm/de/
 				cd tkm/de && bash settings.sh
 				cd - > /dev/null
 				
