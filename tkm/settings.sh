@@ -173,7 +173,6 @@ do
 	then
 		# E1100 MENU OVERLAY
 		echo 'dialog --backtitle "[E1100] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
-		
 		printf "\rFetching channel list...               "
 		curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?type=2' > /tmp/workfile
 		jq '.' /tmp/workfile > /tmp/chlist
@@ -463,6 +462,8 @@ do
 		cd - > /dev/null
 		
 		read -n 1 -s -r -p "Press any key to continue..."
+		printf "\rStarting Proxy Server\n"
+        bash proxy.sh start
 		echo "H" > /tmp/value
 	
 	
