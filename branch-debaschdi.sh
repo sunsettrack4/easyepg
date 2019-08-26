@@ -107,7 +107,7 @@ echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/chlist_printer.pl 2> /dev/nul
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/compare_menu.pl 2> /dev/null
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/url_printer.pl 2> /dev/null
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/proxy.sh 2> /dev/null
-echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/web_magentatv_de.php 2> /dev/nul
+echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/web_magentatv_de.php 2> /dev/null
 
 # RADIOTIMES
 echo "Updating RadioTimes..."
