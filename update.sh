@@ -32,7 +32,7 @@ cp easyepg/combine.sh combine.sh 2> /dev/null
 cp easyepg/prog_combine.pl prog_combine.pl 2> /dev/null
 cp easyepg/LICENSE LICENSE 2> /dev/null
 cp easyepg/update.sh update.sh 2> /dev/null
-
+cp easyepg/branch-debaschdi.sh branch-debaschdi.sh 2> /dev/null
 
 # HORIZON
 echo "Updating Horizon..."
