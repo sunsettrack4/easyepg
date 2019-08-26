@@ -182,4 +182,4 @@ echo "CLEAN"
 rm -rf easyepg/
 
 # DONE
-echo "UPDATE FINISHED!"
+echo "UPDATE FINISHED! --> Branch DeBaschdi"
