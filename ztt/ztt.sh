@@ -60,21 +60,18 @@ printf "\rLoading cookie data..."
 
 export QT_QPA_PLATFORM=offscreen
 
-if phantomjs -platform offscreen save_page.js https://zattoo.com/login 2>&1 >/tmp/cookie_list | grep -q "This application failed to start"
+curl --silent https://zattoo.com/ | grep "appToken" | sed "s/\(.*window.appToken = '\)\(.*\)\(';<\/script>.*\)/\2/g" >/tmp/apptoken
+curl --silent -i -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: application/x-www-form-urlencoded" --data-urlencode "client_app_token=$(</tmp/apptoken)" --data-urlencode "uuid=d7512e98-38a0-4f01-b820-5a5cf98141fe" --data-urlencode "lang=en" --data-urlencode "format=json" https://zattoo.com/zapi/session/hello | grep "beaker.session.id" >/tmp/cookie_list
+														
+if grep -q "beaker.session.id" /tmp/cookie_list
 then
-	if phantomjs save_page.js https://zattoo.com/login 2>&1 >/tmp/cookie_list | grep -q "This application failed to start"
-	then
-		export QT_QPA_PLATFORM=phantom
-		if phantomjs -platform phantom save_page.js https://zattoo.com/login 2>&1 >/tmp/cookie_list | grep -q "This application failed to start"
-		then
-			printf "\rERROR: PhantomJS failed to start!"
-			sleep 2s
-			exit 1
-		fi
-	fi
+	sed -i -e "2d" -e "s/[Ss]et-cookie: //g" -e "s/; Path.*//g" /tmp/cookie_list
+	mv /tmp/cookie_list /tmp/session
+else
+	printf "Unable to load Session ID!\n\n"
+	exit 0
 fi
 
-grep "beaker.session.id" /tmp/cookie_list > /tmp/session
 rm /tmp/login.txt 2> /dev/null
 
 
@@ -90,7 +87,6 @@ curl -i -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "Accept:
 
 if grep -q '"success": true' /tmp/login.txt
 then
-	rm /tmp/cookie_list
 	sed '/[Ss]et-cookie: beaker.session.id/!d' /tmp/login.txt > /tmp/workfile
 	sed -i 's/expires.*//g' /tmp/workfile
 	sed -i 's/[Ss]et-cookie: //g' /tmp/workfile
