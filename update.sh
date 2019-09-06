@@ -37,7 +37,7 @@ cp easyepg/branch-debaschdi.sh branch-debaschdi.sh 2> /dev/null
 # HORIZON
 echo "Updating Horizon..."
 
-echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir hzn 2> /dev/null
 
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/hzn.sh 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/ch_json2xml.pl 2> /dev/null
@@ -64,7 +64,7 @@ sed 's/XX/RO/g;s/YYY/ron/g' easyepg/hzn/url_printer.pl > hzn/ro/url_printer.pl 2
 # ZATTOO
 echo "Updating Zattoo..."
 
-echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir ztt 2> /dev/null
 
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/ztt.sh 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/settings.sh 2> /dev/null
@@ -83,7 +83,7 @@ sed 's/\[XX\]/[CH]/g;s/XXXX/CH/g' easyepg/ztt/settings.sh > ztt/ch/settings.sh 2
 # SWISSCOM
 echo "Updating Swisscom..."
 
-echo "swc/ swc/ch/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir swc 2> /dev/null
 
 echo "swc/ swc/ch/" | xargs -n 1 cp -v easyepg/swc/swc.sh 2> /dev/null
 echo "swc/ swc/ch/" | xargs -n 1 cp -v easyepg/swc/settings.sh 2> /dev/null
@@ -98,7 +98,7 @@ echo "swc/ swc/ch/" | xargs -n 1 cp -v easyepg/swc/url_printer.pl 2> /dev/null
 # TVPLAYER
 echo "Updating tvPlayer..."
 
-echo "tvp/ tvp/uk/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir tvp 2> /dev/null
 
 echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/tvp.sh 2> /dev/null
 echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/settings.sh 2> /dev/null
@@ -112,7 +112,7 @@ echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/compare_menu.pl 2> /dev/null
 # TELEKOM
 echo "Updating Telekom..."
 
-echo "tkm/ tkm/de/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir tkm 2> /dev/null
 
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/tkm.sh 2> /dev/null
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/settings.sh 2> /dev/null
@@ -127,7 +127,7 @@ echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/url_printer.pl 2> /dev/null
 # RADIOTIMES
 echo "Updating RadioTimes..."
 
-echo "rdt/ rdt/uk/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir rdt 2> /dev/null
 
 echo "rdt/ rdt/uk/" | xargs -n 1 cp -v easyepg/rdt/rdt.sh 2> /dev/null
 echo "rdt/ rdt/uk/" | xargs -n 1 cp -v easyepg/rdt/settings.sh 2> /dev/null
@@ -143,7 +143,7 @@ echo "rdt/ rdt/uk/" | xargs -n 1 cp -v easyepg/rdt/url_printer.pl 2> /dev/null
 # WAIPU.TV
 echo "Updating waipu.tv..."
 
-echo "wpu/ wpu/de/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir wpu 2> /dev/null
 
 echo "wpu/ wpu/de/" | xargs -n 1 cp -v easyepg/wpu/wpu.sh 2> /dev/null
 echo "wpu/ wpu/de/" | xargs -n 1 cp -v easyepg/wpu/settings.sh 2> /dev/null
@@ -156,7 +156,7 @@ echo "wpu/ wpu/de/" | xargs -n 1 cp -v easyepg/wpu/compare_menu.pl 2> /dev/null
 # TV-Spielfilm
 echo "Updating TV-Spielfilm..."
 
-echo "tvs/ tvs/de/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir tvs 2> /dev/null
 
 echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/tvs.sh 2> /dev/null
 echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/settings.sh 2> /dev/null
@@ -170,7 +170,7 @@ echo "tvs/ tvs/de/" | xargs -n 1 cp -v easyepg/tvs/url_printer.pl 2> /dev/null
 # VODAFONE
 echo "Updating VODAFONE..."
 
-echo "vdf/ vdf/de/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir vdf 2> /dev/null
 
 echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/vdf.sh 2> /dev/null
 echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/settings.sh 2> /dev/null
@@ -185,7 +185,7 @@ echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/url_printer.pl 2> /dev/null
 # EXTERNAL
 echo "Updating External..."
 
-echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 mkdir -p 2> /dev/null
+mkdir ext 2> /dev/null
 
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ext.sh 2> /dev/null
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/settings.sh 2> /dev/null
