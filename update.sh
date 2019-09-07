@@ -45,7 +45,7 @@ echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/h
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/epg_json2xml.pl 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/settings.sh 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/chlist_printer.pl 2> /dev/null
-echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/compare_menu.pl.sh 2> /dev/null
+echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/compare_menu.pl 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/hzn.sh 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/hzn.sh 2> /dev/null
 
@@ -67,6 +67,7 @@ echo "Updating Zattoo..."
 mkdir ztt 2> /dev/null
 
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/ztt.sh 2> /dev/null
+echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/settings.sh 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/compare_crid.pl 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/save_page.js 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/epg_json2xml.pl 2> /dev/null
