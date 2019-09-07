@@ -241,6 +241,7 @@ foreach my $attributes ( @attributes ) {
  			#CREDITS (condition)
 			if( defined $director ) {
 				$director =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY	
+				$director =~ s/[<>]//g;
 				print "  <credits>\n";
 				print "    <director>" . $director . "</director>\n";
 					if( exists $broadcast->{'actors'} ) {
@@ -250,6 +251,7 @@ foreach my $attributes ( @attributes ) {
 								for my $role ( keys %$actors ) {
 									my $PRINTcast = $actors->{$role};
 									$PRINTcast =~ s/\&/\&amp;/g;
+									$PRINTcast =~ s/[<>]//g;
 									print "    <actor>" . $PRINTcast . "</actor>\n";
 									}
 								}
@@ -276,7 +278,7 @@ foreach my $attributes ( @attributes ) {
 						print "  <category lang=\"$languageVER\">" . $eit->{ $genre } . "</category>\n";
 					} else {
 						print "  <category lang=\"$languageVER\">$genre</category>\n";
-						print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . "$genre" . "\n";;
+						print STDERR "[ EPG WARNING ] CATEGORY UNAVAILABLE IN EIT LIST " . "$genre" . "\n";;
 					}
 				}elsif ( $setup_genre eq $disabled ) {
 					print "  <category lang=\"$languageVER\">$genre</category>\n";
