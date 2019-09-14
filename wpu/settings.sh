@@ -530,13 +530,14 @@ do
 		echo ""
 		echo " --------------------------------------------"
 		echo " WAIPU.TV EPG SIMPLE XMLTV GRABBER           "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash wpu.sh && cd - > /dev/null
+		cd $(pwd)
+		bash wpu.sh && cd $(grep 'DIR=' /tmp/initrun.txt | sed 's/DIR=//g') > /dev/null
 		
 		cp wpu/de/waipu.xml xml/waipu_de.xml 2> /dev/null
 		

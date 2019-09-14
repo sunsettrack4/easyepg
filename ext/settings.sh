@@ -339,14 +339,15 @@ do
 		
 		echo ""
 		echo " --------------------------------------------"
-		echo " EXTERNAL EPG SIMPLE XMLTV GRABBER            "
-		echo "                                             "
+		echo " EXTERNAL EPG SIMPLE XMLTV GRABBER           "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash ext.sh && cd - > /dev/null
+		cd $(pwd)
+		bash ext.sh && cd $(grep 'DIR=' /tmp/initrun.txt | sed 's/DIR=//g') > /dev/null
 		
 		cp ext/oa/external.xml xml/external_oa.xml 2> /dev/null
 		cp ext/ob/external.xml xml/external_ob.xml 2> /dev/null

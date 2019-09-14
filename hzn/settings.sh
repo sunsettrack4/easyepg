@@ -485,13 +485,14 @@ do
 		echo ""
 		echo " --------------------------------------------"
 		echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash hzn.sh && cd - > /dev/null
+		cd $(pwd)
+		bash hzn.sh && cd $(grep 'DIR=' /tmp/initrun.txt | sed 's/DIR=//g') > /dev/null
 		
 		cp hzn/de/horizon.xml xml/horizon_de.xml 2> /dev/null
 		cp hzn/at/horizon.xml xml/horizon_at.xml 2> /dev/null

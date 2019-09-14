@@ -467,13 +467,14 @@ do
 		echo ""
 		echo " --------------------------------------------"
 		echo " TELEKOM EPG SIMPLE XMLTV GRABBER            "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash tkm.sh && cd - > /dev/null
+		cd $(pwd)
+		bash tkm.sh && cd $(grep 'DIR=' /tmp/initrun.txt | sed 's/DIR=//g') > /dev/null
 		
 		cp tkm/de/magenta.xml xml/magentatv_de.xml 2> /dev/null
 		

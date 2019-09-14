@@ -434,13 +434,14 @@ do
 		echo ""
 		echo " --------------------------------------------"
 		echo " RADIOTIMES EPG SIMPLE XMLTV GRABBER         "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash rdt.sh && cd - > /dev/null
+		cd $(pwd)
+		bash rdt.sh && cd $(grep 'DIR=' /tmp/initrun.txt | sed 's/DIR=//g') > /dev/null
 		
 		cp rdt/uk/radiotimes.xml xml/radiotimes_uk.xml 2> /dev/null
 		

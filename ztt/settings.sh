@@ -589,13 +589,14 @@ do
 		echo ""
 		echo " --------------------------------------------"
 		echo " ZATTOO EPG SIMPLE XMLTV GRABBER             "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash ztt.sh && cd - > /dev/null
+		cd $(pwd)
+		bash ztt.sh && cd $(grep 'DIR=' /tmp/initrun.txt | sed 's/DIR=//g') > /dev/null
 		
 		cp ztt/de/zattoo.xml xml/zattoo_de.xml 2> /dev/null
 		cp ztt/ch/zattoo.xml xml/zattoo_ch.xml 2> /dev/null
