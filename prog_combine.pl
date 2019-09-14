@@ -443,10 +443,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -578,10 +586,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -713,10 +729,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -848,10 +872,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -983,10 +1015,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -1118,10 +1158,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -1253,10 +1301,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -1388,10 +1444,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -1523,10 +1587,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -1658,10 +1730,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -1793,10 +1873,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -1928,10 +2016,18 @@ foreach my $configdata ( @configdata ) {
 					# TITLE
 					my $title       = $programme->{title}->{_content};
 					my $title_lang  = $programme->{title}->{lang};
-					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					if( defined $title ) {
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+						} else {
+							print "  <title>" . $title . "</title>\n";
+						}
 					} else {
-						print "  <title>" . $title . "</title>\n";
+						if( defined $title_lang ) {
+							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						} else {
+							print "  <title>No programme available</title>\n";
+						}
 					}
 					
 					# SUB-TITLE
@@ -2061,10 +2157,18 @@ foreach my $configdata ( @configdata ) {
 				# TITLE
 				my $title       = $programme->{title}->{_content};
 				my $title_lang  = $programme->{title}->{lang};
-				if( defined $title_lang ) {
-					print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+				if( defined $title ) {
+					if( defined $title_lang ) {
+						print "  <title lang=\"" . $title_lang . "\">" . $title . "</title>\n";
+					} else {
+						print "  <title>" . $title . "</title>\n";
+					}
 				} else {
-					print "  <title>" . $title . "</title>\n";
+					if( defined $title_lang ) {
+						print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+					} else {
+						print "  <title>No programme available</title>\n";
+					}
 				}
 				
 				# SUB-TITLE
