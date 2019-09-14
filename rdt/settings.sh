@@ -472,7 +472,7 @@ do
 		elif [ $response = 0 ] 
 		then
 			dialog --backtitle "[R1820] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Cache deleted!" 5 30
-			rm -rf cache/* init.txt 2> /dev/null
+			rm -rf cache/* mani/* init.txt 2> /dev/null
 			echo "H" > /tmp/value
 							
 		# R18X0 EXIT
