@@ -900,6 +900,7 @@ do
 		rm day/daydlnew_${time}_${part} day/datafile_${time}_${part} 2> /dev/null
 		touch day/day${time}
 		
+		rm errors.txt 2> /dev/null
 		cat /tmp/errors_${time}_${part}.txt >> errors.txt 2> /dev/null
 	done
 done

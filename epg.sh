@@ -586,7 +586,8 @@ fi
 #
 
 cd $(pwd)
-
+echo "DIR=$(pwd)" > /tmp/initrun.txt
+echo "VER=v0.4.0" >> /tmp/initrun.txt
 
 #
 # CHECK INTERNET CONNECTIVITY
@@ -2851,7 +2852,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2874,7 +2875,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " ZATTOO EPG SIMPLE XMLTV GRABBER             "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2889,7 +2890,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " SWISSCOM EPG SIMPLE XMLTV GRABBER           "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2903,7 +2904,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " TVPLAYER EPG SIMPLE XMLTV GRABBER           "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2917,7 +2918,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " TELEKOM EPG SIMPLE XMLTV GRABBER            "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2931,7 +2932,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " RADIOTIMES EPG SIMPLE XMLTV GRABBER         "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2945,7 +2946,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " WAIPU.TV EPG SIMPLE XMLTV GRABBER           "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2959,7 +2960,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " TV-SPIELFILM EPG SIMPLE XMLTV GRABBER       "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2973,7 +2974,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " VODAFONE EPG SIMPLE XMLTV GRABBER           "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
@@ -2987,7 +2988,7 @@ then
 		echo ""
 		echo " --------------------------------------------"
 		echo " EXTERNAL EPG SIMPLE XMLTV GRABBER            "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""

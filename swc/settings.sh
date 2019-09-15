@@ -449,13 +449,14 @@ do
 		echo ""
 		echo " --------------------------------------------"
 		echo " SWISSCOM EPG SIMPLE XMLTV GRABBER           "
-		echo "                                             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash swc.sh && cd - > /dev/null
+		cd $(pwd)
+		bash swc.sh && cd $(grep 'DIR=' /tmp/initrun.txt | sed 's/DIR=//g') > /dev/null
 		
 		cp swc/ch/swisscom.xml xml/swisscom_ch.xml 2> /dev/null
 		
