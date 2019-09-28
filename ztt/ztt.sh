@@ -887,7 +887,7 @@ done
 
 perl chlist_printer.pl > /tmp/compare.json
 
-rm /tmp/duplicate_checker 2> /dev/null
+rm /tmp/duplicate_checker errors.txt 2> /dev/null
 
 for time in {1..14..1}
 do
@@ -900,7 +900,6 @@ do
 		rm day/daydlnew_${time}_${part} day/datafile_${time}_${part} 2> /dev/null
 		touch day/day${time}
 		
-		rm errors.txt 2> /dev/null
 		cat /tmp/errors_${time}_${part}.txt >> errors.txt 2> /dev/null
 	done
 done

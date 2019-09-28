@@ -568,7 +568,7 @@ fi
 
 cd $(pwd)
 echo "DIR=$(pwd)" > /tmp/initrun.txt
-echo "VER=v0.4.0 2019/09/15" >> /tmp/initrun.txt
+echo "VER=v0.4.0 2019/09/28" >> /tmp/initrun.txt
 
 #
 # CHECK INTERNET CONNECTIVITY
