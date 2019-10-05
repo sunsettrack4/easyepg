@@ -1,27 +1,12 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/easyepg
-#
-#      Collaborators:
-#      - DeBaschdi ( https://github.com/DeBaschdi )
-#
-#  This Program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 3, or (at your option)
-#  any later version.
-#
-#  This Program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
+# #########################
+# USE TESTING BRANCH      #
+# #########################
 
-# ################
-# UPDATE SCRIPT  #
-# ################
+# GIT CLONE
+
+git clone https://github.com/sunsettrack4/easyepg --branch TESTING
 
 # MAIN
 echo "Updating main..."
@@ -32,8 +17,7 @@ cp easyepg/combine.sh combine.sh 2> /dev/null
 cp easyepg/prog_combine.pl prog_combine.pl 2> /dev/null
 cp easyepg/LICENSE LICENSE 2> /dev/null
 cp easyepg/update.sh update.sh 2> /dev/null
-cp easyepg/branch-debaschdi.sh branch-debaschdi.sh 2> /dev/null
-cp easyepg/testing.sh testing.sh 2> /dev/null
+
 
 # HORIZON
 echo "Updating Horizon..."
@@ -46,7 +30,7 @@ echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/h
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/epg_json2xml.pl 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/settings.sh 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/chlist_printer.pl 2> /dev/null
-echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/compare_menu.pl 2> /dev/null
+echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/compare_menu.pl.sh 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/hzn.sh 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/hzn.sh 2> /dev/null
 
@@ -68,7 +52,6 @@ echo "Updating Zattoo..."
 mkdir ztt 2> /dev/null
 
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/ztt.sh 2> /dev/null
-echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/settings.sh 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/compare_crid.pl 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/save_page.js 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/epg_json2xml.pl 2> /dev/null
@@ -123,7 +106,8 @@ echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/cid_json.pl 2> /dev/null
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/chlist_printer.pl 2> /dev/null
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/compare_menu.pl 2> /dev/null
 echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/url_printer.pl 2> /dev/null
-
+echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/proxy.sh 2> /dev/null
+echo "tkm/ tkm/de/" | xargs -n 1 cp -v easyepg/tkm/web_magentatv_de.php 2> /dev/null
 
 # RADIOTIMES
 echo "Updating RadioTimes..."
@@ -194,7 +178,8 @@ echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/epg_ext.pl 2>
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ch_ext.pl 2> /dev/null
 echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/compare_menu.pl 2> /dev/null
 
+echo "CLEAN"
+rm -rf easyepg/
 
 # DONE
-echo "UPDATE FINISHED!"
- 
+echo "UPDATE FINISHED! --> Branch TESTING"
