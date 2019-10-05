@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -98,6 +99,10 @@ foreach my $attributes ( @attributes ) {
     # DEFINE CHANNEL ID + NAME
 	my $cname   = $attributes->{'name'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	
+	# DEFINE LOGO
+	my @logo	= @{ $attributes->{'pictures'} };
+	my $image_location;
         
     # DEFINE LANGUAGE VERSION
     my $languageVER =  $initdata->{'language'};
@@ -135,8 +140,21 @@ foreach my $attributes ( @attributes ) {
 				print "<channel id=\"" . $cname . "\">";
 			}
 			
-			# CHANNEL NAME (language)
-			print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
+			# CHANNEL NAME + LOGO (language) (loop)
+			if( @logo ) {
+				while( my( $image_id, $image ) = each( @logo ) ) {
+					if( $image->{'imageType'} eq "15" ) {
+						$image_location = $image_id;
+						last;
+						}
+					}
+					if( defined $image_location ) {
+						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
+						print "<icon src=\"" . $attributes->{'pictures'}[$image_location]{'href'} . "\" /></channel>\n";
+					} else {
+						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";	
+					}
+				}
+			}
 		}
-	}
 }
