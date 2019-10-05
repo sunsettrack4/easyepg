@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -98,6 +99,9 @@ foreach my $items ( @items ) {
     # DEFINE CHANNEL ID + NAME
 	my $cname   = $items->{'lname'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	
+	# DEFINE CHANNEL LOGO
+	my $logo	= $items->{'logo'};
         
     # DEFINE LANGUAGE VERSION
     # my $languageVER =  $initdata->{'language'};
@@ -137,7 +141,10 @@ foreach my $items ( @items ) {
 			}
 			
 			# CHANNEL NAME (language)
-			print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
+			print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
+			
+			# CHANNEL LOGO
+			print "<icon src=\"https://tv-manager.vodafone.de/tv-manager/backend/epg_images_channels/$logo\" /></channel>\n";
 		}
 	}
 }
