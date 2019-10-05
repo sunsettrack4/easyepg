@@ -354,7 +354,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tkm_g
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > magenta_channels
 sort -u magenta_channels > /tmp/magenta_channels && mv /tmp/magenta_channels magenta_channels
-sed -i 's/></>\n</g;s/<display-name/  &/g' magenta_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g;s/<icon src/  &/g' magenta_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                            "
