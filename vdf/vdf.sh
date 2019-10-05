@@ -333,7 +333,7 @@ then
 	sed "s/.*/curl --connect-timeout 2 --max-time 10 --retry 8 --retry-delay 0 --retry-max-time 5 -s 'https:\/\/tv-manager.vodafone.de\/tv-manager\/backend\/auth-service\/proxy\/epg-data-service\/epg\/tv\/data\/item\/&' | grep 'channelId' > cache\/&/g" day/daydlnew > day/common
 	sed -i '1s/.*/#\!\/bin\/bash\n&/g' day/common 2> /dev/null
 	sed -i '/^$/d' day/common
-	printf "\n$(echo $(wc -l < day/common)) missing Broadastsfiles to be downloaded!\n\n"
+	printf "\n$(echo $(wc -l < day/common)) missing Broadcastsfiles to be downloaded!\n\n"
 	bash day/common 2> /dev/null & wait
 	find cache -size 0 | sed 's/cache\///g' >missingbroadcasts
 	if [ -s missingbroadcasts ]
@@ -372,7 +372,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/vdf_g
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > vodafone_channels
 sort -u vodafone_channels > /tmp/vodafone_channels && mv /tmp/vodafone_channels vodafone_channels
-sed -i 's/></>\n</g;s/<display-name/  &/g' vodafone_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g;s/<icon src/  &/g' vodafone_channels
 
 
 # CREATE CHANNEL ID LIST AS JSON FILE
