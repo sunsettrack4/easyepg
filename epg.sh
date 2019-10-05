@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.4.0 BETA                         "
+echo " Release v0.5.0 TESTING                      "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -568,7 +568,7 @@ fi
 
 cd $(pwd)
 echo "DIR=$(pwd)" > /tmp/initrun.txt
-echo "VER=v0.4.0 2019/10/05" >> /tmp/initrun.txt
+echo "VER=v0.5.0 TESTING" >> /tmp/initrun.txt
 
 #
 # CHECK INTERNET CONNECTIVITY
