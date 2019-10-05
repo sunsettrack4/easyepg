@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ###############################
+# ##################################
 # TVSPIELFILM JSON > XML CONVERTER #
-# ###############################
+# ##################################
 
 # CHANNELS
 
@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -98,6 +99,9 @@ foreach my $items ( @items ) {
     # DEFINE CHANNEL ID + NAME
 	my $cname   = $items->{'name'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	
+	# DEFINE CHANNEL LOGO
+	my $logo	= $items->{'image_large'}{'url'};
         
     # DEFINE LANGUAGE VERSION
     # my $languageVER =  $initdata->{'language'};
@@ -137,7 +141,10 @@ foreach my $items ( @items ) {
 			}
 			
 			# CHANNEL NAME (language)
-			print "<display-name lang=\"de\">" . $cname . "</display-name></channel>\n";
+			print "<display-name lang=\"de\">" . $cname . "</display-name>";
+			
+			# CHANNEL LOGO
+			print "<icon src=\"$logo\" /></channel>\n";
 		}
 	}
 }

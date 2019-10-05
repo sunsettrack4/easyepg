@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ###############################
+# ##################################
 # TVSPIELFILM CHANNEL ID CREATOR   #
-# ###############################
+# ##################################
 
 # CHANNEL IDs
 
@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
