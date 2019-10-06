@@ -38,7 +38,7 @@ use JSON;
 my $json;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "chlist" or die;
+    open my $fh, "<", "chlist_old" or die;
     $json = <$fh>;
     close $fh;
 }
