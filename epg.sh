@@ -691,8 +691,11 @@ do
 	# M1500 UPDATE
 	echo '	5 "UPDATE THIS SCRIPT" \' >> /tmp/menu
 	
-	# M1600 ABOUT
-	echo '	6 "ABOUT EASYEPG" \' >> /tmp/menu
+	# M1600 BACKUP/RESTORE
+	echo '	6 "BACKUP / RESTORE" \' >> /tmp/menu
+	
+	# M1900 ABOUT
+	echo '	9 "ABOUT EASYEPG" \' >> /tmp/menu
 	
 	echo "2> /tmp/value" >> /tmp/menu
 
@@ -2787,12 +2790,98 @@ do
 	
 	
 	# ###########################
-	# M1600 ABOUT THIS PROJECT  #
+	# M1600 BACKUP / RESTORE    #
 	# ###########################
 	
 	elif grep -q "6" /tmp/value
 	then
-		dialog --backtitle "[M1600] EASYEPG SIMPLE XMLTV GRABBER > ABOUT"  --title "ABOUT THE EASYEPG PROJECT" --msgbox "easyEPG Grabber\n(c) 2019 Jan-Luca Neumann / sunsettrack4\nhttps://github.com/sunsettrack4\n\nLicensed under GPL v3.0 - All rights reserved.\n\n* This tool provides high-quality EPG data from different IPTV/OTT sources.\n* It allows you to combine multiple sources for XMLTV file creation.\n* Missing data can be added by using the IMDB mapper tool.\n* Furthermore, you can import XML files from external sources.\n\nSpecial thanks:\n- DeBaschdi - https://github.com/debaschdi (for collaboration)" 19 70
+		# M1610 MENU OVERLAY
+		echo 'dialog --backtitle "[M1610] EASYEPG SIMPLE XMLTV GRABBER > BACKUP/RESTORE" --title "OPTIONS" --menu "Please select the desired action:" 9 40 10 \' > /tmp/menu 
+			
+		# M1611 BACKUP
+		ls -l hzn/ >  /tmp/providerlist
+		ls -l ztt/ >> /tmp/providerlist
+		ls -l swc/ >> /tmp/providerlist
+		ls -l tvp/ >>  /tmp/providerlist
+		ls -l tkm/ >>  /tmp/providerlist
+		ls -l rdt/ >>  /tmp/providerlist
+		ls -l wpu/ >>  /tmp/providerlist
+		ls -l tvs/ >>  /tmp/providerlist
+		ls -l vdf/ >>  /tmp/providerlist
+		ls -l ext/ >>  /tmp/providerlist
+		if grep -q '^d' /tmp/providerlist 2> /dev/null
+		then
+			echo '	1 "BACKUP SETUP" \' >> /tmp/menu
+		fi
+			
+		# M1612 RESTORE
+		if [ -e easyepg_backup.zip ]
+		then
+			echo '	2 "RESTORE SETUP" \' >> /tmp/menu
+		fi
+		
+		echo "2> /tmp/value" >> /tmp/menu
+		
+		bash /tmp/menu
+		input="$(cat /tmp/value)"
+		
+		
+		# ########################
+		# M1611 BACKUP SETUP     #
+		# ########################
+						
+		if grep -q "1" /tmp/value
+		then
+			clear
+			echo ""
+			echo " --------------------------------------------"
+			echo " BACKUP SERVICE                              "
+			echo " easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
+			echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+			echo " --------------------------------------------"
+			echo ""
+			sleep 2s
+			bash backup.sh
+			read -n 1 -s -r -p "Press any key to continue..."
+			echo "M" > /tmp/value
+		
+		
+		# ########################
+		# M1612 RESTORE SETUP    #
+		# ########################
+						
+		elif grep -q "2" /tmp/value
+		then
+			clear
+			echo ""
+			echo " --------------------------------------------"
+			echo " RESTORE SERVICE                             "
+			echo " easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
+			echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+			echo " --------------------------------------------"
+			echo ""
+			sleep 2s
+			bash restore.sh
+			read -n 1 -s -r -p "Press any key to continue..."
+			echo "M" > /tmp/value
+		
+		
+		# ############
+		# M16X0 EXIT #
+		# ############
+			
+		else
+			echo "M" > /tmp/value
+		fi
+	
+	
+	# ###########################
+	# M1900 ABOUT THIS PROJECT  #
+	# ###########################
+	
+	elif grep -q "9" /tmp/value
+	then
+		dialog --backtitle "[M1900] EASYEPG SIMPLE XMLTV GRABBER > ABOUT"  --title "ABOUT THE EASYEPG PROJECT" --msgbox "easyEPG Grabber\n(c) 2019 Jan-Luca Neumann / sunsettrack4\nhttps://github.com/sunsettrack4\n\nLicensed under GPL v3.0 - All rights reserved.\n\n* This tool provides high-quality EPG data from different IPTV/OTT sources.\n* It allows you to combine multiple sources for XMLTV file creation.\n* Missing data can be added by using the IMDB mapper tool.\n* Furthermore, you can import XML files from external sources.\n\nSpecial thanks:\n- DeBaschdi - https://github.com/debaschdi (for collaboration)" 19 70
 		echo "M" > /tmp/value
 	
 	# ############
