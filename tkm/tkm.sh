@@ -49,31 +49,12 @@ fi
 
 
 # ######################################
-# LOADING COOKIE DATA / GET SESSION ID #
+# START PHP PROXY SERVER               #
 # ######################################
 
-printf "\rLoading cookie data..."
-
-# REFRESH COOKIE
-rm /tmp/cookie 2> /dev/null
-
-# AUTH
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"userId":"Guest","mac":"00:00:00:00:00:00"}' 'https://web.magentatv.de/EPG/JSON/Login' > /dev/null
-
-# LOGIN
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"terminalid":"00:00:00:00:00:00","mac":"00:00:00:00:00:00","terminaltype":"WEBTV","utcEnable":1,"timezone":"UTC","userType":3,"terminalvendor":"Unknown","preSharedKeyID":"PC01P00002","cnonce":"5c6ff0b9e4e5efb1498e7eaa8f54d9fb"}' 'https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup' > /dev/null
-
-# GET SESSION ID
-grep "CSRFSESSION" /tmp/cookie > /tmp/session && sed -i 's/\(.*\)\(CSRFSESSION\)	\(.*\)/X_CSRFToken: \3/g' /tmp/session
-
-if ! grep -q "X_CSRFToken" /tmp/session
-then
-	echo " FAILED" && printf "\n"
-	exit 0
-else
-	echo " OK" && printf "\n"
-	session=$(</tmp/session)
-fi
+printf "\rStarting Proxy Server\n"
+bash proxy.sh start
+sleep 1s 
 
 
 # ##################
@@ -96,7 +77,7 @@ rm mani/* 2> /dev/null
 #
 
 printf "\rFetching channel list... "
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -X POST -H "$session" -d '{"properties":[{"name":"logicalChannel","include":"/channellist/logicalChannel/contentId,/channellist/logicalChannel/type,/channellist/logicalChannel/name,/channellist/logicalChannel/chanNo,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href,/channellist/logicalChannel/foreignsn,/channellist/logicalChannel/externalCode,/channellist/logicalChannel/sysChanNo,/channellist/logicalChannel/physicalChannels/physicalChannel/mediaId,/channellist/logicalChannel/physicalChannels/physicalChannel/fileFormat,/channellist/logicalChannel/physicalChannels/physicalChannel/definition"}],"metaDataVer":"Channel/1.1","channelNamespace":"2","filterlist":[{"key":"IsHide","value":"-1"}],"returnSatChannel":0}' "https://web.magentatv.de/EPG/JSON/AllChannel?SID=first" > /tmp/chlist
+curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?type=2' > /tmp/chlist
 jq '.' /tmp/chlist > /tmp/workfile
 
 printf "\rChecking manifest files... "
@@ -111,133 +92,53 @@ then
 
 	split --lines=$(( $number + 1 )) --numeric-suffixes mani/common mani/day
 
-	rm mani/common 2> /dev/null
 else	
 	mv mani/common mani/day00
 fi
 
 
 #
-# CREATE STATUS BAR FOR MANIFEST FILE DOWNLOAD
+# CREATE STATUS INFO FOR MANIFEST FILE DOWNLOAD
 #
 
-x=$(wc -l < mani/day00)
-y=20
-h=40
 
-if [ $x -gt $h ]
-then
-	z5=$(expr $x / $y)
-	z10=$(expr $x / $y \* 2)
-	z15=$(expr $x / $y \* 3)
-	z20=$(expr $x / $y \* 4)
-	z25=$(expr $x / $y \* 5)
-	z30=$(expr $x / $y \* 6)
-	z35=$(expr $x / $y \* 7)
-	z40=$(expr $x / $y \* 8)
-	z45=$(expr $x / $y \* 9)
-	z50=$(expr $x / $y \* 10)
-	z55=$(expr $x / $y \* 11)
-	z60=$(expr $x / $y \* 12)
-	z65=$(expr $x / $y \* 13)
-	z70=$(expr $x / $y \* 14)
-	z75=$(expr $x / $y \* 15)
-	z80=$(expr $x / $y \* 16)
-	z85=$(expr $x / $y \* 17)
-	z90=$(expr $x / $y \* 18)
-	z95=$(expr $x / $y \* 19)
+function status_manifest_download { 
+    #setup_scroll_area
+	sleep 2 2> /dev/null ;
+    thread=$(ps ax)
+	if [[ $thread =~ ^.*curl.*$ ]] ;
+        then 
+			z0="[                    ]"
+			z5="[#                   ]"
+			z10="[##                  ]"
+			z15="[###                 ]"
+			z20="[####                ]"
+			z25="[#####               ]"
+			z30="[######              ]"
+			z35="[#######             ]"
+			z40="[########            ]"
+			z45="[#########           ]"
+			z50="[##########          ]"
+			z55="[###########         ]"
+			z60="[############        ]"
+			z65="[#############       ]"
+			z70="[##############      ]"
+			z75="[###############     ]"
+			z80="[################    ]"
+			z85="[#################   ]"
+			z90="[##################  ]"
+			z95="[################### ]"
+			z100="[####################]"
 
-	echo "#!/bin/bash" > progressbar
-
-	# START
-	echo "sed -i '2i\\" >> progressbar
-	echo "Progress [                    ]   0%% ' mani/day00" >> progressbar
-
-	# 5%
-	echo "sed -i '$z5 i\\" >> progressbar
-	echo "Progress [#                   ]   5%% ' mani/day00" >> progressbar
-
-	# 10%
-	echo "sed -i '$z10 i\\" >> progressbar
-	echo "Progress [##                  ]  10%% ' mani/day00" >> progressbar
-	
-	# 15%
-	echo "sed -i '$z15 i\\" >> progressbar
-	echo "Progress [###                 ]  15%% ' mani/day00" >> progressbar
-
-	# 20%
-	echo "sed -i '$z20 i\\" >> progressbar
-	echo "Progress [####                ]  20%% ' mani/day00" >> progressbar
-
-	# 25%
-	echo "sed -i '$z25 i\\" >> progressbar
-	echo "Progress [#####               ]  25%% ' mani/day00" >> progressbar
-
-	# 30%
-	echo "sed -i '$z30 i\\" >> progressbar
-	echo "Progress [######              ]  30%% ' mani/day00" >> progressbar
-
-	# 35%
-	echo "sed -i '$z35 i\\" >> progressbar
-	echo "Progress [#######             ]  35%% ' mani/day00" >> progressbar
-
-	# 40%
-	echo "sed -i '$z40 i\\" >> progressbar
-	echo "Progress [########            ]  40%% ' mani/day00" >> progressbar
-
-	# 45%
-	echo "sed -i '$z45 i\\" >> progressbar
-	echo "Progress [#########           ]  45%% ' mani/day00" >> progressbar
-
-	# 50%
-	echo "sed -i '$z50 i\\" >> progressbar
-	echo "Progress [##########          ]  50%% ' mani/day00" >> progressbar
-
-	# 55%
-	echo "sed -i '$z55 i\\" >> progressbar
-	echo "Progress [###########         ]  55%% ' mani/day00" >> progressbar
-
-	# 60%
-	echo "sed -i '$z60 i\\" >> progressbar
-	echo "Progress [############        ]  60%% ' mani/day00" >> progressbar
-
-	# 65%
-	echo "sed -i '$z65 i\\" >> progressbar
-	echo "Progress [#############       ]  65%% ' mani/day00" >> progressbar
-
-	# 70%
-	echo "sed -i '$z70 i\\" >> progressbar
-	echo "Progress [##############      ]  70%% ' mani/day00" >> progressbar
-
-	# 75%
-	echo "sed -i '$z75 i\\" >> progressbar
-	echo "Progress [###############     ]  75%% ' mani/day00" >> progressbar
-
-	# 80%
-	echo "sed -i '$z80 i\\" >> progressbar
-	echo "Progress [################    ]  80%% ' mani/day00" >> progressbar
-
-	# 85%
-	echo "sed -i '$z85 i\\" >> progressbar
-	echo "Progress [#################   ]  85%% ' mani/day00" >> progressbar
-
-	# 90%
-	echo "sed -i '$z90 i\\" >> progressbar
-	echo "Progress [##################  ]  90%% ' mani/day00" >> progressbar
-
-	# 95%
-	echo "sed -i '$z95 i\\" >> progressbar
-	echo "Progress [################### ]  95%% ' mani/day00" >> progressbar
-
-	# 100%
-	echo "sed -i '\$i\\" >> progressbar
-	echo "Progress [####################] 100%% ' mani/day00" >> progressbar
-
-	sed -i 's/ i/i/g' progressbar
-	bash progressbar
-	sed -i -e 's/Progress/printf "\\rProgress/g' -e '/Progress/s/.*/&"/g' mani/day00
-	rm progressbar
-fi
+			df=$(find mani/ -type f | wc -l) ;
+			if [ -e mani/common ]; then ftd=$(wc -l < mani/common); else ftd=$(wc -l < mani/day00); fi;
+			status=$(expr $df \* 100 / $ftd - 2) ;
+			if [[ $status -gt 100 || $status -eq 100 ]]; then status="100"; fi
+			if [[ $status -gt 0 && $status -lt 5 || $status -eq 0 ]]; then bar="$z0"; elif [[ $status -gt 5 && $status -lt 10 ]]; then bar="$z5"; elif [[ $status -gt 10 && $status -lt 15 ]] ; then bar="$z10"; elif [[ $status -gt 15 && $status -lt 20 ]] ; then bar="$z15"; elif [[ $status -gt 20 && $status -lt 25 ]] ; then bar="$z20"; elif [[ $status -gt 25 && $status -lt 30 ]] ; then bar="$z25"; elif [[ $status -gt 30 && $status -lt 35 ]] ; then bar="$z30"; elif [[ $status -gt 35 && $status -lt 40 ]] ; then bar="$z35"; elif [[ $status -gt 40 && $status -lt 45 ]] ; then bar="$z40"; elif [[ $status -gt 40 && $status -lt 50 ]] ; then bar="$z45"; elif [[ $status -gt 50 && $status -lt 55 ]] ; then bar="$z50"; elif [[ $status -gt 55 && $status -lt 60 ]] ; then bar="$z55"; elif [[ $status -gt 60 && $status -lt 65 ]] ; then bar="$z60"; elif [[ $status -gt 60 && $status -lt 70 ]] ; then bar="$z65"; elif [[ $status -gt 70 && $status -lt 75 ]] ; then bar="$z70"; elif [[ $status -gt 70 && $status -lt 80 ]] ; then bar="$z75"; elif [[ $status -gt 80 && $status -lt 85 ]] ; then bar="$z80"; elif [[ $status -gt 85 && $status -lt 90 ]] ; then bar="$z85"; elif [[ $status -gt 90 && $status -lt 95 ]] ; then bar="$z90"; elif [[ $status -gt 95 && $status -lt 100 ]] ; then bar="$z95"; elif [ $status -eq 100 ] ; then bar="$z100";fi
+			printf "\rProgress $bar  $status%% ";                                  
+			status_manifest_download ;
+        fi
+        }
 
 
 #
@@ -257,15 +158,17 @@ done
 printf "\rLoading manifest files..."
 echo ""
 
+status_manifest_download & 
+
 for a in {0..8..1}
 do
 	bash mani/day0${a} 2> /dev/null &
 done
 wait
 
-rm mani/day0* 2> /dev/null
+rm mani/day0* 2> /dev/null && rm mani/common 2> /dev/null
 
-echo "DONE!" && printf "\n"
+printf "\rProgress [####################] 100%% DONE!\n\n"
 
 
 #
@@ -321,31 +224,9 @@ echo "- FILE CREATION PROCESS -" && echo ""
 
 rm workfile chlist 2> /dev/null
 
-# REFRESH COOKIE
-printf "\rRefreshing cookie data..."
-rm /tmp/cookie 2> /dev/null
-
-# AUTH
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"userId":"Guest","mac":"00:00:00:00:00:00"}' 'https://web.magentatv.de/EPG/JSON/Login' > /dev/null
-
-# LOGIN
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"terminalid":"00:00:00:00:00:00","mac":"00:00:00:00:00:00","terminaltype":"WEBTV","utcEnable":1,"timezone":"UTC","userType":3,"terminalvendor":"Unknown","preSharedKeyID":"PC01P00002","cnonce":"5c6ff0b9e4e5efb1498e7eaa8f54d9fb"}' 'https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup' > /dev/null
-
-# GET SESSION ID
-grep "CSRFSESSION" /tmp/cookie > /tmp/session && sed -i 's/\(.*\)\(CSRFSESSION\)	\(.*\)/X_CSRFToken: \3/g' /tmp/session
-
-if ! grep -q "X_CSRFToken" /tmp/session
-then
-	echo " FAILED" && printf "\n"
-	exit 0
-else
-	echo " OK" && printf "\n"
-	session=$(</tmp/session)
-fi
-
 # DOWNLOAD CHANNEL LIST + RYTEC/EIT CONFIG FILES (JSON)
 printf "\rRetrieving channel list and config files...          "
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -X POST -H "$session" -d '{"properties":[{"name":"logicalChannel","include":"/channellist/logicalChannel/contentId,/channellist/logicalChannel/type,/channellist/logicalChannel/name,/channellist/logicalChannel/chanNo,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href,/channellist/logicalChannel/foreignsn,/channellist/logicalChannel/externalCode,/channellist/logicalChannel/sysChanNo,/channellist/logicalChannel/physicalChannels/physicalChannel/mediaId,/channellist/logicalChannel/physicalChannels/physicalChannel/fileFormat,/channellist/logicalChannel/physicalChannels/physicalChannel/definition"}],"metaDataVer":"Channel/1.1","channelNamespace":"2","filterlist":[{"key":"IsHide","value":"-1"}],"returnSatChannel":0}' "https://web.magentatv.de/EPG/JSON/AllChannel?SID=first" > /tmp/chlist
+curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?type=2' > /tmp/chlist
 jq '.' /tmp/chlist > chlist
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tkm_channels.json > tkm_channels.json
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tkm_genres.json > tkm_genres.json
@@ -416,6 +297,13 @@ else
 	fi
 fi
 
+# ######################################
+# STOP PHP PROXY SERVER                #
+# ######################################
+
+printf "\rStopping Proxy Server\n"
+bash proxy.sh stop
+sleep 1s
 
 # SHOW WARNINGS
 cat epg_warnings.txt >> warnings.txt && rm epg_warnings.txt

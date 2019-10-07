@@ -20,30 +20,12 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ######################################
-# LOADING COOKIE DATA / GET SESSION ID #
+# START PHP PROXY SERVER               #
 # ######################################
 
-printf "\rLoading cookie data..."
-
-# REFRESH COOKIE
-rm /tmp/cookie 2> /dev/null
-
-# AUTH
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"userId":"Guest","mac":"00:00:00:00:00:00"}' 'https://web.magentatv.de/EPG/JSON/Login' > /dev/null
-
-# LOGIN
-curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -d '{"terminalid":"00:00:00:00:00:00","mac":"00:00:00:00:00:00","terminaltype":"WEBTV","utcEnable":1,"timezone":"UTC","userType":3,"terminalvendor":"Unknown","preSharedKeyID":"PC01P00002","cnonce":"5c6ff0b9e4e5efb1498e7eaa8f54d9fb"}' 'https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup' > /dev/null
-
-# GET SESSION ID
-grep "CSRFSESSION" /tmp/cookie > /tmp/session && sed -i 's/\(.*\)\(CSRFSESSION\)	\(.*\)/X_CSRFToken: \3/g' /tmp/session
-
-if ! grep -q "X_CSRFToken" /tmp/session
-then
-	echo " FAILED" && printf "\n"
-	exit 0
-else
-	session=$(</tmp/session)
-fi
+printf "\rStarting Proxy Server\n"
+bash proxy.sh start
+sleep 1s
 
 rm /tmp/settings_new 2> /dev/null
 
@@ -191,9 +173,8 @@ do
 	then
 		# E1100 MENU OVERLAY
 		echo 'dialog --backtitle "[E1100] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
-		
 		printf "\rFetching channel list...               "
-		curl -s --cookie "/tmp/cookie" --cookie-jar "/tmp/cookie" -X POST -H "$session" -d '{"properties":[{"name":"logicalChannel","include":"/channellist/logicalChannel/contentId,/channellist/logicalChannel/type,/channellist/logicalChannel/name,/channellist/logicalChannel/chanNo,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href,/channellist/logicalChannel/foreignsn,/channellist/logicalChannel/externalCode,/channellist/logicalChannel/sysChanNo,/channellist/logicalChannel/physicalChannels/physicalChannel/mediaId,/channellist/logicalChannel/physicalChannels/physicalChannel/fileFormat,/channellist/logicalChannel/physicalChannels/physicalChannel/definition"}],"metaDataVer":"Channel/1.1","channelNamespace":"2","filterlist":[{"key":"IsHide","value":"-1"}],"returnSatChannel":0}' "https://web.magentatv.de/EPG/JSON/AllChannel?SID=first" > /tmp/workfile
+		curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?type=2' > /tmp/workfile
 		jq '.' /tmp/workfile > /tmp/chlist
 		
 		printf "\rLoading channel configuration..."
@@ -463,7 +444,8 @@ do
 	elif grep -q "7" /tmp/value
 	then
 		clear
-		
+		printf "\rStopping Proxy Server\n"
+        bash proxy.sh stop
 		echo ""
 		echo " --------------------------------------------"
 		echo " TELEKOM EPG SIMPLE XMLTV GRABBER            "
@@ -481,6 +463,8 @@ do
 		cd - > /dev/null
 		
 		read -n 1 -s -r -p "Press any key to continue..."
+		printf "\rStarting Proxy Server\n"
+        bash proxy.sh start
 		echo "H" > /tmp/value
 	
 	
@@ -506,6 +490,8 @@ do
 		then
 			dialog --backtitle "[E1920] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json
+			printf "\rStopping Proxy Server\n"
+        	bash proxy.sh stop
 			echo "M" > /tmp/value
 							
 		# E19X0 EXIT
@@ -521,6 +507,8 @@ do
 	# ############
 	
 	else
+		printf "\rStopping Proxy Server\n"
+        bash proxy.sh stop
 		echo "M" > /tmp/value
 	fi
 
