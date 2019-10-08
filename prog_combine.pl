@@ -165,9 +165,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -308,9 +308,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -451,9 +451,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -594,9 +594,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -737,9 +737,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -880,9 +880,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -1023,9 +1023,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -1166,9 +1166,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -1309,9 +1309,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -1452,9 +1452,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -1595,9 +1595,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -1738,9 +1738,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -1881,9 +1881,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -2024,9 +2024,9 @@ foreach my $configdata ( @configdata ) {
 						}
 					} else {
 						if( defined $title_lang ) {
-							print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+							print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 						} else {
-							print "  <title>No programme available</title>\n";
+							print "  <title>No program information available</title>\n";
 						}
 					}
 					
@@ -2165,9 +2165,9 @@ foreach my $configdata ( @configdata ) {
 					}
 				} else {
 					if( defined $title_lang ) {
-						print "  <title lang=\"" . $title_lang . "\">No programme available</title>\n";
+						print "  <title lang=\"" . $title_lang . "\">No program information available</title>\n";
 					} else {
-						print "  <title>No programme available</title>\n";
+						print "  <title>No program information available</title>\n";
 					}
 				}
 				
