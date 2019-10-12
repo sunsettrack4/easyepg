@@ -734,7 +734,23 @@ do
 	echo '	5 "UPDATE THIS SCRIPT" \' >> /tmp/menu
 	
 	# M1600 BACKUP/RESTORE
-	echo '	6 "BACKUP / RESTORE" \' >> /tmp/menu
+	ls -l hzn/ >  /tmp/providerlist
+	ls -l ztt/ >> /tmp/providerlist
+	ls -l swc/ >> /tmp/providerlist
+	ls -l tvp/ >>  /tmp/providerlist
+	ls -l tkm/ >>  /tmp/providerlist
+	ls -l rdt/ >>  /tmp/providerlist
+	ls -l wpu/ >>  /tmp/providerlist
+	ls -l tvs/ >>  /tmp/providerlist
+	ls -l vdf/ >>  /tmp/providerlist
+	ls -l ext/ >>  /tmp/providerlist
+	if grep -q '^d' /tmp/providerlist 2> /dev/null
+	then
+		echo '	6 "BACKUP / RESTORE" \' >> /tmp/menu
+	elif [ -e easyepg_backup.zip ]
+	then
+		echo '	6 "BACKUP / RESTORE" \' >> /tmp/menu
+	fi
 	
 	# M1900 ABOUT
 	echo '	9 "ABOUT EASYEPG" \' >> /tmp/menu
