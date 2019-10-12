@@ -55,6 +55,15 @@ fi
 
 
 #
+# RESET SETUP
+#
+
+printf "\nResetting setup...\n\n"
+
+rm -rf hzn/de hzn/at hzn/ch hzn/nl hzn/pl hzn/ie hzn/sk hzn/cz hzn/hu hzn/ro ztt/de ztt/ch swc/ch tvp/uk tkm/de rdt/uk wpu/de tvs/de vdf/de ext/oa ext/ob ext/oc 2> /dev/null
+
+
+#
 # START RESTORE PROCESS: PROVIDER SETUPS + XML FILES
 #
 
