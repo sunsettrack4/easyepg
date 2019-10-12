@@ -62,13 +62,13 @@ sudo cpanm install utf8
 mkdir ~/easyepg
 
 # Download the .zip file and extract the files into your folder:
-wget https://github.com/sunsettrack4/easyepg/archive/v0.4.0.zip
+wget https://github.com/sunsettrack4/easyepg/archive/v0.4.1.zip
 
 # Unzip the file:
-unzip v0.4.0.zip
+unzip v0.4.1.zip
 
 # Move all script files to the created folder
-mv ~/easyepg-0.4.0/* ~/easyepg/
+mv ~/easyepg-0.4.1/* ~/easyepg/
 
 # Set system-wide permissions to the folder and its related files
 sudo chmod 0777 ~/easyepg

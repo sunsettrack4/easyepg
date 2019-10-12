@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.4.0 BETA                         "
+echo " Release v0.4.1 BETA                         "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -51,7 +51,17 @@ sleep 0.5s
 mkdir xml 2> /dev/null && chmod 0777 xml 2> /dev/null
 mkdir combine 2> /dev/null && chmod 0777 combine 2> /dev/null
 
-chmod -R 0777 . 2> /dev/null
+if ! chmod -R 0777 . 2> /dev/null
+then
+	printf "\nPermissions of script folder could not be set "
+	ERROR="true"
+fi
+
+if ! ls -ld /tmp | grep -q "drwxrwxrwx" 2> /dev/null
+then
+	printf "\nWorkfolder does not have correct permissions  "
+	ERROR="true"
+fi
 
 if [ ! -e hzn/ch_json2xml.pl ]
 then
@@ -518,19 +528,31 @@ fi
 
 if [ ! -e combine.sh ]
 then
-	printf "\nMissing file in main folder: combine.sh       "
+	printf "\nMissing file in Main folder: combine.sh       "
 	ERROR="true"
 fi
 
 if [ ! -e ch_combine.pl ]
 then
-	printf "\nMissing file in Horzon folder: ch_combine.pl  "
+	printf "\nMissing file in Main folder: ch_combine.pl  "
 	ERROR="true"
 fi
 
 if [ ! -e prog_combine.pl ]
 then
-	printf "\nMissing file in Horzon folder: prog_combine.pl"
+	printf "\nMissing file in Main folder: prog_combine.pl"
+	ERROR="true"
+fi
+
+if [ ! -e backup.sh ]
+then
+	printf "\nMissing file in Main folder: backup.sh"
+	ERROR="true"
+fi
+
+if [ ! -e restore.sh ]
+then
+	printf "\nMissing file in Main folder: restore.sh"
 	ERROR="true"
 fi
 
@@ -582,14 +604,6 @@ fi
 
 
 #
-# SET OLDPWD VALUE
-#
-
-cd $(pwd)
-echo "DIR=$(pwd)" > /tmp/initrun.txt
-echo "VER=v0.4.0 2019/10/07" >> /tmp/initrun.txt
-
-#
 # CHECK INTERNET CONNECTIVITY
 #
 
@@ -612,6 +626,15 @@ else
 	printf "\n\nSETUP OK!"
 	sleep 1s
 fi
+
+
+#
+# SET OLDPWD VALUE
+#
+
+cd $(pwd)
+echo "DIR=$(pwd)" > /tmp/initrun.txt
+echo "VER=v0.4.1 2019/10/12" >> /tmp/initrun.txt
 
 
 # ###############
