@@ -57,7 +57,7 @@ then
 	ERROR="true"
 fi
 
-if ! ls -ld /tmp | grep -q "drwxrwxrwx" 2> /dev/null
+if ! ls -ld /tmp | grep -q "drwxrwxrw[tx]" 2> /dev/null
 then
 	printf "\nWorkfolder does not have correct permissions  "
 	ERROR="true"

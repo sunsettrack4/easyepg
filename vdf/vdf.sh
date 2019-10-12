@@ -228,7 +228,7 @@ printf "\rPreparing multithreaded download...                   "
 sed "s/.*/curl --connect-timeout 2 --max-time 10 --retry 8 --retry-delay 0 --retry-max-time 5 -s 'https:\/\/tv-manager.vodafone.de\/tv-manager\/backend\/auth-service\/proxy\/epg-data-service\/epg\/tv\/data\/item\/&' | grep 'channelId' > cache\/&/g" day/daydlnew > day/common
 
 sed -i '/^$/d' day/common
-printf "\n$(echo $(wc -l < day/common)) broadasts files to be downloaded!\n\n"
+printf "\n$(echo $(wc -l < day/common)) broadcast files to be downloaded!\n\n"
 
 if [ $(wc -l < day/common) -ge 32 ]
 then
