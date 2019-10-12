@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
 
 # READ XML INPUT FILE
@@ -50,6 +51,7 @@ use JSON;
 # DEFINE XML RULES
 my @rules = (
 			'display-name' => 'as is',
+			'icon' => 'as is',
 			'channel' => 'as array no content'
 			);
 
@@ -81,6 +83,7 @@ foreach my $configdata ( @configdata ) {
 		my $channel_id = $channel->{id};
 		my $ch_lang    = $channel->{'display-name'}->{lang};
 		my $ch_name    = $channel->{'display-name'}->{_content};
+		my $ch_logo    = $channel->{'icon'}->{'src'};
 		
 		# ##################
 		# PRINT XML VALUES #
@@ -88,10 +91,15 @@ foreach my $configdata ( @configdata ) {
 		
 		if( $channel_id eq $configdata ) {
 		
-			# CHANNEL ID + NAME
+			# CHANNEL ID + NAME + LOGO (condition)
 			print "<channel id=\"" . $channel_id . "\">\n";
-			print "  <display-name lang=\"" . $ch_lang . "\">" . $ch_name . "<\/display-name>\n<\/channel>\n";
-
+			print "  <display-name lang=\"" . $ch_lang . "\">" . $ch_name . "<\/display-name>\n";
+			
+			if( defined $ch_logo ) {
+				print "  <icon src=\"$ch_logo\" />\n</channel>\n";
+			} else {
+				print "</channel>\n";
+			}
 		}
 	}
 }

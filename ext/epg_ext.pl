@@ -23,6 +23,7 @@ use strict;
 use warnings;
 
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
 
 # READ XML INPUT FILE
