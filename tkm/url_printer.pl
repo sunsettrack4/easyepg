@@ -107,10 +107,15 @@ my @configname  = @{ $channels_data->{'config'} };
 foreach my $configname ( @configname ) {
 	
 	# DEFINE IDs
-	my $new_id = $new_name2id->{$configname};
+	my $new_id          = $new_name2id->{$configname};
+	my $old_id          = $old_name2id->{$configname};
 			
-	# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
+	# FIND CHANNEL NAME IN NEW CHANNEL LIST
 	if( defined $new_id ) {
+		
+		if( $new_id ne $old_id) {
+			print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" received new channel ID!\n";
+		}
 			
 		# DAY 1
 		if( $day_setting == 1 ) {
@@ -155,7 +160,63 @@ foreach my $configname ( @configname ) {
 		} elsif( $day_setting == 14 ) {
 			print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $new_id . "&date=" . $date1 . "&time=14&type=1' | grep \"$new_id\" > mani/$new_id\n";
 		}	
-
+	
+	# IF CHANNEL NAME WAS NOT FOUND IN NEW CHANNEL LIST: TRY TO FIND OLD ID IN NEW CHANNEL LIST
+	} elsif( defined $old_id ) {
+		
+		if( defined $new_id2name->{$old_id} ) {
+			my $renamed_channel = $new_id2name->{$old_id};
+			
+			print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" received new channel name \"$renamed_channel\"!\n";
+			
+			my $renew_id = $new_name2id->{$renamed_channel};
+				
+			# DAY 1
+			if( $day_setting == 1 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=1&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-2
+			} elsif( $day_setting == 2 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=2&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-3
+			} elsif( $day_setting == 3 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=3&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-4
+			} elsif( $day_setting == 4 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=4&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-5
+			} elsif( $day_setting == 5 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=5&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-6
+			} elsif( $day_setting == 6 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=6&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-7
+			} elsif( $day_setting == 7 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=7&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-8
+			} elsif( $day_setting == 8 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=8&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-9
+			} elsif( $day_setting == 9 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=9&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-10
+			} elsif( $day_setting == 10 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=10&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-11
+			} elsif( $day_setting == 11 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=11&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-12
+			} elsif( $day_setting == 12 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=12&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-13
+			} elsif( $day_setting == 13 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=13&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			# DAYS 1-14
+			} elsif( $day_setting == 14 ) {
+				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=14&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
+			}
+		}
+		
+	# IF OLD ID WAS NOT FOUND IN NEW CHANNEL LIST
 	} else {
 		print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 	}

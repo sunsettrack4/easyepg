@@ -208,7 +208,7 @@ then
 	echo "======================================================="
 	echo ""
 	
-	cp /tmp/chlist chlist_old
+	# cp /tmp/chlist chlist_old
 else
 	rm errors.txt 2> /dev/null
 fi
