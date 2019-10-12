@@ -34,6 +34,9 @@ cp easyepg/LICENSE LICENSE 2> /dev/null
 cp easyepg/update.sh update.sh 2> /dev/null
 cp easyepg/branch-debaschdi.sh branch-debaschdi.sh 2> /dev/null
 cp easyepg/testing.sh testing.sh 2> /dev/null
+cp easyepg/testing.sh testing.sh 2> /dev/null
+cp easyepg/backup.sh backup.sh 2> /dev/null
+cp easyepg/restore.sh restore.sh 2> /dev/null
 
 # HORIZON
 echo "Updating Horizon..."
