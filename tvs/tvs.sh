@@ -85,7 +85,6 @@ then
 	
 	split --lines=$(( $number + 1 )) --numeric-suffixes mani/common mani/day
 	
-	rm mani/common 2> /dev/null
 else	
 	cp mani/common mani/day00
 fi
