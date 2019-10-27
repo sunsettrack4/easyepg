@@ -214,10 +214,10 @@ foreach my $configname ( @configname ) {
 			} elsif( $day_setting == 14 ) {
 				print "curl -s 'http://127.0.0.1:8000/web_magentatv_de.php?channel=" . $renew_id . "&date=" . $date1 . "&time=14&type=1' | grep \"$renew_id\" > mani/$renew_id\n";
 			}
+	
+		# IF OLD ID WAS NOT FOUND IN NEW CHANNEL LIST
+		} else {
+			print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 		}
-		
-	# IF OLD ID WAS NOT FOUND IN NEW CHANNEL LIST
-	} else {
-		print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 	}
 }

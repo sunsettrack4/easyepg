@@ -134,6 +134,7 @@ foreach my $attributes ( @attributes ) {
     
 	foreach my $selected_channel ( @configdata ) {
 		
+		my $new_id    = $new_name2id->{$selected_channel};
 		my $old_id    = $old_name2id->{$selected_channel};
 		
 		#
@@ -175,7 +176,7 @@ foreach my $attributes ( @attributes ) {
 		# CONDITION: OLD CHANNEL ID CAN BE FOUND IN NEW CHANNEL LIST
 		#
 		
-		} elsif( defined $old_id ) {
+		} elsif( defined $old_id and not defined $new_id ) {
 			
 			if( defined $new_id2name->{$old_id} ) {
 			
