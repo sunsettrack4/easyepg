@@ -183,7 +183,7 @@ foreach my $attributes ( @attributes ) {
 				my $cname_new = $new_id2name->{$old_id};
 				my $cname_old = $old_id2name->{$old_id};
 				
-				if( $cname eq $cname_new ) {
+				if( $cname eq $cname_new and not defined $old_name2id->{$cname_new} ) {
 				
 					# CHANNEL ID (condition) (settings)
 					if( $setup_cid eq $enabled ) {

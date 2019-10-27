@@ -150,6 +150,7 @@ foreach my $attributes ( @attributes ) {
         # DEFINE CHANNEL ID
         my $cidEXTold  = $chiddata->{'oldid2name'};
         my $cidEXTnew  = $chiddata->{'newid2name'};
+        my $cname_old  = $chiddata->{'oldname2id'};
         my @configdata = @{ $chiddata->{'config'} };
         
         # DEFINE EIT GENRES (language)
@@ -192,7 +193,7 @@ foreach my $attributes ( @attributes ) {
 					} else {
 						print "<programme start=\"$start +0000\" stop=\"$end +0000\" channel=\"" . $cidEXTnew->{$cid} . "\">\n";
 					}
-				} elsif( defined $cidEXTold->{$cid} ) {
+				} elsif( defined $cidEXTold->{$cid} and not defined $cname_old->{$cidEXTnew->{$cid}} ) {
 					if( $cidEXTold->{$cid} eq $selected_channel ) {
 						if( $setup_cid eq $enabled ) {
 							if( defined $rytec->{$cidEXTold->{$cid}} ) {
