@@ -56,7 +56,7 @@ my $chlist;
 my $chlist_config;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "channels.json" or die;
+    open my $fh, "<", "/tmp/compare.json" or die;
     $chlist_config = <$fh>;
     close $fh;
 }
@@ -118,7 +118,13 @@ foreach my $channels ( @channels ) {
 		my $rytec = $chdata->{'channels'}{$countryVER};
 		
 		# DEFINE SELECTED CHANNELS
-		my @configdata = @{ $configdata->{'channels'} };
+		my @configdata = @{ $configdata->{'config'} };
+		
+		# DEFINE COMPARE DATA
+		my $new_name2id = $configdata->{'newname2id'};
+		my $new_id2name = $configdata->{'newid2name'};
+		my $old_name2id = $configdata->{'oldname2id'};
+		my $old_id2name = $configdata->{'oldid2name'};
 		
 		# DEFINE SETTINGS
         my $setup_general  = $setupdata->{'settings'};
@@ -133,9 +139,18 @@ foreach my $channels ( @channels ) {
 		# PRINT XML OUTPUT #
 		# ##################
         
-		# CHANNEL ID (condition) (settings)
 		foreach my $selected_channel ( @configdata ) {
+			
+			my $new_id    = $new_name2id->{$selected_channel};
+			my $old_id    = $old_name2id->{$selected_channel};
+
+			#
+			# CONDITION: OLD CHANNEL NAME CAN BE FOUND IN NEW CHANNEL LIST
+			#
+			
 			if( $cname eq $selected_channel ) { 
+				
+				# CHANNEL ID (condition) (settings)
 				if( $setup_cid eq $enabled ) {
 					if( defined $rytec->{$cname} ) {
 						print "<channel id=\"" . $rytec->{$cname} . "\">";
@@ -153,18 +168,63 @@ foreach my $channels ( @channels ) {
 						if( $image->{'assetType'} eq "station-logo-large" ) {
 							$image_location = $image_id;
 							last;
-							}
 						}
-						if( defined $image_location ) {
-							my $logo_def 	= $item->{'images'}[$image_location]{'url'};
-							$logo_def		=~ s/\?w.*//g;
-							print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
-							print "<icon src=\"$logo_def\" /></channel>\n";
-						} else {
-							print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";	
-						}
+					}
+					if( defined $image_location ) {
+						my $logo_def 	= $item->{'images'}[$image_location]{'url'};
+						$logo_def		=~ s/\?w.*//g;
+						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
+						print "<icon src=\"$logo_def\" /></channel>\n";
+					} else {
+						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";	
 					}	
 				}
+			
+			#
+			# CONDITION: OLD CHANNEL ID CAN BE FOUND IN NEW CHANNEL LIST
+			#
+			
+			} elsif( defined $old_id and not defined $new_id ) {
+				
+				if( defined $new_id2name->{$old_id} ) {
+				
+					my $cname_new = $new_id2name->{$old_id};
+					my $cname_old = $old_id2name->{$old_id};
+					
+					if( $cname eq $cname_new and not defined $old_name2id->{$cname_new} ) {
+						
+						# CHANNEL ID (condition) (settings)
+						if( $setup_cid eq $enabled ) {
+							if( defined $rytec->{$cname_old} ) {
+								print "<channel id=\"" . $rytec->{$cname_old} . "\">";
+							} else {
+								print "<channel id=\"" . $cname_old . "\">";
+								print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $cname_old . "\n";
+							}
+						} else {
+							print "<channel id=\"" . $cname_old . "\">";
+						}
+						
+						# CHANNEL NAME + LOGO (language) (loop)
+						if( @logo ) {
+							while( my( $image_id, $image ) = each( @logo ) ) {
+								if( $image->{'assetType'} eq "station-logo-large" ) {
+									$image_location = $image_id;
+									last;
+								}
+							}
+							if( defined $image_location ) {
+								my $logo_def 	= $item->{'images'}[$image_location]{'url'};
+								$logo_def		=~ s/\?w.*//g;
+								print "<display-name lang=\"$languageVER\">" . $cname_old . "</display-name>";
+								print "<icon src=\"$logo_def\" /></channel>\n";
+							} else {
+								print "<display-name lang=\"$languageVER\">" . $cname_old . "</display-name></channel>\n";	
+							}	
+						}
+					}
+				}		
 			}
 		}
+	}
 }

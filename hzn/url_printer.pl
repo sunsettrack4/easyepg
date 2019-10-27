@@ -95,9 +95,14 @@ foreach my $configname ( @configname ) {
 	
 	# DEFINE IDs
 	my $new_id = $new_name2id->{$configname};
+	my $old_id = $old_name2id->{$configname};
 			
-	# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
+	# FIND CHANNEL NAME IN NEW CHANNEL LIST
 	if( defined $new_id ) {
+		
+		if( $new_id ne $old_id) {
+			print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" received new channel ID!\n";
+		}
 			
 		# DAY 1
 		if( $day_setting == 1 ) {
@@ -121,7 +126,50 @@ foreach my $configname ( @configname ) {
 		} elsif( $day_setting == 7 ) {
 			print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $new_id . "&byStartTime=" . $date1 . "~" . $date8 . "&sort=startTime&range=1-10000' | grep \"$new_id\" > mani/$new_id\n";
 		}
+		
+	# IF CHANNEL NAME WAS NOT FOUND IN NEW CHANNEL LIST: TRY TO FIND OLD ID IN NEW CHANNEL LIST
+	} elsif( defined $old_id ) {
+		
+		if( defined $new_id2name->{$old_id} ) {
+			my $renamed_channel = $new_id2name->{$old_id};
+			
+			if( defined $old_name2id->{$renamed_channel} ) {
+				print STDERR "[ CHLIST WARNING ] Renamed CHANNEL \"$renamed_channel\" (formerly known as \"$configname\") already exists in original channel list!\n";
+			} elsif( not defined $old_name2id->{$renamed_channel} ) {
+				print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" received new channel name \"$renamed_channel\"!\n";
+			
+				my $renew_id = $new_name2id->{$renamed_channel};
+				
+				# DAY 1
+				if( $day_setting == 1 ) {
+					print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $renew_id . "&byStartTime=" . $date1 . "~" . $date2 . "&sort=startTime&range=1-10000' | grep \"$renew_id\" > mani/$renew_id\n";
+				# DAYS 1-2
+				} elsif( $day_setting == 2 ) {
+					print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $renew_id . "&byStartTime=" . $date1 . "~" . $date3 . "&sort=startTime&range=1-10000' | grep \"$renew_id\" > mani/$renew_id\n";
+				# DAYS 1-3
+				} elsif( $day_setting == 3 ) {
+					print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $renew_id . "&byStartTime=" . $date1 . "~" . $date4 . "&sort=startTime&range=1-10000' | grep \"$renew_id\" > mani/$renew_id\n";
+				# DAYS 1-4
+				} elsif( $day_setting == 4 ) {
+					print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $renew_id . "&byStartTime=" . $date1 . "~" . $date5 . "&sort=startTime&range=1-10000' | grep \"$renew_id\" > mani/$renew_id\n";
+				# DAYS 1-5
+				} elsif( $day_setting == 5 ) {
+					print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $renew_id . "&byStartTime=" . $date1 . "~" . $date6 . "&sort=startTime&range=1-10000' | grep \"$renew_id\" > mani/$renew_id\n";
+				# DAYS 1-6
+				} elsif( $day_setting == 6 ) {
+					print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $renew_id . "&byStartTime=" . $date1 . "~" . $date7 . "&sort=startTime&range=1-10000' | grep \"$renew_id\" > mani/$renew_id\n";
+				# DAYS 1-7
+				} elsif( $day_setting == 7 ) {
+					print "curl -s 'https://web-api-pepper.horizon.tv/oesp/v2/XX/YYY/web/listings?byStationId=" . $renew_id . "&byStartTime=" . $date1 . "~" . $date8 . "&sort=startTime&range=1-10000' | grep \"$renew_id\" > mani/$renew_id\n";
+				}
+			}
+			
+		# IF OLD ID WAS NOT FOUND IN NEW CHANNEL LIST
+		} else {
+			print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in new channel list!\n";
+		}
 	
+	# IF CHANNEL WAS NOT FOUND IN ANY CHANNEL LIST
 	} else {
 		print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 	}
