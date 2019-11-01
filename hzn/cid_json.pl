@@ -46,7 +46,7 @@ my $json;
 # CONVERT JSON TO PERL STRUCTURES
 my $data   = decode_json($json);
 
-# CREATE REPORT FILE TO CHECK DUPLICATES (4)
+# CREATE REPORT FILE TO CHECK DUPLICATES
 open my $fh, ">", "/tmp/report.txt";
 print $fh "{\"channels\":[]}";
 close $fh;
