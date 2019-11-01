@@ -34,15 +34,6 @@ use utf8;
  
 use JSON;
 
-# READ JSON INPUT FILE: CHLIST
-my $json;
-{
-    local $/; #Enable 'slurp' mode
-    open my $fh, "<", "chlist" or die;
-    $json = <$fh>;
-    close $fh;
-}
-
 # READ JSON INPUT FILE: HZN HARDCODED CHLIST
 my $chlist;
 {
@@ -80,7 +71,6 @@ my $settings;
 }
 
 # CONVERT JSON TO PERL STRUCTURES
-my $data        = decode_json($json);
 my $chdata      = decode_json($chlist);
 my $configdata  = decode_json($chlist_config);
 my $initdata    = decode_json($init);
