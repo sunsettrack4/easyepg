@@ -464,6 +464,8 @@ foreach my $newchannels ( @newchannels_name2logo ) {
 		} else {
 			print "\",\n";
 		}
+	} else {
+		print "\",\n";
 	}
 }
 
@@ -556,6 +558,8 @@ foreach my $oldchannels ( @oldchannels_name2logo ) {
 		} else {
 			print "\",\n";
 		}
+	} else {
+		print "\",\n";
 	}
 }
 
