@@ -2,8 +2,10 @@ FROM ubuntu:18.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
+ENV CRON='0 0 * * 7'
+
 RUN apt-get update \
-  && apt-get install -qy \
+  && apt-get install -qy --no-install-recommends \
     iproute2 \
     cron \
     phantomjs \
@@ -14,7 +16,7 @@ RUN apt-get update \
     perl \
     perl-doc \
     jq \
-    php \
+    php-cli \
     php-curl \
     git \
     xml-twig-tools \
@@ -26,21 +28,21 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
     /var/cache/apt/archives/
 
+
 # Install CPAN and the required modules to parse JSON files
-RUN cpan App:cpanminus \
-  && cpanm install JSON \
-     XML::Rules \
-     XML::DOM \
-     Data::Dumper \
-     Time::Piece \
-     Time::Seconds \
-     DateTime \
-     DateTime::Format::DateParse \
-     utf8
+RUN cpanm JSON \
+    XML::Rules \
+    XML::DOM \
+    Data::Dumper \
+    Time::Piece \
+    Time::Seconds \
+    DateTime \
+    DateTime::Format::DateParse \
+    utf8
 
-# Create any directory in your desired location, e.g.:
+COPY docker-entrypoint.sh /
+VOLUME /src
 
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["./epg.sh"]
 
-WORKDIR "/src"
-
-CMD ["/src/epg.sh"]

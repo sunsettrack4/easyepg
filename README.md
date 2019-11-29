@@ -24,6 +24,7 @@ This tool provides high-quality EPG data from different IPTV/OTT sources.
 
 #### Supported platforms
 * any Linux-based OS, e.g. Ubuntu, Debian
+* Docker
 
 ## The power of open source
 You are welcome to test the script on your machine.
@@ -38,6 +39,32 @@ This includes a limitation of liability. The license also states that it does no
 If you like my script, please [![Paypal Donation Page](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://paypal.me/sunsettrack4) - thank you! :-)
 
 # Installation
+
+## Docker
+Build + run the docker-image:
+
+```bash
+# build image named easyepg
+docker build -t easyepg .
+...
+# run image easyepg with hostpath `/host/path` mounted to /src
+docker run -v /host/path:/src/ --name easyepg easyepg
+
+# run with own cron-schedule
+docker run -e CRON='0 0 * * 7' -v /host/path:/src/ --name easyepg easyepg
+
+# list running containers
+~> docker ps
+72febf5a63c5  easyepg  "/docker-entrypoint.…"  4 hours ago  Up 4 hours easyepg
+```
+
+This will:
+
+* mount the local path `/host/path´ into the container,
+* and clone the easyepg*repository into `/host/path/easyepg`
+* start epg.sh
+* setup a cronjob that on every 7th day of the week
+  
 
 ## EPG script
 Please run the commands below to setup the script. "Sudo" is not required on user "root".
