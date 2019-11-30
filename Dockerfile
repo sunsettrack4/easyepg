@@ -22,15 +22,17 @@ RUN apt-get update \
     xml-twig-tools \
     unzip \
     liblocal-lib-perl \
-    cpanminus \
-    build-essential \
     inetutils-ping \
   && rm -rf /var/lib/apt/lists/* \
     /var/cache/apt/archives/
 
 
 # Install CPAN and the required modules to parse JSON files
-RUN cpanm JSON \
+RUN apt-get update \
+  && apt-get install -yq --no-install-recommends \
+    cpanminus \
+    build-essential \
+  && cpanm JSON \
     XML::Rules \
     XML::DOM \
     Data::Dumper \
@@ -38,7 +40,15 @@ RUN cpanm JSON \
     Time::Seconds \
     DateTime \
     DateTime::Format::DateParse \
-    utf8
+    utf8 \
+  && apt-get purge -y \
+    build-essential \
+    cpanminus \
+  && apt-get clean -y \
+  && apt-get autoremove -y \
+  && rm -rf /root/.cpanm \
+    /var/lib/apt/lists/* \
+    /var/cache/apt/archives/*
 
 COPY docker-entrypoint.sh /
 VOLUME /src
