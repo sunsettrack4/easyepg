@@ -5,6 +5,7 @@ services:
 
 stages:
   - build
+  - test
   - release
 
 include:
