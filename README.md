@@ -47,10 +47,10 @@ Build + run the docker-image:
 # build image named easyepg
 docker build -t easyepg .
 ...
-# run image easyepg with hostpath `/host/path` mounted to /src
-docker run -v /host/path:/src/ --name easyepg easyepg
+# run easyepg with hostpath `/host/path` once to configure
+docker run -ti -v /host/path:/src/ --name easyepg easyepg
 
-# run with own cron-schedule
+# run with cron-schedule
 docker run -e CRON='0 0 * * 7' -v /host/path:/src/ --name easyepg easyepg
 
 # list running containers
