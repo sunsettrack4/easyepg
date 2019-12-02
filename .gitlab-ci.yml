@@ -73,6 +73,12 @@ release:
       echo ""
     fi
 
+    if [[ -n "$DOCKER_TOKEN" ]]; then
+      echo "Logging in to Docker Registry with token..."
+      docker login -u "strowi" -p "$DOCKER_TOKEN" "docker.io"
+      echo ""
+    fi
+
     docker pull "$1"
     docker tag "$1" "$CI_REGISTRY_IMAGE"
     docker push "$CI_REGISTRY_IMAGE"

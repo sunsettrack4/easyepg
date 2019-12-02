@@ -41,21 +41,27 @@ If you like my script, please [![Paypal Donation Page](https://www.paypalobjects
 # Installation
 
 ## Docker
+
+Images are available here:
+
+* [docker.io/strowi/easyepg](https://hub.docker.com/repository/docker/strowi/easyepg)
+* [registry.gitlab.com/strowi/easyepg:latest](https://gitlab.com/strowi/easyepg)
+s
 Build + run the docker-image:
 
 ```bash
 # build image named easyepg
-docker build -t easyepg .
+docker build -t strowi/easyepg .
 ...
 # run easyepg with hostpath `/host/path` once to configure
-docker run -ti -v /host/path:/src/ --name easyepg easyepg
+docker run -ti -v /host/path:/src/ --name easyepg strowi/easyepg
 
 # run with cron-schedule
-docker run -e CRON='0 0 * * 7' -v /host/path:/src/ --name easyepg easyepg
+docker run -e CRON='0 0 * * 7' -v /host/path:/src/ --name easyepg strowi/easyepg
 
 # list running containers
 ~> docker ps
-72febf5a63c5  easyepg  "/docker-entrypoint.…"  4 hours ago  Up 4 hours easyepg
+72febf5a63c5  strowi/easyepg  "/docker-entrypoint.…"  4 hours ago  Up 4 hours easyepg
 ```
 
 This will:
