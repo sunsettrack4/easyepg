@@ -20,7 +20,7 @@ release:
   script:
     - release_container "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"  # push as :latest
     - docker tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" "strowi/easyepg"
-    - docker push "strowi/varnish"
+    - docker push "strowi/easyepg"
   only:
     - master
 
