@@ -237,10 +237,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -380,10 +382,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -523,10 +527,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -666,10 +672,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -809,10 +817,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -952,10 +962,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -1095,10 +1107,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -1238,10 +1252,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -1381,10 +1397,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -1524,10 +1542,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -1667,10 +1687,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -1810,10 +1832,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -1953,10 +1977,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -2096,10 +2122,12 @@ foreach my $configdata ( @configdata ) {
 						foreach my $category_string ( @category ) {
 							my $category_content = $category_string->{_content};
 							my $category_lang    = $category_string->{lang};
-							if( defined $category_lang ) {
-								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-							} else {
-								print "  <category>" . $category_content . "</category>\n";
+							if( defined $category_content ) {
+								if( defined $category_lang ) {
+									print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+								} else {
+									print "  <category>" . $category_content . "</category>\n";
+								}
 							}
 						}
 					}
@@ -2237,10 +2265,12 @@ foreach my $configdata ( @configdata ) {
 					foreach my $category_string ( @category ) {
 						my $category_content = $category_string->{_content};
 						my $category_lang    = $category_string->{lang};
-						if( defined $category_lang ) {
-							print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
-						} else {
-							print "  <category>" . $category_content . "</category>\n";
+						if( defined $category_content ) {
+							if( defined $category_lang ) {
+								print "  <category lang=\"" . $category_lang . "\">" . $category_content . "</category>\n";
+							} else {
+								print "  <category>" . $category_content . "</category>\n";
+							}
 						}
 					}
 				}
