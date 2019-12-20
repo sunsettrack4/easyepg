@@ -54,5 +54,5 @@ COPY docker-entrypoint.sh /
 VOLUME /src
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["./epg.sh"]
+
 
