@@ -9,7 +9,7 @@ cd /src/easyepg && "$@"
 # run via cron
 if [[ -n "${CRON}" ]]; then
   echo "# setting up cronjob: ${CRON}"
-  ( crontab -l; echo "PATH=${PATH}"; echo "${CRON} cd /src/easyepg && /src/easyepg/epg.sh >> /var/log/easyepg.log" ) |crontab -
+  ( echo "PATH=${PATH}"; echo "${CRON} /bin/bash -c \"cd /src/easyepg && /src/easyepg/epg.sh\"" ) |crontab -
   cron -f
 else
   echo "No con schedule specified, exiting..."
