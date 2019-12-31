@@ -1,0 +1,18 @@
+version: '2.1'
+
+services:
+  easyepg:
+    image: strowi/easyepg
+    restart: always
+    tty: true
+    volumes:
+      - ./easyepg:/src
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 1288:80
+    depends_on:
+      - easyepg
+    volumes:
+      - ./easyepg/xml:/usr/share/nginx/html:ro
