@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##################################
+# ###############################
 # TVSPIELFILM CHANNEL ID CREATOR   #
-# ##################################
+# ###############################
 
 # CHANNEL IDs
 
@@ -29,7 +29,6 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
-binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -48,19 +47,19 @@ my $data   = decode_json($json);
 
 print "{ \"cid\":\n  {\n";
 
-my @items = @{ $data->{'items'} };
-foreach my $items ( @items ) {
+my @stations = @{ $data->{'stations'} };
+foreach my $stations ( @stations ) {
 		
 	# ####################
     # DEFINE JSON VALUES #
     # ####################
         
     # DEFINE CHANNEL NAME
-	my $cname   = $items->{'name'};
+	my $cname   = $stations->{'name'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE CHANNEL ID
-	my $cid     = $items->{'id'};
+	my $cid     = $stations->{'channelNumber'};
         
     # ###################
 	# PRINT JSON OUTPUT #

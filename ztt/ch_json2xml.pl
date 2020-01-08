@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -102,6 +103,10 @@ foreach my $channels ( @channels ) {
 		my $cname   = $schedule->{'title'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
         
+        # DEFINE CHANNEL LOGO
+        my $logo	= $schedule->{'qualities'}[0]{'logo_black_84'};
+        $logo		=~ s/84x48.png/210x120.png/g;
+        
         # DEFINE LANGUAGE VERSION
         my $languageVER =  $initdata->{'language'};
         
@@ -139,7 +144,10 @@ foreach my $channels ( @channels ) {
 				}
 				
 				# CHANNEL NAME (language)
-				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
+				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
+				
+				# CHANNEL LOGO
+				print "<icon src=\"https://images.zattic.com$logo\" /></channel>\n";
 			}
 		}
 	}

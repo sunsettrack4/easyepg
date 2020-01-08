@@ -136,7 +136,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tvp_g
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > tvp_channels
 sort -u tvp_channels > /tmp/tvp_channels && mv /tmp/tvp_channels tvp_channels
-sed -i 's/></>\n</g;s/<display-name/  &/g' tvp_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g;s/<icon src/  &/g' tvp_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                            "

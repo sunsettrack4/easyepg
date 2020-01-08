@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ###############################
-# SWISSCOM JSON > XML CONVERTER #
+# TVSPIELFILM JSON > XML CONVERTER #
 # ###############################
 
 # CHANNELS
@@ -29,7 +29,6 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
-binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -47,7 +46,7 @@ my $json;
 my $chlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "swc_channels.json" or die;
+    open my $fh, "<", "tvtvus_channels.json" or die;
     $chlist = <$fh>;
     close $fh;
 }
@@ -89,21 +88,20 @@ my $setupdata   = decode_json($settings);
 # DEFINE COUNTRY VERSION
 my $countryVER =  $initdata->{'country'};
 
-my @attributes = @{ $data->{'attributes'} };
-foreach my $attributes ( @attributes ) {
+my @stations = @{ $data->{'stations'} };
+foreach my $stations ( @stations ) {
 		
 	# ####################
     # DEFINE JSON VALUES #
     # ####################
         
     # DEFINE CHANNEL ID + NAME
-	my $cname   = $attributes->{'Title'};
+	my $cname   = $stations->{'name'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-	my $cid		= $attributes->{'Identifier'};
         
     # DEFINE LANGUAGE VERSION
     # my $languageVER =  $initdata->{'language'};
-    my $languageVER = $attributes->{'Languages'}[0];
+    my $languageVER = $stations->{'Languages'}[0];
         
     # DEFINE RYTEC CHANNEL ID (language)
 	my $rytec = $chdata->{'channels'}{$countryVER};
@@ -139,10 +137,7 @@ foreach my $attributes ( @attributes ) {
 			}
 			
 			# CHANNEL NAME (language)
-			print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
-			
-			# CHANNEL LOGO
-			print "<icon src=\"https://services.sg1.etvp01.sctv.ch/content/images/tv/channel/" . $cid . "_w300.webp\" /></channel>\n"
+			print "<display-name lang=\"de\">" . $cname . "</display-name></channel>\n";
 		}
 	}
 }

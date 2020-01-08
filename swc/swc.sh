@@ -304,7 +304,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/swc_g
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > swisscom_channels
 sort -u swisscom_channels > /tmp/swisscom_channels && mv /tmp/swisscom_channels swisscom_channels
-sed -i 's/></>\n</g;s/<display-name/  &/g' swisscom_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g;s/<icon src/  &/g' swisscom_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                            "
@@ -312,7 +312,8 @@ perl cid_json.pl > swc_cid.json && rm chlist
 
 # CONVERT JSON INTO XML: EPG
 printf "\rConverting EPG JSON file into XML format...          "
-perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt && rm /tmp/epg_workfile 2> /dev/null
+#perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt && rm /tmp/epg_workfile 2> /dev/null
+perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt 2> /dev/null
 
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                           "
@@ -320,6 +321,7 @@ cat swisscom_epg >> swisscom_channels && mv swisscom_channels swisscom && rm swi
 sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' swisscom
 sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" swisscom
 sed -i '$s/.*/&\n\n<\/tv>/g' swisscom
+rm /tmp/epg_workfile 2> /dev/null 
 mv swisscom swisscom.xml
 
 # VALIDATING XML FILE

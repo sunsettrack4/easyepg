@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -105,6 +106,10 @@ foreach my $channels ( @channels ) {
 		$cname =~ s///g;		 # REMOVE "SELECTED AREA"
 		$cname =~ s///g;
 		$cname =~ s/\ \ /\ /g;
+		
+		# DEFINE LOGO
+		my @logo	= @{ $item->{'images'} };
+		my $image_location;
         
         # DEFINE LANGUAGE VERSION
         my $languageVER =  $initdata->{'language'};
@@ -142,9 +147,24 @@ foreach my $channels ( @channels ) {
 					print "<channel id=\"" . $cname . "\">";
 				}
 				
-				# CHANNEL NAME (language)
-				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
+				# CHANNEL NAME + LOGO (language) (loop)
+				if( @logo ) {
+					while( my( $image_id, $image ) = each( @logo ) ) {
+						if( $image->{'assetType'} eq "station-logo-large" ) {
+							$image_location = $image_id;
+							last;
+							}
+						}
+						if( defined $image_location ) {
+							my $logo_def 	= $item->{'images'}[$image_location]{'url'};
+							$logo_def		=~ s/\?w.*//g;
+							print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
+							print "<icon src=\"$logo_def\" /></channel>\n";
+						} else {
+							print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";	
+						}
+					}	
+				}
 			}
 		}
-	}
 }

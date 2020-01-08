@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ##############################
-# TVPLAYER CHANNEL LIST CREATOR #
-# ##############################
+# #################################
+# TVTV-US TV CHANNEL LIST CREATOR #
+# #################################
 
 # COMPARE STRINGS, CREATE MENU LIST
 
@@ -29,7 +29,6 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
-binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -68,20 +67,15 @@ foreach my $configname ( @configname ) {
 	my $old_id = $old_name2id->{$configname};
 	my $new_id = $new_name2id->{$configname};
 	
-	if( defined $new_id ) {
+	# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
+	if( $new_id eq $old_id ) {
+		print "$configname\n";
 		
-		# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
-		if( $new_id eq $old_id ) {
-			print "$configname\n";
-		
-		# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
-		} elsif( defined $new_id ) {
-			print "$configname\n";
-			print STDERR "[ CHLIST INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
-		}
-	
-	# CHANNEL NOT FOUND
+	# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
+	} elsif( defined $new_id ) {
+		print "$configname\n";
+		print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
 	} else {
-		print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel lists!\n";
+		print STDERR "[ WARNING ] CHANNEL $configname not found in channel lists!\n";
 	}
 }

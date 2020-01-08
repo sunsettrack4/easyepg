@@ -1535,7 +1535,7 @@ curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/ztt_g
 printf "\rConverting CHANNEL JSON file into XML format...      "
 perl ch_json2xml.pl 2>warnings.txt > zattoo_channels
 sort -u zattoo_channels > /tmp/zattoo_channels && mv /tmp/zattoo_channels zattoo_channels
-sed -i 's/></>\n</g;s/<display-name/  &/g' zattoo_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g;s/<icon src/  &/g' zattoo_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                            "

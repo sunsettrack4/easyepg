@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ################################
-# VODAFONE CHANNEL LIST CREATOR  #
+# TVTV-US CHANNEL LIST CREATOR  #
 # ################################
 
 # CREATE JSON FILE FOR COMPARISM
@@ -29,7 +29,6 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
-binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -75,7 +74,7 @@ my $configdata   = decode_json($chlist_config);
 
 print "{ \"newname2id\": {\n";
 
-my @newchannels_name2id = @{ $newdata->{'items'} };
+my @newchannels_name2id = @{ $newdata->{'stations'} };
 foreach my $newchannels ( @newchannels_name2id ) {
 
 	#
@@ -83,11 +82,11 @@ foreach my $newchannels ( @newchannels_name2id ) {
 	#
         
 	# DEFINE NEW CHANNEL NAME
-	my $newcname   = $newchannels->{'lname'};
+	my $newcname   = $newchannels->{'name'};
 	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE NEW CHANNEL ID
-	my $newcid     = $newchannels->{'tvtvid'};
+	my $newcid     = $newchannels->{'channelNumber'};
 		
 	# PRINT NEW CHANNEL NAMES
 	print "\"$newcname\": \"$newcid\",\n";
@@ -97,7 +96,7 @@ foreach my $newchannels ( @newchannels_name2id ) {
 
 print "\"DUMMY\": \"DUMMY\" },\n\"newid2name\": {\n";
 
-my @newchannels_id2name = @{ $newdata->{'items'} };
+my @newchannels_id2name = @{ $newdata->{'stations'} };
 foreach my $newchannels ( @newchannels_id2name ) {
 		
 	#
@@ -105,11 +104,11 @@ foreach my $newchannels ( @newchannels_id2name ) {
 	#
         
 	# DEFINE NEW CHANNEL NAME
-	my $newcname   = $newchannels->{'lname'};
+	my $newcname   = $newchannels->{'name'};
 	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE NEW CHANNEL ID
-	my $newcid     = $newchannels->{'tvtvid'};
+	my $newcid     = $newchannels->{'channelNumber'};
 		
 	# PRINT NEW CHANNEL NAMES newcid
 	print "\"$newcid\": \"$newcname\",\n";
@@ -124,7 +123,7 @@ foreach my $newchannels ( @newchannels_id2name ) {
 
 print "\"DUMMY\": \"DUMMY\" },\n\"oldname2id\": {\n";
 						
-my @oldchannels_name2id = @{ $olddata->{'items'} };
+my @oldchannels_name2id = @{ $olddata->{'stations'} };
 foreach my $oldchannels ( @oldchannels_name2id ) {
 						
 	#
@@ -132,11 +131,11 @@ foreach my $oldchannels ( @oldchannels_name2id ) {
 	#
 								
 	# DEFINE OLD CHANNEL NAME
-	my $oldcname   = $oldchannels->{'lname'};
+	my $oldcname   = $oldchannels->{'name'};
 	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE OLD CHANNEL ID
-	my $oldcid     = $oldchannels->{'tvtvid'};
+	my $oldcid     = $oldchannels->{'channelNumber'};
 							
 	# PRINT OLD CHANNEL NAMES
 	print "\"$oldcname\": \"$oldcid\",\n";
@@ -146,7 +145,7 @@ foreach my $oldchannels ( @oldchannels_name2id ) {
 
 print "\"DUMMY\": \"DUMMY\" },\n\"oldid2name\": {\n";
 						
-my @oldchannels_id2name = @{ $olddata->{'items'} };
+my @oldchannels_id2name = @{ $olddata->{'stations'} };
 foreach my $oldchannels ( @oldchannels_id2name ) {
 						
 	#
@@ -154,11 +153,11 @@ foreach my $oldchannels ( @oldchannels_id2name ) {
 	#
 								
 	# DEFINE OLD CHANNEL NAME
-	my $oldcname   = $oldchannels->{'lname'};
+	my $oldcname   = $oldchannels->{'name'};
 	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE OLD CHANNEL ID
-	my $oldcid     = $oldchannels->{'tvtvid'};
+	my $oldcid     = $oldchannels->{'channelNumber'};
 							
 	# PRINT OLD CHANNEL NAMES
 	print "\"$oldcid\": \"$oldcname\",\n";

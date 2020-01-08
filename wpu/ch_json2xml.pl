@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -99,6 +100,9 @@ foreach my $chlist ( @channels ) {
     # DEFINE CHANNEL ID + NAME
 	my $cname   = $channels->{'displayName'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	
+	# DEFINE CHANNEL LOGO
+	my $logo	= $channels->{'links'}[4]{'href'};
         
     # DEFINE LANGUAGE VERSION
     my $languageVER =  $initdata->{'language'};
@@ -137,7 +141,10 @@ foreach my $chlist ( @channels ) {
 			}
 			
 			# CHANNEL NAME (language)
-			print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n</channel>\n";
+			print "  <display-name lang=\"$languageVER\">" . $cname . "</display-name>\n";
+			
+			# CHANNEL LOGO
+			print "  <icon src=\"$logo?width=300&amp;height=300\" />\n</channel>\n"
 		}
 	}
 }

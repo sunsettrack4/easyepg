@@ -29,6 +29,7 @@ use strict;
 use warnings;
  
 binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
 use utf8;
  
 use JSON;
@@ -98,6 +99,9 @@ foreach my $attributes ( @attributes ) {
         # DEFINE CHANNEL ID + NAME
 		my $cname   = $attributes->{'name'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+		
+		# DEFINE LOGO
+		my $logo	= $attributes->{'logo'}{'colour'};
         
         # DEFINE LANGUAGE VERSION
         my $languageVER =  $initdata->{'language'};
@@ -136,7 +140,10 @@ foreach my $attributes ( @attributes ) {
 				}
 				
 				# CHANNEL NAME (language)
-				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
+				print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
+				
+				# CHANNEL LOGO
+				print "<icon src=\"$logo\" /></channel>\n";
 			}
 		}
 }
