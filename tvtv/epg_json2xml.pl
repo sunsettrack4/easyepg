@@ -104,7 +104,7 @@ my $countryVER =  $initdata->{'country'};
 # DEFINE LANGUAGE VERSION
 my $languageVER =  $initdata->{'language'};
 
-print "\n<!-- EPG DATA - SOURCE: TVTV YYY $countryVER -->\n\n";
+print "\n<!-- EPG DATA - SOURCE: TVTV YYY -->\n\n";
 
 my @attributes = @{ $data->{'attributes'} };
 foreach my $attributes ( @attributes ) {

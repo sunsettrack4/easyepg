@@ -98,6 +98,9 @@ foreach my $stations ( @stations ) {
     # DEFINE CHANNEL ID + NAME
 	my $cname   = $stations->{'name'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	
+	# DEFINE CHANNEL LOGO
+	my $logo	= $stations->{'logoFilename'};
         
     # DEFINE LANGUAGE VERSION
     # my $languageVER =  $initdata->{'language'};
@@ -137,7 +140,14 @@ foreach my $stations ( @stations ) {
 			}
 			
 			# CHANNEL NAME (language)
-			print "<display-name lang=\"de\">" . $cname . "</display-name></channel>\n";
+			print "<display-name lang=\"de\">" . $cname . "</display-name>";
+			
+			# CHANNEL LOGO
+			if( $logo ne "" ) {
+				print "<icon src=\"https://cdn.tvpassport.com/image/station/100x100/$logo\" /></channel>\n";
+			} else {
+				print "</channel>\n";
+			}
 		}
 	}
 }
