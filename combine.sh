@@ -250,7 +250,7 @@ then
 			if [ -e xml/tvtv_ca.xml ]
 			then
 				grep 'channel id=' xml/tvtv_ca.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
-				sed 's/<channel id="/"[TVTV CANNADA] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+				sed 's/<channel id="/"[TVTV CANADA] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 
 			if [ -e xml/external_oa.xml ]
@@ -406,7 +406,7 @@ then
 
 				if [ -e xml/tvtv_ca.xml ]
 				then
-					grep "TVTV CANNADA" /tmp/channels | sed '/TVTV CANNADA/s/\[TVTV CANNADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_ca_channels.json
+					grep "TVTV CANADA" /tmp/channels | sed '/TVTV CANADA/s/\[TVTV CANADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_ca_channels.json
 				fi
 
 				if [ -e xml/external_oa.xml ]
@@ -1049,7 +1049,7 @@ then
 					if [ -e xml/tvtv_ca.xml ]
 					then
 						grep 'channel id=' xml/tvtv_ca.xml > /tmp/xmlch_tvtvca
-						sed -i 's/<channel id="/[TVTV CANNADA] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_tvtvca
+						sed -i 's/<channel id="/[TVTV CANADA] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_tvtvca
 					else
 						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json 2> /dev/null
 					fi
@@ -1060,7 +1060,7 @@ then
 					if [ -e tvtv_ca_channels.json ]
 					then
 						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' tvtv_ca_channels.json > /tmp/channels_tvtvca && cat /tmp/channels_tvtvca >> /tmp/xmlch2
-						sed -i 's/.*/[TVTV CANNADA] &/g' /tmp/channels_tvtvca
+						sed -i 's/.*/[TVTV CANADA] &/g' /tmp/channels_tvtvca
 
 						comm -12 <(sort -u /tmp/xmlch_tvtvca) <(sort -u /tmp/channels_tvtvca) > /tmp/comm_menu_enabled
 						comm -2 -3 <(sort -u /tmp/xmlch_tvtvca) <(sort -u /tmp/channels_tvtvca) > /tmp/comm_menu_disabled
@@ -1307,7 +1307,7 @@ then
 
 							if [ -e xml/tvtv_ca.xml ]
 							then
-								grep "TVTV CANNADA" /tmp/channels | sed '/TVTV CANNADA/s/\[TVTV CANNADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json
+								grep "TVTV CANADA" /tmp/channels | sed '/TVTV CANADA/s/\[TVTV CANADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json
 							fi
 
 							if [ -e xml/external_oa.xml ]
@@ -1980,13 +1980,13 @@ then
 							then
 								sed 's/fileNAME/tvtv_ca.xml/g' ch_combine.pl > /tmp/ch_combine.pl
 								sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/ch_combine.pl
-								printf "\n<!-- CHANNEL LIST: TVTV CANNADA -->\n\n" >> /tmp/combined_channels
+								printf "\n<!-- CHANNEL LIST: TVTV CANADA -->\n\n" >> /tmp/combined_channels
 								perl /tmp/ch_combine.pl >> /tmp/combined_channels
 
 								sed 's/fileNAME/tvtv_ca.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 								sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/prog_combine.pl
 								sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
-								printf "\n<!-- PROGRAMMES: TVTV CANNADA -->\n\n" >> /tmp/combined_programmes
+								printf "\n<!-- PROGRAMMES: TVTV CANADA -->\n\n" >> /tmp/combined_programmes
 								perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 							fi
 						fi
