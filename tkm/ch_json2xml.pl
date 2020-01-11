@@ -150,7 +150,7 @@ foreach my $attributes ( @attributes ) {
 					}
 					if( defined $image_location ) {
 						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
-						print "<icon src=\"" . $attributes->{'pictures'}[$image_location]{'href'} . "\" /></channel>\n";
+						print "<icon src=\"" . "https://ngiss.t-online.de/iss?client=ngtv&amp;y=36&amp;ar=keep&amp;src=" . $attributes->{'pictures'}[$image_location]{'href'} . "\" /></channel>\n";
 					} else {
 						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";	
 					}

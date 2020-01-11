@@ -202,6 +202,7 @@ do
 				echo "H" > /tmp/value
 			else
 				dialog --backtitle "[E1120] EASYEPG SIMPLE XMLTV GRABBER > MAGENTA SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
+				bash proxy.sh stop
 				echo "M" > /tmp/value
 				exit 1
 			fi
