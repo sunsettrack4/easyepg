@@ -20,21 +20,21 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 clear
-echo " --------------------------------------------"
-echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.4.3 BETA                         "
-echo " powered by                                  "
-echo "                                             "
-echo " ==THE======================================="
-echo "   ##### ##### ##### #   # ##### ##### ##### "
-echo "   #     #   # #     #   # #     #   # #     "
-echo "  ##### ##### ##### #####  ##### ##### #  ## "
-echo "  #     #   #     #   #    #     #     #   # " 
-echo " ##### #   # #####   #     ##### #     ##### "
-echo " ===================================PROJECT=="
-echo "                                             "
-echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
-echo " --------------------------------------------"
+echo " ----------------------------------------------"
+echo " EASYEPG SIMPLE XMLTV GRABBER                  "
+echo " Release v0.4.3 BETA                           "
+echo " powered by                                    "
+echo "                                               "
+echo " ==THE=======================================  "
+echo "   ##### ##### ##### #   # ##### ##### #####   "
+echo "   #     #   # #     #   # #     #   # #       "
+echo "  ##### ##### ##### #####  ##### ##### #  ##   "
+echo "  #     #   #     #   #    #     #     #   #   " 
+echo " ##### #   # #####   #     ##### #     #####   "
+echo " ===================================PROJECT==  "
+echo "                                               "
+echo " (c) 2019 Jan-Luca Neumann / sunsettrack4      "
+echo " ----------------------------------------------"
 echo ""
 
 # ################
@@ -496,6 +496,60 @@ then
 	ERROR="true"
 fi
 
+if [ ! -e tvtv/ch_json2xml.pl ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/ch_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/chlist_printer.pl ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/chlist_printer.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/cid_json.pl ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/cid_json.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/compare_crid.pl ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/compare_crid.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/compare_menu.pl ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/compare_menu.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/epg_json2xml.pl ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/epg_json2xml.pl"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/settings.sh ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/settings.sh"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/tvtv.sh ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/tvtv.sh"
+	ERROR="true"
+fi
+
+if [ ! -e tvtv/url_printer.pl ]
+then
+	printf "\nMissing file in TVTV folder: tvtv/url_printer.pl"
+	ERROR="true"
+fi
+
 if [ ! -e ext/ch_ext.pl ]
 then
 	printf "\nMissing file in External folder: ext/ch_ext.pl"
@@ -635,7 +689,7 @@ fi
 
 cd $(pwd)
 echo "DIR=$(pwd)" > /tmp/initrun.txt
-echo "VER=v0.4.3 2019/12/15" >> /tmp/initrun.txt
+echo "VER=v0.4.3 2020/01/11" >> /tmp/initrun.txt
 
 
 # ###############
@@ -803,7 +857,7 @@ do
 		# M1190 VODAFONE
 		echo '	009 "VODAFONE" \' >> /tmp/menu
 
-		# M1200 TVTVUS
+		# M11A0 TVTVUS
 		echo '	010 "TVTV" \' >> /tmp/menu
 
 		# M11+0 EXTERNAL
@@ -1619,9 +1673,10 @@ do
 				echo "M" > /tmp/value
 			fi
 		
-		# #################
-		# M1180 TVS		  #
-		# #################
+		
+		# ####################
+		# M1180 TV-SPIELFILM #
+		# ####################
 
 		elif grep -q "008"  /tmp/value
 		then
@@ -1677,15 +1732,16 @@ do
 			
 			
 			# ############
-			# M115X EXIT #
+			# M118X EXIT #
 			# ############
 			
 			else
 				echo "M" > /tmp/value
 			fi
+			
 
 		# #################
-		# M1190 VDF		  #
+		# M1190 VODAFONE  #
 		# #################
 
 		elif grep -q "009"  /tmp/value
@@ -1714,7 +1770,7 @@ do
 				
 				
 			# #######################
-			# M1191 VODAFONE DE #
+			# M1191 VODAFONE DE     #
 			# #######################
 				
 			if grep -q "1" /tmp/value
@@ -1743,37 +1799,39 @@ do
 			
 			
 			# ############
-			# M115X EXIT #
+			# M119X EXIT #
 			# ############
 			
 			else
 				echo "M" > /tmp/value
 			fi
+			
 
 		# ###############
-		# M1200 TVTV    #
+		# M11A0 TVTV    #
 		# ###############
+		
 		elif grep -q "010"  /tmp/value
 		then
-			# M1200 MENU OVERLAY
-			echo 'dialog --backtitle "[M1110] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVTV" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu
+			# M11A0 MENU OVERLAY
+			echo 'dialog --backtitle "[M11A0] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVTV" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu
 
-			# M1201 USA
+			# M11A1 USA
 			if [ ! -d tvtv/us ]
 			then
 				echo '	1 "[US] TVTV USA" \' >> /tmp/menu
 			fi
 
-			# M1202 CANNADA
+			# M11A2 CANADA
 			if [ ! -d tvtv/ca ]
 			then
-				echo '	2 "[CA] TVTV CANNADA" \' >> /tmp/menu
+				echo '	2 "[CA] TVTV CANADA" \' >> /tmp/menu
 			fi
 
-      # M120E ERROR
+			# M11AE ERROR
 			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
 			then
-				dialog --backtitle "[M111E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVTV" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				dialog --backtitle "[M11AE] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVTV" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
 				sleep 2s
 				echo "M" > /tmp/value
 			else
@@ -1783,8 +1841,8 @@ do
 				input="$(cat /tmp/value)"
 			fi
 
-      ###################
-			#M1201 USA        #
+			###################
+			# M11A1 USA       #
 			###################
 
 			if grep -q "1" /tmp/value
@@ -1794,7 +1852,7 @@ do
 				echo '{"country":"USA","language":"en"}' > tvtv/us/init.json
 				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/tvtv.sh > tvtv/us/tvtv.sh
 				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/ch_json2xml.pl > tvtv/us/ch_json2xml.pl
-        cp tvtv/compare_crid.pl tvtv/us/
+				cp tvtv/compare_crid.pl tvtv/us/
 				cp tvtv/cid_json.pl tvtv/us/
 				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/epg_json2xml.pl > tvtv/us/epg_json2xml.pl
 				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/settings.sh > tvtv/us/settings.sh
@@ -1813,7 +1871,7 @@ do
 
 
 			# ##################
-			# M1202 CANNADA    #
+			# M11A2 CANADA     #
 			# ##################
 
 			elif grep -q "2" /tmp/value
@@ -1821,15 +1879,15 @@ do
 				mkdir tvtv/ca
 				chmod 0777 tvtv/ca
 				echo '{"country":"CA","language":"en"}' > tvtv/ca/init.json
-				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/tvtv.sh > tvtv/ca/tvtv.sh
-				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl
-        cp tvtv/compare_crid.pl tvtv/ca/
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/tvtv.sh > tvtv/ca/tvtv.sh
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl
+				cp tvtv/compare_crid.pl tvtv/ca/
 				cp tvtv/cid_json.pl tvtv/ca/
-				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl
-				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/settings.sh > tvtv/ca/settings.sh
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/settings.sh > tvtv/ca/settings.sh
 				cp tvtv/chlist_printer.pl tvtv/ca/
 				cp tvtv/compare_menu.pl tvtv/ca/
-				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/url_printer.pl > tvtv/ca/url_printer.pl
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/url_printer.pl > tvtv/ca/url_printer.pl
 				cd tvtv/ca && bash settings.sh
 				cd - > /dev/null
 
@@ -1842,12 +1900,13 @@ do
 
 
 			# ############
-			# M111X EXIT #
+			# M11AX EXIT #
 			# ############
 
 			else
 				echo "M" > /tmp/value
 			fi
+
 
 		# #################
 		# M11+0 EXTERNAL  #
@@ -2043,7 +2102,7 @@ do
 			echo '	009 "VODAFONE" \' >> /tmp/menu
 		fi
 
-		# M1300 TVTV
+		# M12A0 TVTV
 		if ls -l tvtv/ | grep -q '^d' 2> /dev/null
 		then
 			echo '	010 "TVTV" \' >> /tmp/menu
@@ -2800,32 +2859,33 @@ do
 			else
 				echo "M" > /tmp/value
 			fi
+			
 
 		# ###############
-		# M1300 TVTV    #
+		# M12A0 TVTV    #
 		# ###############
 
 		elif grep -q "010" /tmp/value
 		then
-			# M1300 MENU OVERLAY
-			echo 'dialog --backtitle "[M1300] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVTV" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu
+			# M12A0 MENU OVERLAY
+			echo 'dialog --backtitle "[M12A0] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVTV" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu
 
-			# M1301 USA
+			# M12A1 USA
 			if [ -d tvtv/us ]
 			then
 				echo '	1 "[US] TVTV USA" \' >> /tmp/menu
 			fi
 
-			# M1302 CANNNADA
+			# M12A2 CANADA
 			if [ -d tvtv/ca ]
 			then
-				echo '	2 "[CA] TVTV CANNADA" \' >> /tmp/menu
+				echo '	2 "[CA] TVTV CANADA" \' >> /tmp/menu
 			fi
 
-			# M130E ERROR
+			# M12AE ERROR
 			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
 			then
-				dialog --backtitle "[M122E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVTV" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				dialog --backtitle "[M12AE] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVTV" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
 				sleep 2s
 				echo "M" > /tmp/value
 			else
@@ -2837,7 +2897,7 @@ do
 
 
 			# ##################
-			# M1301 TVTV US    #
+			# M12A1 TVTV US    #
 			# ##################
 
 			if grep -q "1" /tmp/value
@@ -2855,7 +2915,7 @@ do
 
 
 			# ####################
-			# M1302 TVTV CANNADA #
+			# M12A2 TVTV CANADA  #
 			# ####################
 
 			elif grep -q "2" /tmp/value
@@ -2873,7 +2933,7 @@ do
 
 
 			# ############
-			# M130X EXIT #
+			# M12AX EXIT #
 			# ############
 
 			else
@@ -3310,7 +3370,7 @@ then
 	then
 		echo ""
 		echo " --------------------------------------------"
-		echo " TVTV EPG SIMPLE XMLTV GRABBER             "
+		echo " TVTV EPG SIMPLE XMLTV GRABBER               "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
@@ -3735,13 +3795,13 @@ do
 			then
 				sed 's/fileNAME/tvtv_ca.xml/g' ch_combine.pl > /tmp/ch_combine.pl
 				sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/ch_combine.pl
-				printf "\n<!-- CHANNEL LIST: TVTV CANNADA -->\n\n" >> /tmp/combined_channels
+				printf "\n<!-- CHANNEL LIST: TVTV CANADA -->\n\n" >> /tmp/combined_channels
 				perl /tmp/ch_combine.pl >> /tmp/combined_channels
 
 				sed 's/fileNAME/tvtv_ca.xml/g' prog_combine.pl > /tmp/prog_combine.pl
 				sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/prog_combine.pl
 				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
-				printf "\n<!-- PROGRAMMES: TVTV CANNADA -->\n\n" >> /tmp/combined_programmes
+				printf "\n<!-- PROGRAMMES: TVTV CANADA -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
 		fi
