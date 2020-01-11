@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
@@ -318,7 +318,7 @@ perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt 2> /dev/null
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                           "
 cat swisscom_epg >> swisscom_channels && mv swisscom_channels swisscom && rm swisscom_epg
-sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' swisscom
+sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann -->\n<tv>' swisscom
 sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" swisscom
 sed -i '$s/.*/&\n\n<\/tv>/g' swisscom
 rm /tmp/epg_workfile 2> /dev/null 

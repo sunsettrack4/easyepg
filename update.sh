@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:

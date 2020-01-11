@@ -70,7 +70,7 @@ wget https://github.com/sunsettrack4/easyepg/archive/v0.4.3.zip
 unzip v0.4.3.zip
 
 # Move all script files to the created folder
-mv ~/easyepg-0.4.2/* ~/easyepg/
+mv ~/easyepg-0.4.3/* ~/easyepg/
 
 # Set system-wide permissions to the folder and its related files
 sudo chmod 0777 ~/easyepg

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
@@ -384,7 +384,7 @@ perl epg_json2xml.pl > tvtv_XXX_epg 2>epg_warnings.txt && rm /tmp/epg_workfile 2
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                   "
 cat tvtv_XXX_epg >> tvtv_XXX_channels && mv tvtv_XXX_channels tvtv_XXX && rm tvtv_XXX_epg
-sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' tvtv_XXX
+sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann -->\n<tv>' tvtv_XXX
 sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" tvtv_XXX
 sed -i '$s/.*/&\n\n<\/tv>/g' tvtv_XXX
 mv tvtv_XXX tvtv_XXX.xml

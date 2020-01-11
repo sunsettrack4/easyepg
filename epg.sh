@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
@@ -33,7 +33,7 @@ echo "  #     #   #     #   #    #     #     #   #   "
 echo " ##### #   # #####   #     ##### #     #####   "
 echo " ===================================PROJECT==  "
 echo "                                               "
-echo " (c) 2019 Jan-Luca Neumann / sunsettrack4      "
+echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4      "
 echo " ----------------------------------------------"
 echo ""
 
@@ -730,7 +730,7 @@ fi
 while grep -q "M" /tmp/value
 do
 	# M1000 MENU OVERLAY
-	echo 'dialog --backtitle "[M1000] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --menu "Welcome to EasyEPG! :)\n(c) 2019 Jan-Luca Neumann\n\nIf you like this script, please support my work:\nhttps://paypal.me/sunsettrack4\n\nPlease choose an option:" 19 55 10 \' > /tmp/menu
+	echo 'dialog --backtitle "[M1000] EASYEPG SIMPLE XMLTV GRABBER" --title "MAIN MENU" --menu "Welcome to EasyEPG! :)\n(c) 2019-2020 Jan-Luca Neumann\n\nIf you like this script, please support my work:\nhttps://paypal.me/sunsettrack4\n\nPlease choose an option:" 19 55 10 \' > /tmp/menu
 
 	# M1100 ADD GRABBER
 	echo '	1 "ADD GRABBER INSTANCE" \' >> /tmp/menu
@@ -3152,7 +3152,7 @@ do
 			echo " --------------------------------------------"
 			echo " BACKUP SERVICE                              "
 			echo " easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-			echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+			echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 			echo " --------------------------------------------"
 			echo ""
 			sleep 2s
@@ -3172,7 +3172,7 @@ do
 			echo " --------------------------------------------"
 			echo " RESTORE SERVICE                             "
 			echo " easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-			echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+			echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 			echo " --------------------------------------------"
 			echo ""
 			sleep 2s
@@ -3196,7 +3196,7 @@ do
 	
 	elif grep -q "9" /tmp/value
 	then
-		dialog --backtitle "[M1900] EASYEPG SIMPLE XMLTV GRABBER > ABOUT"  --title "ABOUT THE EASYEPG PROJECT" --msgbox "easyEPG Grabber\n(c) 2019 Jan-Luca Neumann / sunsettrack4\nhttps://github.com/sunsettrack4\n\nLicensed under GPL v3.0 - All rights reserved.\n\n* This tool provides high-quality EPG data from different IPTV/OTT sources.\n* It allows you to combine multiple sources for XMLTV file creation.\n* Missing data can be added by using the IMDB mapper tool.\n* Furthermore, you can import XML files from external sources.\n\nSpecial thanks:\n- DeBaschdi - https://github.com/debaschdi (for collaboration)" 19 70
+		dialog --backtitle "[M1900] EASYEPG SIMPLE XMLTV GRABBER > ABOUT"  --title "ABOUT THE EASYEPG PROJECT" --msgbox "easyEPG Grabber\n(c) 2019-2020 Jan-Luca Neumann / sunsettrack4\nhttps://github.com/sunsettrack4\n\nLicensed under GPL v3.0 - All rights reserved.\n\n* This tool provides high-quality EPG data from different IPTV/OTT sources.\n* It allows you to combine multiple sources for XMLTV file creation.\n* Missing data can be added by using the IMDB mapper tool.\n* Furthermore, you can import XML files from external sources.\n\nSpecial thanks:\n- DeBaschdi - https://github.com/debaschdi (for collaboration)" 19 70
 		echo "M" > /tmp/value
 	
 	# ############
@@ -3236,7 +3236,7 @@ then
 		echo " --------------------------------------------"
 		echo " HORIZON EPG SIMPLE XMLTV GRABBER            "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3259,7 +3259,7 @@ then
 		echo " --------------------------------------------"
 		echo " ZATTOO EPG SIMPLE XMLTV GRABBER             "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3274,7 +3274,7 @@ then
 		echo " --------------------------------------------"
 		echo " SWISSCOM EPG SIMPLE XMLTV GRABBER           "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3288,7 +3288,7 @@ then
 		echo " --------------------------------------------"
 		echo " TVPLAYER EPG SIMPLE XMLTV GRABBER           "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3302,7 +3302,7 @@ then
 		echo " --------------------------------------------"
 		echo " TELEKOM EPG SIMPLE XMLTV GRABBER            "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3316,7 +3316,7 @@ then
 		echo " --------------------------------------------"
 		echo " RADIOTIMES EPG SIMPLE XMLTV GRABBER         "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3330,7 +3330,7 @@ then
 		echo " --------------------------------------------"
 		echo " WAIPU.TV EPG SIMPLE XMLTV GRABBER           "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3344,7 +3344,7 @@ then
 		echo " --------------------------------------------"
 		echo " TV-SPIELFILM EPG SIMPLE XMLTV GRABBER       "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3358,7 +3358,7 @@ then
 		echo " --------------------------------------------"
 		echo " VODAFONE EPG SIMPLE XMLTV GRABBER           "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3372,7 +3372,7 @@ then
 		echo " --------------------------------------------"
 		echo " TVTV EPG SIMPLE XMLTV GRABBER               "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3387,7 +3387,7 @@ then
 		echo " --------------------------------------------"
 		echo " EXTERNAL EPG SIMPLE XMLTV GRABBER            "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
@@ -3866,7 +3866,7 @@ do
 		then
 			sed -i 's/\&/\&amp;/g' /tmp/file
 		
-			sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
+			sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
 			sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>' /tmp/file
 			sed '$s/.*/&\n<\/tv>/g' /tmp/file > combine/$folder/$folder.xml
 			rm /tmp/combined_programmes

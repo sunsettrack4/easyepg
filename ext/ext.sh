@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
@@ -138,7 +138,7 @@ perl epg_ext.pl > ext_epg
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                           "
 cat ext_epg >> ext_channels && mv ext_channels external && rm ext_epg
-sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' external
+sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann -->\n<tv>' external
 sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" external
 sed -i '$s/.*/&\n\n<\/tv>/g' external
 mv external external.xml
