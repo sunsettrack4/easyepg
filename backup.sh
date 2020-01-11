@@ -309,7 +309,6 @@ fi
 if [ -e tvtv/us ]
 then
 	echo "Backing up: TVTV USA"
-	cp tvtv/us/user/userfile		easyepg_backup/tvtv_us_user_userfile
 	cp tvtv/us/chlist_old		easyepg_backup/tvtv_us_chlist_old
 	cp tvtv/us/channels.json 	easyepg_backup/tvtv_us_channels.json
 	cp tvtv/us/init.json 		easyepg_backup/tvtv_us_init.json
@@ -323,7 +322,6 @@ fi
 if [ -e tvtv/ca ]
 then
 	echo "Backing up: TVTV CANADA"
-	cp tvtv/ca/user/userfile		easyepg_backup/tvtv_ca_user_userfile
 	cp tvtv/ca/chlist_old		easyepg_backup/tvtv_ca_chlist_old
 	cp tvtv/ca/channels.json 	easyepg_backup/tvtv_ca_channels.json
 	cp tvtv/ca/init.json 		easyepg_backup/tvtv_ca_init.json

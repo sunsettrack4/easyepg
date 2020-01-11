@@ -561,7 +561,6 @@ if [ -e easyepg_backup/tvtv_us_init.json ]
 then
 	echo "Restoring: TVTV USA"
 	mkdir tvtv/us 2> /dev/null
-	mkdir tvtv/us/user 2> /dev/null
 
 	cp tvtv/chlist_printer.pl 	tvtv/us/chlist_printer.pl
 	cp tvtv/cid_json.pl 		tvtv/us/cid_json.pl
@@ -577,7 +576,6 @@ then
 	cp easyepg_backup/tvtv_us_chlist_old		tvtv/us/chlist_old
 	cp easyepg_backup/tvtv_us_channels.json		tvtv/us/channels.json
 	cp easyepg_backup/tvtv_us_settings.json		tvtv/us/settings.json
-	cp easyepg_backup/tvtv_us_user_userfile		tvtv/us/user/userfile
 	cp easyepg_backup/xml_tvtv_us.xml			xml/tvtv_us.xml 2> /dev/null
 else
 	echo "Skipping restore: TVTV USA - no setup found"
@@ -589,7 +587,6 @@ if [ -e easyepg_backup/tvtv_ca_init.json ]
 then
 	echo "Restoring: TVTV CANADA"
 	mkdir tvtv/ca 2> /dev/null
-	mkdir tvtv/ca/user 2> /dev/null
 
 	cp tvtv/chlist_printer.pl 	tvtv/ca/chlist_printer.pl
 	cp tvtv/cid_json.pl			tvtv/ca/cid_json.pl
@@ -605,7 +602,6 @@ then
 	cp easyepg_backup/tvtv_ca_chlist_old		tvtv/ca/chlist_old
 	cp easyepg_backup/tvtv_ca_channels.json		tvtv/ca/channels.json
 	cp easyepg_backup/tvtv_ca_settings.json		tvtv/ca/settings.json
-	cp easyepg_backup/tvtv_ca_user_userfile		tvtv/ca/user/userfile
 	cp easyepg_backup/xml_tvtv_ca.xml			xml/tvtv_ca.xml 2> /dev/null
 else
 	echo "Skipping restore: TVTV CANADA - no setup found"
