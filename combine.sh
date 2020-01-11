@@ -401,12 +401,12 @@ then
 
 				if [ -e xml/tvtv_us.xml ]
 				then
-					grep "TVTV USA" /tmp/channels | sed '/TVTV USA/s/\[TVTV USA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_us_channels.json
+					grep "TVTV USA" /tmp/channels | sed '/TVTV USA/s/\[TVTV USA\] //g;s/.*/&,/g;$s/\(.*\),/\1]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_us_channels.json
 				fi
 
 				if [ -e xml/tvtv_ca.xml ]
 				then
-					grep "TVTV CANADA" /tmp/channels | sed '/TVTV CANADA/s/\[TVTV CANADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_ca_channels.json
+					grep "TVTV CANADA" /tmp/channels | sed '/TVTV CANADA/s/\[TVTV CANADA\] //g;s/.*/&,/g;$s/\(.*\),/\1]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_ca_channels.json
 				fi
 
 				if [ -e xml/external_oa.xml ]
@@ -1302,12 +1302,12 @@ then
 
 							if [ -e xml/tvtv_us.xml ]
 							then
-								grep "TVTV USA" /tmp/channels | sed '/TVTV USA/s/\[TVTV USA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_us_channels.json
+								grep "TVTV USA" /tmp/channels | sed '/TVTV USA/s/\[TVTV USA\] //g;s/.*/&,/g;$s/\(.*\),/\1]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_us_channels.json
 							fi
 
 							if [ -e xml/tvtv_ca.xml ]
 							then
-								grep "TVTV CANADA" /tmp/channels | sed '/TVTV CANADA/s/\[TVTV CANADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json
+								grep "TVTV CANADA" /tmp/channels | sed '/TVTV CANADA/s/\[TVTV CANADA\] //g;s/.*/&,/g;$s/\(.*\),/\1]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json
 							fi
 
 							if [ -e xml/external_oa.xml ]
