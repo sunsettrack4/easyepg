@@ -22,6 +22,7 @@ RUN apt-get update \
     xml-twig-tools \
     unzip \
     liblocal-lib-perl \
+    libdatetime-format-strptime-perl \
     inetutils-ping \
   && rm -rf /var/lib/apt/lists/* \
     /var/cache/apt/archives/

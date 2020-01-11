@@ -6,7 +6,7 @@ services:
     restart: always
     tty: true
     volumes:
-      - ./easyepg:/src
+      - ./data:/src
 
   nginx:
     image: nginx:alpine
