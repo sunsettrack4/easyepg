@@ -32,9 +32,9 @@ mkdir cache 2> /dev/null	# cache
 mkdir day 2> /dev/null		# download scripts
 mkdir mani 2> /dev/null		# manifest files
 
-if grep -q "USA" init.json 2> /dev/null
+if grep -q "XYZ" init.json 2> /dev/null
 then
-	printf "+++ COUNTRY: USA +++\n\n"
+	printf "+++ COUNTRY: YYY +++\n\n"
 fi
 
 if grep -q '"day": "0"' settings.json
@@ -43,7 +43,7 @@ then
 	exit 0
 fi
 
-if ! curl --write-out %{http_code} --silent --output /dev/null https://tvtv.us/ | grep -q "200"
+if ! curl --write-out %{http_code} --silent --output /dev/null https://tvtv.XXX/ | grep -q "200"
 then
 	printf "Service provider unavailable!\n\n"
 	exit 0
@@ -79,7 +79,7 @@ mkdir mani 2> /dev/null
 #
 
 printf "\rFetching channel list...               "
-curl --compressed -s https://tvtv.us/tvm/t/tv/v4/lineups/2381D/ > /tmp/workfile
+curl --compressed -s https://tvtv.XXX/tvm/t/tv/v4/lineups/ZZZ/ > /tmp/workfile
 jq '.' /tmp/workfile > /tmp/chlist
 
 
@@ -223,7 +223,7 @@ fi
 
 printf "\rPreparing multithreaded download...                   "
 
-sed "s/.*/curl -s --compressed --connect-timeout 2 --max-time 10 --retry 8 --retry-delay 0 --retry-max-time 5  'https:\/\/tvtv.us\/tvm\/t\/tv\/v4\/episodes\/&' | grep 'seriesID' > cache\/&/g" day/daydlnew > day/common
+sed "s/.*/curl -s --compressed --connect-timeout 2 --max-time 10 --retry 8 --retry-delay 0 --retry-max-time 5  'https:\/\/tvtv.XXX\/tvm\/t\/tv\/v4\/episodes\/&' | grep 'seriesID' > cache\/&/g" day/daydlnew > day/common
 
 sed -i '/^$/d' day/common
 sort -u day/common | uniq > /tmp/common
@@ -326,10 +326,10 @@ then
 	echo  "Missing Broadcastfiles Detected" && printf "\n"
 	printf "\rWaiting for 10 Seconds"
 	sleep 10
-	printf "\rPreparing Broadcastdatabase (TVTV seems to hate Screen-Scrapper)...                 "
+	printf "\rPreparing Broadcastdatabase (TVTV YYY seems to hate Screen-Scrapper)...                 "
 	echo ""
 	find cache -size 0 | sed 's/cache\///g' >day/daydlnew
-	sed "s/.*/curl -s --compressed --connect-timeout 2 --max-time 10 --retry 8 --retry-delay 0 --retry-max-time 5  'https:\/\/tvtv.us\/tvm\/t\/tv\/v4\/episodes\/&' | grep 'seriesID' > cache\/&/g" day/daydlnew > day/common
+	sed "s/.*/curl -s --compressed --connect-timeout 2 --max-time 10 --retry 8 --retry-delay 0 --retry-max-time 5  'https:\/\/tvtv.XXX\/tvm\/t\/tv\/v4\/episodes\/&' | grep 'seriesID' > cache\/&/g" day/daydlnew > day/common
 	sed -i '1s/.*/#\!\/bin\/bash\n&/g' day/common 2> /dev/null
 	sed -i '/^$/d' day/common
 	printf "\n$(echo $(wc -l < day/common)) missing Broadastsfiles to be downloaded!\n\n"
@@ -359,57 +359,57 @@ rm workfile chlist 2> /dev/null
 
 # DOWNLOAD CHANNEL LIST + RYTEC/EIT CONFIG FILES (JSON)
 printf "\rRetrieving channel list and config files...          "
-curl --compressed -s https://tvtv.us/tvm/t/tv/v4/lineups/2381D/ > /tmp/chlist
+curl --compressed -s https://tvtv.XXX/tvm/t/tv/v4/lineups/ZZZ/ > /tmp/chlist
 jq '.' /tmp/chlist > chlist
 
 cp chlist /tmp/chlist
-curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tvtvus_channels.json > tvtvus_channels.json
-curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tvtvus_genres.json > tvtvus_genres.json
+curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tvtv_channels.json > tvtv_channels.json
+curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tvtv_genres.json > tvtv_genres.json
 
 # CONVERT JSON INTO XML: CHANNELS
 printf "\rConverting CHANNEL JSON file into XML format...      "
-perl ch_json2xml.pl 2>warnings.txt > tvtv-us_channels
-sort -u tvtv-us_channels > /tmp/tvtv-us_channels && mv /tmp/tvtv-us_channels tvtv-us_channels
-sed -i 's/></>\n</g;s/<display-name/  &/g' tvtv-us_channels
+perl ch_json2xml.pl 2>warnings.txt > tvtv_XXX_channels
+sort -u tvtv_XXX_channels > /tmp/tvtv_XXX_channels && mv /tmp/tvtv_XXX_channels tvtv_XXX_channels
+sed -i 's/></>\n</g;s/<display-name/  &/g' tvtv_XXX_channels
 
 # CREATE CHANNEL ID LIST AS JSON FILE
 printf "\rRetrieving Channel IDs...                    "
-perl cid_json.pl > tvtvus_cid.json && rm chlist
+perl cid_json.pl > tvtv_XXX_cid.json && rm chlist
 
 # CONVERT JSON INTO XML: EPG
 printf "\rConverting EPG JSON file into XML format...          "
-perl epg_json2xml.pl > tvtv-us_epg 2>epg_warnings.txt && rm /tmp/epg_workfile 2> /dev/null
+perl epg_json2xml.pl > tvtv_XXX_epg 2>epg_warnings.txt && rm /tmp/epg_workfile 2> /dev/null
 
 
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                   "
-cat tvtv-us_epg >> tvtv-us_channels && mv tvtv-us_channels tvtv-us && rm tvtv-us_epg
-sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' tvtv-us
-sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" tvtv-us
-sed -i '$s/.*/&\n\n<\/tv>/g' tvtv-us
-mv tvtv-us tvtv-us.xml
+cat tvtv_XXX_epg >> tvtv_XXX_channels && mv tvtv_XXX_channels tvtv_XXX && rm tvtv_XXX_epg
+sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' tvtv_XXX
+sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" tvtv_XXX
+sed -i '$s/.*/&\n\n<\/tv>/g' tvtv_XXX
+mv tvtv_XXX tvtv_XXX.xml
 
 # VALIDATING XML FILE
 printf "\rValidating EPG XMLTV file..."
-xmllint --noout tvtv-us.xml > errorlog 2>&1
+xmllint --noout tvtv_XXX.xml > errorlog 2>&1
 
 if grep -q "parser error" errorlog
 then
 	printf " DONE!\n\n"
-	mv tvtv-us.xml tvtv-us_ERROR.xml
+	mv tvtv_XXX.xml tvtv_XXX_ERROR.xml
 	echo "[ EPG ERROR ] XMLTV FILE VALIDATION FAILED DUE TO THE FOLLOWING ERRORS:" >> warnings.txt
 	cat errorlog >> warnings.txt
 else
 	printf " DONE!\n\n"
-	rm tvtv-us_ERROR.xml 2> /dev/null
+	rm tvtv_XXX_ERROR.xml 2> /dev/null
 	rm errorlog 2> /dev/null
 	
-	if ! grep -q "<programme start=" tvtv-us.xml
+	if ! grep -q "<programme start=" tvtv_XXX.xml
 	then
 		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY PROGRAMME DATA!" >> errorlog
 	fi
 	
-	if ! grep "<channel id=" tvtv-us.xml > /tmp/id_check
+	if ! grep "<channel id=" tvtv_XXX.xml > /tmp/id_check
 	then
 		echo "[ EPG ERROR ] XMLTV FILE DOES NOT CONTAIN ANY CHANNEL DATA!" >> errorlog
 	fi
@@ -426,7 +426,7 @@ else
 	
 	if [ -e errorlog ]
 	then
-		mv tvtv-us.xml tvtv-us_ERROR.xml
+		mv tvtv_XXX.xml tvtv_XXX_ERROR.xml
 		cat errorlog >> warnings.txt
 	else
 		rm errorlog 2> /dev/null

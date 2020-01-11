@@ -22,7 +22,7 @@
 clear
 echo " --------------------------------------------"
 echo " EASYEPG SIMPLE XMLTV GRABBER                "
-echo " Release v0.4.2 BETA                         "
+echo " Release v0.4.3 BETA                         "
 echo " powered by                                  "
 echo "                                             "
 echo " ==THE======================================="
@@ -591,6 +591,7 @@ then
 	perldoc -l utf8 >/dev/null 2>&1 || { printf "\nuft8 module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l DateTime >/dev/null 2>&1 || { printf "\nDateTime module for perl is requried but not installed!" >&2; ERROR2="true"; }
 	perldoc -l DateTime::Format::DateParse >/dev/null 2>&1 || { printf "\nDateTime::Format::DateParse module for perl is requried but not installed!" >&2; ERROR2="true"; }
+	perldoc -l DateTime::Format::Strptime >/dev/null 2>&1 || { printf "\nDateTime::Format::Strptime module for perl is requried but not installed!" >&2; ERROR2="true"; }
 else
 	printf "\nperl-doc is required but it's not installed!"
 	ERROR2="true"
@@ -634,7 +635,7 @@ fi
 
 cd $(pwd)
 echo "DIR=$(pwd)" > /tmp/initrun.txt
-echo "VER=v0.4.2 2019/12/15" >> /tmp/initrun.txt
+echo "VER=v0.4.3 2019/12/15" >> /tmp/initrun.txt
 
 
 # ###############
@@ -650,6 +651,7 @@ ls -l rdt/ >>  /tmp/providerlist
 ls -l wpu/ >>  /tmp/providerlist
 ls -l tvs/ >>  /tmp/providerlist
 ls -l vdf/ >>  /tmp/providerlist
+ls -l tvtv/ >>  /tmp/providerlist
 ls -l ext/ >>  /tmp/providerlist
 
 if grep -q '^d' /tmp/providerlist 2> /dev/null
@@ -689,6 +691,7 @@ do
 	ls -l wpu/ >>  /tmp/providerlist
 	ls -l tvs/ >>  /tmp/providerlist
 	ls -l vdf/ >>  /tmp/providerlist
+	ls -l tvtv/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -705,6 +708,7 @@ do
 	ls -l wpu/ >>  /tmp/providerlist
 	ls -l tvs/ >>  /tmp/providerlist
 	ls -l vdf/ >>  /tmp/providerlist
+	ls -l tvtv/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -724,6 +728,7 @@ do
 	ls -l wpu/ >>  /tmp/providerlist
 	ls -l tvs/ >>  /tmp/providerlist
 	ls -l vdf/ >>  /tmp/providerlist
+	ls -l tvtv/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -743,6 +748,7 @@ do
 	ls -l wpu/ >>  /tmp/providerlist
 	ls -l tvs/ >>  /tmp/providerlist
 	ls -l vdf/ >>  /tmp/providerlist
+	ls -l tvtv/ >>  /tmp/providerlist
 	ls -l ext/ >>  /tmp/providerlist
 	if grep -q '^d' /tmp/providerlist 2> /dev/null
 	then
@@ -771,31 +777,34 @@ do
 		echo 'dialog --backtitle "[M1100] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER" --title "PROVIDERS" --menu "Please select a provider you want to use as EPG source:" 18 40 11 \' > /tmp/menu
 
 		# M1110 HORIZON
-		echo '	1 "HORIZON" \' >> /tmp/menu
+		echo '	001 "HORIZON" \' >> /tmp/menu
 		
 		# M1120 ZATTOO
-		echo '	2 "ZATTOO" \' >> /tmp/menu
+		echo '	002 "ZATTOO" \' >> /tmp/menu
 		
 		# M1130 SWISSCOM
-		echo '	3 "SWISSCOM" \' >> /tmp/menu
+		echo '	003 "SWISSCOM" \' >> /tmp/menu
 		
 		# M1140 TVPLAYER
-		echo '	4 "TVPLAYER" \' >> /tmp/menu
+		echo '	004 "TVPLAYER" \' >> /tmp/menu
 		
 		# M1150 TELEKOM
-		echo '	5 "TELEKOM" \' >> /tmp/menu
+		echo '	005 "TELEKOM" \' >> /tmp/menu
 		
 		# M1160 RADIOTIMES
-		echo '	6 "RADIOTIMES" \' >> /tmp/menu
+		echo '	006 "RADIOTIMES" \' >> /tmp/menu
 		
 		# M1170 WAIPU.TV
-		echo '	7 "WAIPU.TV" \' >> /tmp/menu
+		echo '	007 "WAIPU.TV" \' >> /tmp/menu
 		
 		# M1180 TV-SPIELFILM
-		echo '	8 "TV-SPIELFILM" \' >> /tmp/menu
+		echo '	008 "TV-SPIELFILM" \' >> /tmp/menu
 
 		# M1190 VODAFONE
-		echo '	9 "VODAFONE" \' >> /tmp/menu
+		echo '	009 "VODAFONE" \' >> /tmp/menu
+
+		# M1200 TVTVUS
+		echo '	010 "TVTV" \' >> /tmp/menu
 
 		# M11+0 EXTERNAL
 		echo '	+ "EXTERNAL" \' >> /tmp/menu
@@ -810,7 +819,7 @@ do
 		# M1110 HORIZON #
 		# ###############
 
-		if grep -q "1" /tmp/value
+		if grep -q "001" /tmp/value
 		then
 			# M1110 MENU OVERLAY
 			echo 'dialog --backtitle "[M1110] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > HORIZON" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1182,7 +1191,7 @@ do
 		# M1120 ZATTOO  #
 		# ###############
 
-		elif grep -q "2" /tmp/value
+		elif grep -q "002" /tmp/value
 		then
 			# M1120 MENU OVERLAY
 			echo 'dialog --backtitle "[M1120] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > ZATTOO" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1284,7 +1293,7 @@ do
 		# M1130 SWISSCOM  #
 		# #################
 
-		elif grep -q "3" /tmp/value
+		elif grep -q "003" /tmp/value
 		then
 			# M1130 MENU OVERLAY
 			echo 'dialog --backtitle "[M1130] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > SWISSCOM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1350,7 +1359,7 @@ do
 		# M1140 TVPLAYER  #
 		# #################
 
-		elif grep -q "4" /tmp/value
+		elif grep -q "004"  /tmp/value
 		then
 			# M1140 MENU OVERLAY
 			echo 'dialog --backtitle "[M1140] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVPLAYER" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1415,7 +1424,7 @@ do
 		# M1150 TELEKOM   #
 		# #################
 
-		elif grep -q "5" /tmp/value
+		elif grep -q "005"  /tmp/value
 		then
 			# M1150 MENU OVERLAY
 			echo 'dialog --backtitle "[M1150] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TELEKOM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1483,7 +1492,7 @@ do
 		# M1160 RADIOTIMES #
 		# ##################
 
-		elif grep -q "6" /tmp/value
+		elif grep -q "006"  /tmp/value
 		then
 			# M1160 MENU OVERLAY
 			echo 'dialog --backtitle "[M1160] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > RADIOTIMES" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1550,7 +1559,7 @@ do
 		# M1170 WAIPU.TV   #
 		# ##################
 
-		elif grep -q "7" /tmp/value
+		elif grep -q "007"  /tmp/value
 		then
 			# M1170 MENU OVERLAY
 			echo 'dialog --backtitle "[M1170] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > WAIPU.TV" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1614,7 +1623,7 @@ do
 		# M1180 TVS		  #
 		# #################
 
-		elif grep -q "8" /tmp/value
+		elif grep -q "008"  /tmp/value
 		then
 			# M1180 MENU OVERLAY
 			echo 'dialog --backtitle "[M1150] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TV-SPIELFILM" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1679,7 +1688,7 @@ do
 		# M1190 VDF		  #
 		# #################
 
-		elif grep -q "9" /tmp/value
+		elif grep -q "009"  /tmp/value
 		then
 			# M1180 MENU OVERLAY
 			echo 'dialog --backtitle "[M1150] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > VODAFONE" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu 
@@ -1737,6 +1746,105 @@ do
 			# M115X EXIT #
 			# ############
 			
+			else
+				echo "M" > /tmp/value
+			fi
+
+		# ###############
+		# M1200 TVTV    #
+		# ###############
+		elif grep -q "010"  /tmp/value
+		then
+			# M1200 MENU OVERLAY
+			echo 'dialog --backtitle "[M1110] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVTV" --title "SERVICE" --menu "Please select the service you want to grab:" 11 50 10 \' > /tmp/menu
+
+			# M1201 USA
+			if [ ! -d tvtv/us ]
+			then
+				echo '	1 "[US] TVTV USA" \' >> /tmp/menu
+			fi
+
+			# M1202 CANNADA
+			if [ ! -d tvtv/ca ]
+			then
+				echo '	2 "[CA] TVTV CANNADA" \' >> /tmp/menu
+			fi
+
+      # M120E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M111E] EASYEPG SIMPLE XMLTV GRABBER > ADD GRABBER > TVTV" --title "ERROR" --infobox "All services already exist! Please modify them in settings!" 3 65
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+
+      ###################
+			#M1201 USA        #
+			###################
+
+			if grep -q "1" /tmp/value
+			then
+				mkdir tvtv/us
+				chmod 0777 tvtv/us
+				echo '{"country":"USA","language":"en"}' > tvtv/us/init.json
+				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/tvtv.sh > tvtv/us/tvtv.sh
+				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/ch_json2xml.pl > tvtv/us/ch_json2xml.pl
+        cp tvtv/compare_crid.pl tvtv/us/
+				cp tvtv/cid_json.pl tvtv/us/
+				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/epg_json2xml.pl > tvtv/us/epg_json2xml.pl
+				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/settings.sh > tvtv/us/settings.sh
+				cp tvtv/chlist_printer.pl tvtv/us/
+				cp tvtv/compare_menu.pl tvtv/us/
+				sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/url_printer.pl > tvtv/us/url_printer.pl
+				cd tvtv/us && bash settings.sh
+				cd - > /dev/null
+
+				if [ ! -e tvtv/us/channels.json ]
+				then
+					rm -rf tvtv/us/
+				fi
+
+				echo "M" > /tmp/value
+
+
+			# ##################
+			# M1202 CANNADA    #
+			# ##################
+
+			elif grep -q "2" /tmp/value
+			then
+				mkdir tvtv/ca
+				chmod 0777 tvtv/ca
+				echo '{"country":"CA","language":"en"}' > tvtv/ca/init.json
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/tvtv.sh > tvtv/ca/tvtv.sh
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl
+        cp tvtv/compare_crid.pl tvtv/ca/
+				cp tvtv/cid_json.pl tvtv/ca/
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/settings.sh > tvtv/ca/settings.sh
+				cp tvtv/chlist_printer.pl tvtv/ca/
+				cp tvtv/compare_menu.pl tvtv/ca/
+				sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' tvtv/url_printer.pl > tvtv/ca/url_printer.pl
+				cd tvtv/ca && bash settings.sh
+				cd - > /dev/null
+
+				if [ ! -e tvtv/ca/channels.json ]
+				then
+					rm -rf tvtv/ca/
+				fi
+
+				echo "M" > /tmp/value
+
+
+			# ############
+			# M111X EXIT #
+			# ############
+
 			else
 				echo "M" > /tmp/value
 			fi
@@ -1884,55 +1992,61 @@ do
 		# M1210 HORIZON
 		if ls -l hzn/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	1 "HORIZON" \' >> /tmp/menu
+			echo '	001 "HORIZON" \' >> /tmp/menu
 		fi
 		
 		# M1220 ZATTOO
 		if ls -l ztt/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	2 "ZATTOO" \' >> /tmp/menu
+			echo '	002 "ZATTOO" \' >> /tmp/menu
 		fi
 		
 		# M1230 SWISSCOM
 		if ls -l swc/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	3 "SWISSCOM" \' >> /tmp/menu
+			echo '	003 "SWISSCOM" \' >> /tmp/menu
 		fi
 		
 		# M1240 TVPLAYER
 		if ls -l tvp/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	4 "TVPLAYER" \' >> /tmp/menu
+			echo '	004 "TVPLAYER" \' >> /tmp/menu
 		fi
 		
 		# M1250 TELEKOM
 		if ls -l tkm/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	5 "TELEKOM" \' >> /tmp/menu
+			echo '	005 "TELEKOM" \' >> /tmp/menu
 		fi
 		
 		# M1260 RADIOTIMES
 		if ls -l rdt/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	6 "RADIOTIMES" \' >> /tmp/menu
+			echo '	006 "RADIOTIMES" \' >> /tmp/menu
 		fi
 		
 		# M1270 WAIPU.TV
 		if ls -l wpu/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	7 "WAIPU.TV" \' >> /tmp/menu
+			echo '	007 "WAIPU.TV" \' >> /tmp/menu
 		fi
 
 		# M1280 TV-SPIELFILM
 		if ls -l tvs/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	8 "TV-SPIELFILM" \' >> /tmp/menu
+			echo '	008 "TV-SPIELFILM" \' >> /tmp/menu
 		fi
 
 		# M1290 VODAFONE
 		if ls -l vdf/ | grep -q '^d' 2> /dev/null
 		then
-			echo '	9 "VODAFONE" \' >> /tmp/menu
+			echo '	009 "VODAFONE" \' >> /tmp/menu
+		fi
+
+		# M1300 TVTV
+		if ls -l tvtv/ | grep -q '^d' 2> /dev/null
+		then
+			echo '	010 "TVTV" \' >> /tmp/menu
 		fi
 		
 		# M12+0 EXTERNAL
@@ -1951,7 +2065,7 @@ do
 		# M1210 HORIZON #
 		# ###############
 		
-		if grep -q "1" /tmp/value
+		if grep -q "001" /tmp/value
 		then
 			# M1210 MENU OVERLAY
 			echo 'dialog --backtitle "[M1210] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > HORIZON" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2222,7 +2336,7 @@ do
 		# M1220 ZATTOO  #
 		# ###############
 		
-		elif grep -q "2" /tmp/value
+		elif grep -q "002" /tmp/value
 		then
 			# M1220 MENU OVERLAY
 			echo 'dialog --backtitle "[M1220] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > ZATTOO" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2302,7 +2416,7 @@ do
 		# M1230 SWISSCOM  #
 		# #################
 		
-		elif grep -q "3" /tmp/value
+		elif grep -q "003" /tmp/value
 		then
 			# M1230 MENU OVERLAY
 			echo 'dialog --backtitle "[M1230] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > SWISSCOM" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2358,7 +2472,7 @@ do
 		# M1240 TVPLAYER  #
 		# #################
 		
-		elif grep -q "4" /tmp/value
+		elif grep -q "004" /tmp/value
 		then
 			# M1240 MENU OVERLAY
 			echo 'dialog --backtitle "[M1240] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVPLAYER" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2414,7 +2528,7 @@ do
 		# M1250 MAGENTA TV DE  #
 		# ######################
 		
-		elif grep -q "5" /tmp/value
+		elif grep -q "005" /tmp/value
 		then
 			# M1250 MENU OVERLAY
 			echo 'dialog --backtitle "[M1250] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TELEKOM" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2470,7 +2584,7 @@ do
 		# M1260 RADIOTIMES #
 		# ##################
 		
-		elif grep -q "6" /tmp/value
+		elif grep -q "006" /tmp/value
 		then
 			# M1260 MENU OVERLAY
 			echo 'dialog --backtitle "[M1260] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > RADIOTIMES" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2526,7 +2640,7 @@ do
 		# M1270 WAIPU.TV   #
 		# ##################
 		
-		elif grep -q "7" /tmp/value
+		elif grep -q "007" /tmp/value
 		then
 			# M1270 MENU OVERLAY
 			echo 'dialog --backtitle "[M1270] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > WAIPU.TV" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2581,7 +2695,7 @@ do
 		# M1280 TV-SPIELFILM   #
 		# ######################
 		
-		elif grep -q "8" /tmp/value
+		elif grep -q "008" /tmp/value
 		then
 			# M1280 MENU OVERLAY
 			echo 'dialog --backtitle "[M1280] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TV-SPIELFILM" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2636,7 +2750,7 @@ do
 		# M1290 VODAFONE   #
 		# ######################
 		
-		elif grep -q "9" /tmp/value
+		elif grep -q "009" /tmp/value
 		then
 			# M1290 MENU OVERLAY
 			echo 'dialog --backtitle "[M1290] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > VODAFONE" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu 
@@ -2686,6 +2800,86 @@ do
 			else
 				echo "M" > /tmp/value
 			fi
+
+		# ###############
+		# M1300 TVTV    #
+		# ###############
+
+		elif grep -q "010" /tmp/value
+		then
+			# M1300 MENU OVERLAY
+			echo 'dialog --backtitle "[M1300] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVTV" --title "SERVICE" --menu "Please select the service you want to change:" 11 50 10 \' > /tmp/menu
+
+			# M1301 USA
+			if [ -d tvtv/us ]
+			then
+				echo '	1 "[US] TVTV USA" \' >> /tmp/menu
+			fi
+
+			# M1302 CANNNADA
+			if [ -d tvtv/ca ]
+			then
+				echo '	2 "[CA] TVTV CANNADA" \' >> /tmp/menu
+			fi
+
+			# M130E ERROR
+			if ! grep -q '[0-9] "\[[A-Z][A-Z]\] ' /tmp/menu
+			then
+				dialog --backtitle "[M122E] EASYEPG SIMPLE XMLTV GRABBER > SETTINGS > TVTV" --title "ERROR" --infobox "No service available! Please setup a service first!" 3 55
+				sleep 2s
+				echo "M" > /tmp/value
+			else
+				echo "2> /tmp/value" >> /tmp/menu
+
+				bash /tmp/menu
+				input="$(cat /tmp/value)"
+			fi
+
+
+			# ##################
+			# M1301 TVTV US    #
+			# ##################
+
+			if grep -q "1" /tmp/value
+			then
+				cd tvtv/us
+				bash settings.sh
+				cd - > /dev/null
+
+				if [ ! -e tvtv/us/channels.json ]
+				then
+					rm -rf tvtv/us xml/tvtv_us.xml 2> /dev/null
+				fi
+
+				echo "M" > /tmp/value
+
+
+			# ####################
+			# M1302 TVTV CANNADA #
+			# ####################
+
+			elif grep -q "2" /tmp/value
+			then
+				cd tvtv/ca
+				bash settings.sh
+				cd - > /dev/null
+
+				if [ ! -e tvtv/ca/channels.json ]
+				then
+					rm -rf tvtv/ca xml/tvtv_ca.xml 2> /dev/null
+				fi
+
+				echo "M" > /tmp/value
+
+
+			# ############
+			# M130X EXIT #
+			# ############
+
+			else
+				echo "M" > /tmp/value
+			fi
+
 
 		# ######################
 		# M12+0 EXTERNAL       #
@@ -2868,6 +3062,7 @@ do
 		ls -l wpu/ >>  /tmp/providerlist
 		ls -l tvs/ >>  /tmp/providerlist
 		ls -l vdf/ >>  /tmp/providerlist
+		ls -l tvtv/ >>  /tmp/providerlist
 		ls -l ext/ >>  /tmp/providerlist
 		if grep -q '^d' /tmp/providerlist 2> /dev/null
 		then
@@ -3110,7 +3305,22 @@ then
 		
 		cd vdf/de 2> /dev/null && bash vdf.sh && cd - > /dev/null && cp vdf/de/vodafone.xml xml/vodafone_de.xml 2> /dev/null
 	fi
-	
+
+	if ls -l tvtv/ | grep -q '^d'
+	then
+		echo ""
+		echo " --------------------------------------------"
+		echo " TVTV EPG SIMPLE XMLTV GRABBER             "
+		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
+		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " --------------------------------------------"
+		echo ""
+		sleep 2s
+
+		cd tvtv/us 2> /dev/null && bash tvtv.sh && cd - > /dev/null && cp tvtv/us/tvtv.xml xml/tvtv_us.xml 2> /dev/null
+		cd tvtv/ca 2> /dev/null && bash tvtv.sh && cd - > /dev/null && cp tvtv/ca/tvtv.xml xml/tvtv_ca.xml 2> /dev/null
+	fi
+
 	if ls -l ext/ | grep -q '^d'
 	then
 		echo ""
@@ -3496,6 +3706,42 @@ do
 				sed -i "s/channelsFILE/$folder\/vdf_de_channels.json/g" /tmp/prog_combine.pl
 				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 				printf "\n<!-- PROGRAMMES: VODAFONE DE -->\n\n" >> /tmp/combined_programmes
+				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+			fi
+		fi
+
+		# TVTV US
+		if [ -s combine/$folder/tvtv_us_channels.json ]
+		then
+			if [ -s xml/tvtv_us.xml ]
+			then
+				sed 's/fileNAME/tvtv_us.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvtv_us_channels.json/g" /tmp/ch_combine.pl
+				printf "\n<!-- CHANNEL LIST: TVTV USA -->\n\n" >> /tmp/combined_channels
+				perl /tmp/ch_combine.pl >> /tmp/combined_channels
+
+				sed 's/fileNAME/tvtv_us.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvtv_us_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+				printf "\n<!-- PROGRAMMES: TVTV USA -->\n\n" >> /tmp/combined_programmes
+				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+			fi
+		fi
+
+		# TVTV CA
+		if [ -s combine/$folder/tvtv_ca_channels.json ]
+		then
+			if [ -s xml/tvtv_ca.xml ]
+			then
+				sed 's/fileNAME/tvtv_ca.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/ch_combine.pl
+				printf "\n<!-- CHANNEL LIST: TVTV CANNADA -->\n\n" >> /tmp/combined_channels
+				perl /tmp/ch_combine.pl >> /tmp/combined_channels
+
+				sed 's/fileNAME/tvtv_ca.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+				sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/prog_combine.pl
+				sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+				printf "\n<!-- PROGRAMMES: TVTV CANNADA -->\n\n" >> /tmp/combined_programmes
 				perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 			fi
 		fi

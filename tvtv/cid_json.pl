@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 #      Copyright (C) 2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/easyepg/hzn
+#      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
 #      - DeBaschdi ( https://github.com/DeBaschdi )
@@ -20,8 +20,10 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ###############################
-# TVTV CHANNEL LIST CREATOR #
+# TVTV CHANNEL ID CREATOR       #
 # ###############################
+
+# CHANNEL IDs
 
 use strict;
 use warnings;
@@ -31,36 +33,41 @@ use utf8;
  
 use JSON;
 
-# READ JSON INPUT FILE: MANIFEST
-my $manifests;
+# READ JSON INPUT FILE: CHLIST
+my $json;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "/tmp/epg_workfile" or die;
-    $manifests = <$fh>;
+    open my $fh, "<", "/tmp/chlist" or die;
+    $json = <$fh>;
     close $fh;
 }
 
 # CONVERT JSON TO PERL STRUCTURES
-my $manifestsdata    = decode_json($manifests);
+my $data   = decode_json($json);
 
-#
-# DEFINE JSON VALUES
-#
-my @attributes = @{ $manifestsdata->{'attributes'} };
+print "{ \"cid\":\n  {\n";
 
-# DEFINE manifests STRINGS
-foreach my $attributes ( @attributes ) {
-    
-    my @listings = @{ $attributes->{'listings'} };
-    foreach my $listings ( @listings ) {
+my @stations = @{ $data->{'stations'} };
+foreach my $stations ( @stations ) {
 		
-		# ####################
-        # DEFINE JSON VALUES #
-        # ####################
+	# ####################
+    # DEFINE JSON VALUES #
+    # ####################
         
-        # DEFINE TIMES AND CHANNEL ID
-        my $showID    = $listings->{'showID'};
+    # DEFINE CHANNEL NAME
+	my $cname   = $stations->{'name'};
+	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	$cname =~ s/\t/  /g;
 		
-		print $showID. "\n";
-	}
-}	
+	# DEFINE CHANNEL ID
+	my $cid     = $stations->{'channelNumber'};
+        
+    # ###################
+	# PRINT JSON OUTPUT #
+	# ###################
+        
+	# CHANNEL ID (condition)
+	print "  \"$cid\":\"$cname\",\n";
+}
+
+print "  \"000000000000\":\"DUMMY\"\n  }\n}";

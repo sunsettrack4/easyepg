@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 #      Copyright (C) 2019 Jan-Luca Neumann
-#      https://github.com/sunsettrack4/easyepg
+#      https://github.com/sunsettrack4/easyepg/hzn
 #
 #      Collaborators:
 #      - DeBaschdi ( https://github.com/DeBaschdi )
@@ -20,10 +20,8 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ###############################
-# TVSPIELFILM CHANNEL ID CREATOR   #
+# TVTV     CHANNEL LIST CREATOR #
 # ###############################
-
-# CHANNEL IDs
 
 use strict;
 use warnings;
@@ -33,40 +31,36 @@ use utf8;
  
 use JSON;
 
-# READ JSON INPUT FILE: CHLIST
-my $json;
+# READ JSON INPUT FILE: MANIFEST
+my $manifests;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "/tmp/chlist" or die;
-    $json = <$fh>;
+    open my $fh, "<", "/tmp/epg_workfile" or die;
+    $manifests = <$fh>;
     close $fh;
 }
 
 # CONVERT JSON TO PERL STRUCTURES
-my $data   = decode_json($json);
+my $manifestsdata    = decode_json($manifests);
 
-print "{ \"cid\":\n  {\n";
+#
+# DEFINE JSON VALUES
+#
+my @attributes = @{ $manifestsdata->{'attributes'} };
 
-my @stations = @{ $data->{'stations'} };
-foreach my $stations ( @stations ) {
+# DEFINE manifests STRINGS
+foreach my $attributes ( @attributes ) {
+    
+    my @listings = @{ $attributes->{'listings'} };
+    foreach my $listings ( @listings ) {
 		
-	# ####################
-    # DEFINE JSON VALUES #
-    # ####################
+		# ####################
+        # DEFINE JSON VALUES #
+        # ####################
         
-    # DEFINE CHANNEL NAME
-	my $cname   = $stations->{'name'};
-	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+        # DEFINE TIMES AND CHANNEL ID
+        my $showID    = $listings->{'showID'};
 		
-	# DEFINE CHANNEL ID
-	my $cid     = $stations->{'channelNumber'};
-        
-    # ###################
-	# PRINT JSON OUTPUT #
-	# ###################
-        
-	# CHANNEL ID (condition)
-	print "  \"$cid\":\"$cname\",\n";
-}
-
-print "  \"000000000000\":\"DUMMY\"\n  }\n}";
+		print $showID. "\n";
+	}
+}	

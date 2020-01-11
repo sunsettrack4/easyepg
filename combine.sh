@@ -241,6 +241,18 @@ then
 				sed 's/<channel id="/"[VODAFONE DE] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
 			fi
 
+			if [ -e xml/tvtv_us.xml ]
+			then
+				grep 'channel id=' xml/tvtv_us.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[TVTV USA] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+
+			if [ -e xml/tvtv_ca.xml ]
+			then
+				grep 'channel id=' xml/tvtv_ca.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
+				sed 's/<channel id="/"[TVTV CANNADA] /g;s/">/" "" on \\/g' /tmp/xmlch >> /tmp/chmenu
+			fi
+
 			if [ -e xml/external_oa.xml ]
 			then
 				grep 'channel id=' xml/external_oa.xml > /tmp/xmlch && cat /tmp/xmlch >> /tmp/xmlch2
@@ -268,7 +280,7 @@ then
 				rm /tmp/setupname /tmp/chduplicates 2> /dev/null
 			else
 				sed 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels > /tmp/xmlch2
-				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[TV-SPIELFILM [A-Z][A-Z]\] /\n/g;s/"\[TV-SPIELFILM [A-Z][A-Z]\] //g;s/ "\[VODAFONE [A-Z][A-Z]\] /\n/g;s/"\[VODAFONE [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
+				sed -i 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[TV-SPIELFILM [A-Z][A-Z]\] /\n/g;s/"\[TV-SPIELFILM [A-Z][A-Z]\] //g;s/ "\[VODAFONE [A-Z][A-Z]\] /\n/g;s/"\[VODAFONE [A-Z][A-Z]\] //g;s/ "\[TVTV [A-Z][A-Z]\] /\n/g;s/"\[TVTV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g;s/"//g' /tmp/xmlch2
 				sort /tmp/xmlch2 | uniq -d > /tmp/chduplicates
 				
 				if [ -s /tmp/chduplicates ]
@@ -288,7 +300,7 @@ then
 		if [ -s /tmp/channels ]
 		then
 			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[TV-SPIELFILM/\n"\[TV-SPIELFILM/g;s/ "\[VODAFONE/\n"\[VODAFONE/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
+			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[TV-SPIELFILM/\n"\[TV-SPIELFILM/g;s/ "\[VODAFONE/\n"\[VODAFONE/g;s/ "\[TVTV/\n"\[TVTV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
 			then
@@ -385,6 +397,16 @@ then
 				if [ -e xml/vodafone_de.xml ]
 				then
 					grep "VODAFONE DE" /tmp/channels | sed '/VODAFONE DE/s/\[VODAFONE DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/vdf_de_channels.json
+				fi
+
+				if [ -e xml/tvtv_us.xml ]
+				then
+					grep "TVTV USA" /tmp/channels | sed '/TVTV USA/s/\[TVTV USA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_us_channels.json
+				fi
+
+				if [ -e xml/tvtv_ca.xml ]
+				then
+					grep "TVTV CANNADA" /tmp/channels | sed '/TVTV CANNADA/s/\[TVTV CANNADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(</tmp/setupname)/tvtv_ca_channels.json
 				fi
 
 				if [ -e xml/external_oa.xml ]
@@ -998,6 +1020,56 @@ then
 					
 					cd - > /dev/null
 
+					# TVTV US
+					if [ -e xml/tvtv_us.xml ]
+					then
+						grep 'channel id=' xml/tvtv_us.xml > /tmp/xmlch_tvtvus
+						sed -i 's/<channel id="/[TVTV USA] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_tvtvus
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_us_channels.json 2> /dev/null
+					fi
+
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_us_channels.json /tmp/xmlch_zde
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+
+					if [ -e tvtv_us_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' tvtv_us_channels.json > /tmp/channels_tvtvus && cat /tmp/channels_tvtvus >> /tmp/xmlch2
+						sed -i 's/.*/[TVTV USA] &/g' /tmp/channels_tvtvus
+
+						comm -12 <(sort -u /tmp/xmlch_tvtvus) <(sort -u /tmp/channels_tvtvus) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_tvtvus) <(sort -u /tmp/channels_tvtvus) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+
+					cd - > /dev/null
+
+					# TVTV CA
+					if [ -e xml/tvtv_ca.xml ]
+					then
+						grep 'channel id=' xml/tvtv_ca.xml > /tmp/xmlch_tvtvca
+						sed -i 's/<channel id="/[TVTV CANNADA] /g;s/">//g;s/\&amp;/\&/g' /tmp/xmlch_tvtvca
+					else
+						rm combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json 2> /dev/null
+					fi
+
+					touch combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json /tmp/xmlch_zch
+					cd combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)
+
+					if [ -e tvtv_ca_channels.json ]
+					then
+						sed '/{"channels":\[/d;/}/d;s/",//g;s/"\]//g;s/"//g' tvtv_ca_channels.json > /tmp/channels_tvtvca && cat /tmp/channels_tvtvca >> /tmp/xmlch2
+						sed -i 's/.*/[TVTV CANNADA] &/g' /tmp/channels_tvtvca
+
+						comm -12 <(sort -u /tmp/xmlch_tvtvca) <(sort -u /tmp/channels_tvtvca) > /tmp/comm_menu_enabled
+						comm -2 -3 <(sort -u /tmp/xmlch_tvtvca) <(sort -u /tmp/channels_tvtvca) > /tmp/comm_menu_disabled
+						sed 's/.*/"&" "" on \\/g' /tmp/comm_menu_enabled >> /tmp/chmenu
+						sed 's/.*/"&" "" off \\/g' /tmp/comm_menu_disabled >> /tmp/chmenu
+					fi
+
+					cd - > /dev/null
+
 					# EXTERNAL SLOT 1
 					if [ -e xml/external_oa.xml ]
 					then
@@ -1091,7 +1163,7 @@ then
 					
 					if [ -e /tmp/menu ]
 					then
-						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[RADIOTIMES [A-Z][A-Z]\]|\[WAIPU.TV [A-Z][A-Z]\]|\[TV-SPIELFILM [A-Z][A-Z]\]|\[VODAFONE [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
+						if grep -q -E "\[HORIZON [A-Z][A-Z]\]|\[ZATTOO [A-Z][A-Z]\]|\[SWISSCOM [A-Z][A-Z]\]|\[TVPLAYER [A-Z][A-Z]\]|\[MAGENTATV [A-Z][A-Z]\]|\[RADIOTIMES [A-Z][A-Z]\]|\[WAIPU.TV [A-Z][A-Z]\]|\[TV-SPIELFILM [A-Z][A-Z]\]|\[VODAFONE [A-Z][A-Z]\]|\[TVTV [A-Z][A-Z]\]|\[EXTERNAL [A-Z][A-Z]\]" /tmp/chmenu
 						then
 							bash /tmp/chmenu
 							
@@ -1127,9 +1199,9 @@ then
 					if [ -s /tmp/channels ]
 					then
 						sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
-						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[TV-SPIELFILM [A-Z][A-Z]\] /\n/g;s/"\[TV-SPIELFILM [A-Z][A-Z]\] //g;s/ "\[VODAFONE [A-Z][A-Z]\] /\n/g;s/"\[VODAFONE [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
+						sed 's/ "\[HORIZON [A-Z][A-Z]\] /\n/g;s/"\[HORIZON [A-Z][A-Z]\] //g;s/ "\[ZATTOO [A-Z][A-Z]\] /\n/g;s/"\[ZATTOO [A-Z][A-Z]\] //g;s/ "\[SWISSCOM [A-Z][A-Z]\] /\n/g;s/"\[SWISSCOM [A-Z][A-Z]\] //g;s/ "\[TVPLAYER [A-Z][A-Z]\] /\n/g;s/"\[TVPLAYER [A-Z][A-Z]\] //g;s/ "\[MAGENTATV [A-Z][A-Z]\] /\n/g;s/"\[MAGENTATV [A-Z][A-Z]\] //g;s/ "\[RADIOTIMES [A-Z][A-Z]\] /\n/g;s/"\[RADIOTIMES [A-Z][A-Z]\] //g;s/ "\[WAIPU.TV [A-Z][A-Z]\] /\n/g;s/"\[WAIPU.TV [A-Z][A-Z]\] //g;s/ "\[TV-SPIELFILM [A-Z][A-Z]\] /\n/g;s/"\[TV-SPIELFILM [A-Z][A-Z]\] //g;s/ "\[VODAFONE [A-Z][A-Z]\] /\n/g;s/"\[VODAFONE [A-Z][A-Z]\] //g;s/ "\[TVTV [A-Z][A-Z]\] /\n/g;s/"\[TVTV [A-Z][A-Z]\] //g;s/ "\[EXTERNAL [A-Z][A-Z]\] /\n/g;s/"\[EXTERNAL [A-Z][A-Z]\] //g;s/"//g' /tmp/channels > /tmp/xmlch2
 							
-						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[TV-SPIELFILM/\n"\[TV-SPIELFILM/g;s/ "\[VODAFONE/\n"\[VODAFONE/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g;' /tmp/channels
+						sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[TV-SPIELFILM/\n"\[TV-SPIELFILM/g;s/ "\[VODAFONE/\n"\[VODAFONE/g;s/ "\[TVTV/\n"\[TVTV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g;' /tmp/channels
 						
 						if [ -e combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine) ]
 						then
@@ -1226,6 +1298,16 @@ then
 							if [ -e xml/vodafone_de.xml ]
 							then
 								grep "VODAFONE DE" /tmp/channels | sed '/VODAFONE DE/s/\[VODAFONE DE\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/vdf_de_channels.json
+							fi
+
+							if [ -e xml/tvtv_us.xml ]
+							then
+								grep "TVTV USA" /tmp/channels | sed '/TVTV USA/s/\[TVTV USA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_us_channels.json
+							fi
+
+							if [ -e xml/tvtv_ca.xml ]
+							then
+								grep "TVTV CANNADA" /tmp/channels | sed '/TVTV CANNADA/s/\[TVTV CANNADA\] //g;s/.*/&,/g;$s/,/]\n}/g;1i{"channels":\[' > combine/$(sed -n "$(</tmp/selectedsetup)p" /tmp/combine)/tvtv_ca_channels.json
 							fi
 
 							if [ -e xml/external_oa.xml ]
@@ -1869,6 +1951,42 @@ then
 								sed -i "s/channelsFILE/$folder\/vdf_de_channels.json/g" /tmp/prog_combine.pl
 								sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
 								printf "\n<!-- PROGRAMMES: VODAFONE DE -->\n\n" >> /tmp/combined_programmes
+								perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+							fi
+						fi
+
+						# TVTV US
+						if [ -s combine/$folder/tvtv_us_channels.json ]
+						then
+							if [ -s xml/tvtv_us.xml ]
+							then
+								sed 's/fileNAME/tvtv_us.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+								sed -i "s/channelsFILE/$folder\/tvtv_us_channels.json/g" /tmp/ch_combine.pl
+								printf "\n<!-- CHANNEL LIST: TVTV USA -->\n\n" >> /tmp/combined_channels
+								perl /tmp/ch_combine.pl >> /tmp/combined_channels
+
+								sed 's/fileNAME/tvtv_us.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+								sed -i "s/channelsFILE/$folder\/tvtv_us_channels.json/g" /tmp/prog_combine.pl
+								sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+								printf "\n<!-- PROGRAMMES: TVTV USA -->\n\n" >> /tmp/combined_programmes
+								perl /tmp/prog_combine.pl >> /tmp/combined_programmes
+							fi
+						fi
+
+						# TVTV CA
+						if [ -s combine/$folder/tvtv_ca_channels.json ]
+						then
+							if [ -s xml/tvtv_ca.xml ]
+							then
+								sed 's/fileNAME/tvtv_ca.xml/g' ch_combine.pl > /tmp/ch_combine.pl
+								sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/ch_combine.pl
+								printf "\n<!-- CHANNEL LIST: TVTV CANNADA -->\n\n" >> /tmp/combined_channels
+								perl /tmp/ch_combine.pl >> /tmp/combined_channels
+
+								sed 's/fileNAME/tvtv_ca.xml/g' prog_combine.pl > /tmp/prog_combine.pl
+								sed -i "s/channelsFILE/$folder\/tvtv_ca_channels.json/g" /tmp/prog_combine.pl
+								sed -i "s/settingsFILE/$folder\/settings.json/g" /tmp/prog_combine.pl
+								printf "\n<!-- PROGRAMMES: TVTV CANNADA -->\n\n" >> /tmp/combined_programmes
 								perl /tmp/prog_combine.pl >> /tmp/combined_programmes
 							fi
 						fi
