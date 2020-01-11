@@ -21,7 +21,7 @@
 
 
 # ########################
-# E1000 TVTV-US SETTINGS #
+# E1000 TVTV SETTINGS #
 # ########################
 
 echo "H" > /tmp/value
@@ -29,7 +29,7 @@ echo "H" > /tmp/value
 while grep -q "H" /tmp/value
 do
 	# E1000 MENU OVERLAY
-	echo 'dialog --backtitle "[E1000] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS" --title "SETTINGS" --menu "Please select the option you want to change:" 14 60 10 \' > /tmp/menu 
+	echo 'dialog --backtitle "[E1000] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS" --title "SETTINGS" --menu "Please select the option you want to change:" 14 60 10 \' > /tmp/menu
 
 	if [ ! -e settings.json ]
 	then
@@ -155,10 +155,10 @@ do
 	if grep -q "1" /tmp/value
 	then
 		# E1100 MENU OVERLAY
-		echo 'dialog --backtitle "[E1100] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
+		echo 'dialog --backtitle "[E1100] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
 		
 		printf "\rFetching channel list...               "
-		curl --compressed -s https://tvtv.us/tvm/t/tv/v4/lineups/2381D/ > /tmp/workfile
+		curl --compressed -s https://tvtv.XXX/tvm/t/tv/v4/lineups/ZZZ/ > /tmp/workfile
 		jq '.' /tmp/workfile > /tmp/chlist
 
 		printf "\rLoading channel configuration..."
@@ -182,10 +182,10 @@ do
 			then
 				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				cp /tmp/chlist chlist_old
-				dialog --backtitle "[E1110] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list added!\nPlease run the grabber to add the channels to the setup modules!" 7 50
+				dialog --backtitle "[E1110] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list added!\nPlease run the grabber to add the channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
 			else
-				dialog --backtitle "[E1120] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
+				dialog --backtitle "[E1120] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
 				echo "M" > /tmp/value
 				exit 1
 			fi
@@ -210,11 +210,11 @@ do
 			if [ -s /tmp/chconf ]
 			then
 				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
-				dialog --backtitle "[E1130] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
+				dialog --backtitle "[E1130] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
 				cp /tmp/chlist chlist_old
 				echo "H" > /tmp/value
 			else
-				dialog --backtitle "[E1140] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
+				dialog --backtitle "[E1140] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
 				echo "H" > /tmp/value
 			fi
 		fi
@@ -231,7 +231,7 @@ do
 		while grep -q "X" /tmp/value
 		do
 			# E1200 MENU OVERLAY
-			dialog --backtitle "[E1200] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
+			dialog --backtitle "[E1200] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > TIME PERIOD" --title "EPG GRABBER" --inputbox "Please enter the number of days you want to retrieve the EPG information. (0=disable | 1-14=enable)" 10 46 2>/tmp/value
 							
 			sed -i 's/.*/epg&-/g' /tmp/value
 			
@@ -240,7 +240,7 @@ do
 			then
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=0" >> /tmp/settings_new
-				dialog --backtitle "[E1210] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber disabled!" 5 26 
+				dialog --backtitle "[E1210] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber disabled!" 5 26
 				echo "H" > /tmp/value
 			
 			# E1220 INPUT: 1 DAY
@@ -248,7 +248,7 @@ do
 			then
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=1" >> /tmp/settings_new
-				dialog --backtitle "[E1220] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for 1 day!" 5 42
+				dialog --backtitle "[E1220] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for 1 day!" 5 42
 				echo "H" > /tmp/value
 				
 			# E1230 INPUT: 2-9 DAYS
@@ -257,7 +257,7 @@ do
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=$(</tmp/value)" >> /tmp/settings_new
-				dialog --backtitle "[E1230] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
+				dialog --backtitle "[E1230] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
 			# E1240 INPUT: 10-14 DAYS
@@ -266,13 +266,13 @@ do
 				sed -i 's/epg//g;s/-//g' /tmp/value
 				sed -i '/day=/d' /tmp/settings_new
 				echo "day=$(</tmp/value)" >> /tmp/settings_new
-				dialog --backtitle "[E1240] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
+				dialog --backtitle "[E1240] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > TIME PERIOD" --title "INFO" --msgbox "EPG grabber is enabled for $(</tmp/value) days!" 5 42
 				echo "H" > /tmp/value
 			
 			# E1250 WRONG INPUT
 			elif [ -s /tmp/value ]
 			then
-				dialog --backtitle "[E1250] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > TIME PERIOD" --title "ERROR" --msgbox "Wrong input detected!" 5 30 
+				dialog --backtitle "[E1250] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > TIME PERIOD" --title "ERROR" --msgbox "Wrong input detected!" 5 30
 				echo "X" > /tmp/value
 			
 			# E12X0 EXIT
@@ -289,14 +289,14 @@ do
 	elif grep -q "3" /tmp/value
 	then
 		# E1300 MENU OVERLAY
-		dialog --backtitle "[E1300] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CHANNEL IDs" --title "CHANNEL IDs" --yesno "Do you want to use the Rytec ID format?\n\nRytec ID example: ChannelNameHD.de\nUsual ID example: Channel Name HD" 8 55
+		dialog --backtitle "[E1300] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CHANNEL IDs" --title "CHANNEL IDs" --yesno "Do you want to use the Rytec ID format?\n\nRytec ID example: ChannelNameHD.de\nUsual ID example: Channel Name HD" 8 55
 						
 		response=$?
 						
 		# E1310 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[E1310] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CHANNEL IDs" --title "INFO" --msgbox "Rytec Channel IDs disabled!" 5 32
+			dialog --backtitle "[E1310] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CHANNEL IDs" --title "INFO" --msgbox "Rytec Channel IDs disabled!" 5 32
 			sed -i '/cid=/d' /tmp/settings_new
 			echo "cid=disabled" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -304,7 +304,7 @@ do
 		# E1320 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[E1320] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CHANNEL IDs" --title "INFO" --msgbox "Rytec Channel IDs enabled!" 5 30
+			dialog --backtitle "[E1320] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CHANNEL IDs" --title "INFO" --msgbox "Rytec Channel IDs enabled!" 5 30
 			sed -i '/cid=/d' /tmp/settings_new
 			echo "cid=enabled" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -312,7 +312,7 @@ do
 		# E13X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[E13X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CHANNEL IDs" --title "INFO" --msgbox "No changes applied!" 5 30
+			dialog --backtitle "[E13X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CHANNEL IDs" --title "INFO" --msgbox "No changes applied!" 5 30
 			echo "H" > /tmp/value
 		fi
 
@@ -324,14 +324,14 @@ do
 	elif grep -q "4" /tmp/value
 	then
 		# E1400 MENU OVERLAY
-		dialog --backtitle "[E1400] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CATEGORIES" --title "CATEGORIES" --yesno "Do you want to use the EIT format for tvHeadend?" 5 55
+		dialog --backtitle "[E1400] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CATEGORIES" --title "CATEGORIES" --yesno "Do you want to use the EIT format for tvHeadend?" 5 55
 						
 		response=$?
 						
 		# E1410 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[E1410] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CATEGORIES" --title "INFO" --msgbox "EIT categories disabled!" 5 32
+			dialog --backtitle "[E1410] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CATEGORIES" --title "INFO" --msgbox "EIT categories disabled!" 5 32
 			sed -i '/genre=/d' /tmp/settings_new
 			echo "genre=disabled" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -339,7 +339,7 @@ do
 		# E1420 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[E1420] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CATEGORIES" --title "INFO" --msgbox "EIT categories enabled!" 5 30
+			dialog --backtitle "[E1420] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CATEGORIES" --title "INFO" --msgbox "EIT categories enabled!" 5 30
 			sed -i '/genre=/d' /tmp/settings_new
 			echo "genre=enabled" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -347,7 +347,7 @@ do
 		# E14X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[E14X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > CONVERT CATEGORIES" --title "INFO" --msgbox "No changes applied!" 5 30
+			dialog --backtitle "[E14X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > CONVERT CATEGORIES" --title "INFO" --msgbox "No changes applied!" 5 30
 			echo "H" > /tmp/value
 		fi
 	
@@ -359,14 +359,14 @@ do
 	elif grep -q "5" /tmp/value
 	then
 		# E1500 MENU OVERLAY
-		dialog --backtitle "[E1500] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > MULTIPLE CATEGORIES" --title "MULTIPLE CATEGORIES" --yesno "Do you want to use multiple categories for tvHeadend?" 5 60
+		dialog --backtitle "[E1500] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > MULTIPLE CATEGORIES" --title "MULTIPLE CATEGORIES" --yesno "Do you want to use multiple categories for tvHeadend?" 5 60
 						
 		response=$?
 						
 		# E1510 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[E1510] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > MULTIPLE CATEGORIES" --title "INFO" --msgbox "Multiple categories disabled!" 5 35
+			dialog --backtitle "[E1510] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > MULTIPLE CATEGORIES" --title "INFO" --msgbox "Multiple categories disabled!" 5 35
 			sed -i '/category=/d' /tmp/settings_new
 			echo "category=disabled" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -374,7 +374,7 @@ do
 		# E1520 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[E1520] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > MULTIPLE CATEGORIES" --title "INFO" --msgbox "Multiple categories enabled!" 5 35
+			dialog --backtitle "[E1520] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > MULTIPLE CATEGORIES" --title "INFO" --msgbox "Multiple categories enabled!" 5 35
 			sed -i '/category=/d' /tmp/settings_new
 			echo "category=enabled" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -382,7 +382,7 @@ do
 		# E15X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[E15X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > MULTIPLE CATEGORIES" --title "INFO" --msgbox "No changes applied!" 5 30
+			dialog --backtitle "[E15X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > MULTIPLE CATEGORIES" --title "INFO" --msgbox "No changes applied!" 5 30
 			echo "H" > /tmp/value
 		fi
 	
@@ -394,7 +394,7 @@ do
 	elif grep -q "6" /tmp/value
 	then
 		# E1600 MENU OVERLAY
-		dialog --backtitle "[E1600] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > EPISODE FORMAT" --title "EPISODE" --menu "Please select the format you want to use.\n\nonscreen: move the episode data into the broadcast description\nxmltv_ns: episode data to be parsed by tvHeadend" 14 60 10 \
+		dialog --backtitle "[E1600] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > EPISODE FORMAT" --title "EPISODE" --menu "Please select the format you want to use.\n\nonscreen: move the episode data into the broadcast description\nxmltv_ns: episode data to be parsed by tvHeadend" 14 60 10 \
 		1	"ONSCREEN" \
 		2	"XMLTV_NS" \
 		2>/tmp/value
@@ -402,7 +402,7 @@ do
 		# E1610 ONSCREEN
 		if grep -q "1" /tmp/value
 		then
-			dialog --backtitle "[E1610] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'onscreen' enabled!" 5 40
+			dialog --backtitle "[E1610] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'onscreen' enabled!" 5 40
 			sed -i '/episode=/d' /tmp/settings_new
 			echo "episode=onscreen" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -410,7 +410,7 @@ do
 		# E1620 XMLTV_NS
 		elif grep -q "2" /tmp/value
 		then
-			dialog --backtitle "[E1620] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'xmltv_ns' enabled!" 5 40
+			dialog --backtitle "[E1620] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > EPISODE FORMAT" --title "INFO" --msgbox "Episode format 'xmltv_ns' enabled!" 5 40
 			sed -i '/episode=/d' /tmp/settings_new
 			echo "episode=xmltv_ns" >> /tmp/settings_new
 			echo "H" > /tmp/value
@@ -431,16 +431,16 @@ do
 		
 		echo ""
 		echo " --------------------------------------------"
-		echo " TVTV-US EPG SIMPLE XMLTV GRABBER       "
+		echo " TVTV YYY EPG SIMPLE XMLTV GRABBER           "
 		echo "                             "
 		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s
 		
-		bash tvtvus.sh && cd - > /dev/null
+		bash tvtv.sh && cd - > /dev/null
 		
-		cp tvtvus/de/TVTV-US.xml xml/TVTV-US_de.xml 2> /dev/null
+		cp tvtv/XXX/tvtv_XXX.xml xml/tvtv_XXX.xml 2> /dev/null
 		
 		cd - > /dev/null
 		
@@ -455,27 +455,27 @@ do
 	elif grep -q "9" /tmp/value
 	then
 		# E1900 MENU OVERLAY
-		dialog --backtitle "[E1900] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
+		dialog --backtitle "[E1900] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > DELETE INSTANCE" --title "WARNING" --yesno "Do you want to delete this service?" 5 50
 						
 		response=$?
 						
 		# E1910 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[E1910] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[E1910] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 32
 			echo "H" > /tmp/value
 						
 		# E1920 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[E1920] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[E1920] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service deleted!" 5 30
 			rm channels.json
 			echo "M" > /tmp/value
 							
 		# E19X0 EXIT
 		elif [ $response = 255 ]
 		then
-			dialog --backtitle "[E19X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV-US SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
+			dialog --backtitle "[E19X0] EASYEPG SIMPLE XMLTV GRABBER > TVTV YYY SETTINGS > DELETE INSTANCE" --title "INFO" --msgbox "Service not deleted!" 5 30
 			echo "H" > /tmp/value
 		fi
 	

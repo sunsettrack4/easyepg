@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # #################################
-# TVTV-US TV CHANNEL LIST CREATOR #
+# TVTV CHANNEL LIST CREATOR       #
 # #################################
 
 # COMPARE STRINGS, CREATE MENU LIST

@@ -555,6 +555,58 @@ else
 	echo "Skipping restore: Vodafone DE - no setup found"
 fi
 
+# TVTV US
+
+if [ -e easyepg_backup/tvtv_us_init.json ]
+then
+	echo "Restoring: TVTV USA"
+	mkdir tvtv/us 2> /dev/null
+
+	cp tvtv/chlist_printer.pl 	tvtv/us/chlist_printer.pl
+	cp tvtv/cid_json.pl 		tvtv/us/cid_json.pl
+	cp tvtv/compare_crid.pl		tvtv/us/compare_crid.pl
+	cp tvtv/compare_menu.pl		tvtv/us/compare_menu.pl	
+	sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/tvtv.sh > tvtv/us/tvtv.sh 2> /dev/null
+	sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/ch_json2xml.pl > tvtv/us/ch_json2xml.pl 2> /dev/null
+	sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/epg_json2xml.pl > tvtv/us/epg_json2xml.pl 2> /dev/null
+	sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/settings.sh > tvtv/us/settings.sh 2> /dev/null
+	sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' tvtv/url_printer.pl > tvtv/us/url_printer.pl 2> /dev/null
+
+	cp easyepg_backup/tvtv_us_init.json			tvtv/us/init.json
+	cp easyepg_backup/tvtv_us_chlist_old		tvtv/us/chlist_old
+	cp easyepg_backup/tvtv_us_channels.json		tvtv/us/channels.json
+	cp easyepg_backup/tvtv_us_settings.json		tvtv/us/settings.json
+	cp easyepg_backup/xml_tvtv_us.xml			xml/tvtv_us.xml 2> /dev/null
+else
+	echo "Skipping restore: TVTV USA - no setup found"
+fi
+
+# TVTV CA
+
+if [ -e easyepg_backup/tvtv_ca_init.json ]
+then
+	echo "Restoring: TVTV CANADA"
+	mkdir tvtv/ca 2> /dev/null
+
+	cp tvtv/chlist_printer.pl 	tvtv/ca/chlist_printer.pl
+	cp tvtv/cid_json.pl			tvtv/ca/cid_json.pl
+	cp tvtv/compare_crid.pl		tvtv/ca/compare_crid.pl
+	cp tvtv/compare_menu.pl		tvtv/ca/compare_menu.pl
+	sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/tvtv.sh > tvtv/ca/tvtv.sh 2> /dev/null
+	sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl 2> /dev/null
+	sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl 2> /dev/null
+	sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/settings.sh > tvtv/ca/settings.sh 2> /dev/null
+	sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' tvtv/url_printer.pl > tvtv/ca/url_printer.pl 2> /dev/null
+
+	cp easyepg_backup/tvtv_ca_init.json			tvtv/ca/init.json
+	cp easyepg_backup/tvtv_ca_chlist_old		tvtv/ca/chlist_old
+	cp easyepg_backup/tvtv_ca_channels.json		tvtv/ca/channels.json
+	cp easyepg_backup/tvtv_ca_settings.json		tvtv/ca/settings.json
+	cp easyepg_backup/xml_tvtv_ca.xml			xml/tvtv_ca.xml 2> /dev/null
+else
+	echo "Skipping restore: TVTV CANADA - no setup found"
+fi
+
 # EXTERNAL 1
 
 if [ -e easyepg_backup/ext_oa_channels.json ]
@@ -667,6 +719,8 @@ do
 	cp easyepg_backup/combine_$folder-wpu_de_channels.json 	combine/$folder/wpu_de_channels.json	2> /dev/null
 	cp easyepg_backup/combine_$folder-tvs_de_channels.json 	combine/$folder/tvs_de_channels.json	2> /dev/null
 	cp easyepg_backup/combine_$folder-vdf_de_channels.json 	combine/$folder/vdf_de_channels.json	2> /dev/null
+	cp easyepg_backup/combine_$folder-tvtv_us_channels.json 	combine/$folder/tvtv_us_channels.json	2> /dev/null
+	cp easyepg_backup/combine_$folder-tvtv_ca_channels.json 	combine/$folder/tvtv_ca_channels.json	2> /dev/null
 	cp easyepg_backup/combine_$folder-ext_oa_channels.json 	combine/$folder/ext_oa_channels.json	2> /dev/null
 	cp easyepg_backup/combine_$folder-ext_ob_channels.json 	combine/$folder/ext_ob_channels.json	2> /dev/null
 	cp easyepg_backup/combine_$folder-ext_oc_channels.json 	combine/$folder/ext_oc_channels.json	2> /dev/null

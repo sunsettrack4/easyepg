@@ -304,6 +304,32 @@ else
 	echo "Skipping backup: Vodafone DE - no setup found"
 fi
 
+# TVTV US
+
+if [ -e tvtv/us ]
+then
+	echo "Backing up: TVTV USA"
+	cp tvtv/us/chlist_old		easyepg_backup/tvtv_us_chlist_old
+	cp tvtv/us/channels.json 	easyepg_backup/tvtv_us_channels.json
+	cp tvtv/us/init.json 		easyepg_backup/tvtv_us_init.json
+	cp tvtv/us/settings.json 	easyepg_backup/tvtv_us_settings.json
+else
+	echo "Skipping backup: TVTV USA - no setup found"
+fi
+
+# TVTV CA
+
+if [ -e tvtv/ca ]
+then
+	echo "Backing up: TVTV CANADA"
+	cp tvtv/ca/chlist_old		easyepg_backup/tvtv_ca_chlist_old
+	cp tvtv/ca/channels.json 	easyepg_backup/tvtv_ca_channels.json
+	cp tvtv/ca/init.json 		easyepg_backup/tvtv_ca_init.json
+	cp tvtv/ca/settings.json 	easyepg_backup/tvtv_ca_settings.json
+else
+	echo "Skipping backup: TVTV CANADA - no setup found"
+fi
+
 # EXTERNAL 1
 
 if [ -e ext/oa ]
@@ -536,6 +562,26 @@ else
 	echo "Skipping backup: Vodafone DE - XML file not found"
 fi
 
+# TVTV US
+
+if [ -e xml/tvtv_us.xml ]
+then
+	echo "Backing up XML: TVTV US"
+	cp xml/tvtv_us.xml		easyepg_backup/xml_tvtv_us.xml
+else
+	echo "Skipping backup: TVTV USA - XML file not found"
+fi
+
+# TVTV CA
+
+if [ -e xml/tvtv_ca.xml ]
+then
+	echo "Backing up XML: TVTV CANADA"
+	cp xml/tvtv_ca.xml		easyepg_backup/xml_tvtv_ca.xml
+else
+	echo "Skipping backup: TVTV CANADA - XML file not found"
+fi
+
 # EXTERNAL 1
 
 if [ -e xml/external_oa.xml ]
@@ -621,6 +667,8 @@ do
 	cp combine/$folder/wpu_de_channels.json		easyepg_backup/combine_$folder-wpu_de_channels.json 2> /dev/null
 	cp combine/$folder/tvs_de_channels.json		easyepg_backup/combine_$folder-tvs_de_channels.json 2> /dev/null
 	cp combine/$folder/vdf_de_channels.json		easyepg_backup/combine_$folder-vdf_de_channels.json 2> /dev/null
+	cp combine/$folder/tvtv_us_channels.json	easyepg_backup/combine_$folder-tvtv_us_channels.json 2> /dev/null
+	cp combine/$folder/tvtv_ca_channels.json	easyepg_backup/combine_$folder-tvtv_ca_channels.json 2> /dev/null
 	cp combine/$folder/ext_oa_channels.json		easyepg_backup/combine_$folder-ext_oa_channels.json 2> /dev/null
 	cp combine/$folder/ext_ob_channels.json		easyepg_backup/combine_$folder-ext_ob_channels.json 2> /dev/null
 	cp combine/$folder/ext_oc_channels.json		easyepg_backup/combine_$folder-ext_oc_channels.json 2> /dev/null

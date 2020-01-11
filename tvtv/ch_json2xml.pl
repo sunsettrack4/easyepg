@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ###############################
-# TVSPIELFILM JSON > XML CONVERTER #
-# ###############################
+# ##################################
+# TVTV JSON > XML CONVERTER        #
+# ##################################
 
 # CHANNELS
 
@@ -42,11 +42,11 @@ my $json;
     close $fh;
 }
 
-# READ JSON INPUT FILE: SWC HARDCODED CHLIST
+# READ JSON INPUT FILE: TVTV HARDCODED CHLIST
 my $chlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "tvtvus_channels.json" or die;
+    open my $fh, "<", "tvtv_channels.json" or die;
     $chlist = <$fh>;
     close $fh;
 }
@@ -98,6 +98,9 @@ foreach my $stations ( @stations ) {
     # DEFINE CHANNEL ID + NAME
 	my $cname   = $stations->{'name'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	
+	# DEFINE CHANNEL LOGO
+	my $logo	= $stations->{'logoFilename'};
         
     # DEFINE LANGUAGE VERSION
     # my $languageVER =  $initdata->{'language'};
@@ -137,7 +140,14 @@ foreach my $stations ( @stations ) {
 			}
 			
 			# CHANNEL NAME (language)
-			print "<display-name lang=\"de\">" . $cname . "</display-name></channel>\n";
+			print "<display-name lang=\"de\">" . $cname . "</display-name>";
+			
+			# CHANNEL LOGO
+			if( $logo ne "" ) {
+				print "<icon src=\"https://cdn.tvpassport.com/image/station/100x100/$logo\" /></channel>\n";
+			} else {
+				print "</channel>\n";
+			}
 		}
 	}
 }

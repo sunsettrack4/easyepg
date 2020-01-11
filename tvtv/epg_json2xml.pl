@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # #################################
-# TVTV-US JSON > XML CONVERTER #
+# TVTV JSON > XML CONVERTER       #
 # #################################
 
 # EPG
@@ -45,11 +45,11 @@ my $json;
     close $fh;
 }
 
-# READ JSON INPUT FILE: MAGENTA NUMERIC CHANNEL IDs
+# READ JSON INPUT FILE: TVTV NUMERIC CHANNEL IDs
 my $chidlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "tvtvus_cid.json" or die;
+    open my $fh, "<", "tvtv_XXX_cid.json" or die;
     $chidlist = <$fh>;
     close $fh;
 }
@@ -58,7 +58,7 @@ my $chidlist;
 my $chlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "tvtvus_channels.json" or die;
+    open my $fh, "<", "tvtv_channels.json" or die;
     $chlist = <$fh>;
     close $fh;
 }
@@ -67,7 +67,7 @@ my $chlist;
 my $genrelist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "tvtvus_genres.json" or die;
+    open my $fh, "<", "tvtv_genres.json" or die;
     $genrelist = <$fh>;
     close $fh;
 }
@@ -104,7 +104,7 @@ my $countryVER =  $initdata->{'country'};
 # DEFINE LANGUAGE VERSION
 my $languageVER =  $initdata->{'language'};
 
-print "\n<!-- EPG DATA - SOURCE: TVTV-US $countryVER -->\n\n";
+print "\n<!-- EPG DATA - SOURCE: TVTV YYY -->\n\n";
 
 my @attributes = @{ $data->{'attributes'} };
 foreach my $attributes ( @attributes ) {
@@ -202,15 +202,27 @@ foreach my $attributes ( @attributes ) {
 			}
 			
 			# IMAGE (condition)
-			if( defined $listings->{'artwork'}{'moviePoster'} ) {
-				my $image = $listings->{'artwork'}{'moviePoster'} ;
-				$image =~ s/^/https:\/\/www.tvtv.us\/tvm\/i\/image\/show\/960x1440\//g; 
-				print "  <icon src=\"" . $image . "\" />\n";
-			}else{
-				if( defined $listings->{'showPicture'} ) {
-				my $image = $listings->{'showPicture'} ;
-				$image =~ s/^/https:\/\/www.tvtv.us\/tvm\/i\/image\/show\/960x1440\//g; 
-				print "  <icon src=\"" . $image . "\" />\n";
+			if( defined $listings->{'artwork'}{'moviePoster'} and defined $listings->{'showPicture'} ) {
+				if( $listings->{'artwork'}{'moviePoster'} ne "" ) {
+					my $image = $listings->{'artwork'}{'moviePoster'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
+				} elsif( $listings->{'showPicture'} ne "" ) {
+					my $image = $listings->{'showPicture'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
+				}
+			} elsif( defined $listings->{'artwork'}{'moviePoster'} ) {
+				if( $listings->{'artwork'}{'moviePoster'} ne "" ) {
+					my $image = $listings->{'artwork'}{'moviePoster'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
+				}
+			} elsif( defined $listings->{'showPicture'} ) {
+				if( $listings->{'showPicture'} ne "" ) {
+					my $image = $listings->{'showPicture'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
 				}	
 			} 
 			
@@ -246,7 +258,7 @@ foreach my $attributes ( @attributes ) {
 				print "  <desc lang=\"$languageVER\">$desc</desc>\n";
 			}
 			
- 			#CREDITS (condition)
+ 			# CREDITS (condition)
 			if ( $director eq ''){
 				undef $director;
 			} 

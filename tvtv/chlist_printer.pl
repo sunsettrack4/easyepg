@@ -20,7 +20,7 @@
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
 # ################################
-# TVTV-US CHANNEL LIST CREATOR  #
+# TVTV  CHANNEL LIST CREATOR     #
 # ################################
 
 # CREATE JSON FILE FOR COMPARISM
@@ -84,6 +84,7 @@ foreach my $newchannels ( @newchannels_name2id ) {
 	# DEFINE NEW CHANNEL NAME
 	my $newcname   = $newchannels->{'name'};
 	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+	$newcname =~ s/\t/  /g;
 		
 	# DEFINE NEW CHANNEL ID
 	my $newcid     = $newchannels->{'channelNumber'};
@@ -106,7 +107,7 @@ foreach my $newchannels ( @newchannels_id2name ) {
 	# DEFINE NEW CHANNEL NAME
 	my $newcname   = $newchannels->{'name'};
 	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-		
+	$newcname =~ s/\t/  /g;
 	# DEFINE NEW CHANNEL ID
 	my $newcid     = $newchannels->{'channelNumber'};
 		
@@ -133,7 +134,8 @@ foreach my $oldchannels ( @oldchannels_name2id ) {
 	# DEFINE OLD CHANNEL NAME
 	my $oldcname   = $oldchannels->{'name'};
 	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-		
+	$oldcname =~ s/\t/  /g;
+
 	# DEFINE OLD CHANNEL ID
 	my $oldcid     = $oldchannels->{'channelNumber'};
 							
@@ -155,7 +157,8 @@ foreach my $oldchannels ( @oldchannels_id2name ) {
 	# DEFINE OLD CHANNEL NAME
 	my $oldcname   = $oldchannels->{'name'};
 	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-		
+	$oldcname =~ s/\t/  /g;
+
 	# DEFINE OLD CHANNEL ID
 	my $oldcid     = $oldchannels->{'channelNumber'};
 							
