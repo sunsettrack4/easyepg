@@ -21,6 +21,7 @@ This tool provides high-quality EPG data from different IPTV/OTT sources.
 * Swisscom (CH)
 * Radiotimes (UK)
 * tvPlayer (UK)
+* TVTV (US,CA)
 
 #### Supported platforms
 * any Linux-based OS, e.g. Ubuntu, Debian
@@ -57,15 +58,16 @@ sudo cpanm install Time::Seconds
 sudo cpanm install DateTime
 sudo cpanm install DateTime::Format::DateParse
 sudo cpanm install utf8
+sudo cpanm install DateTime::Format::Strptime
 
 # Create any directory in your desired location, e.g.:
 mkdir ~/easyepg
 
 # Download the .zip file and extract the files into your folder:
-wget https://github.com/sunsettrack4/easyepg/archive/v0.4.2.zip
+wget https://github.com/sunsettrack4/easyepg/archive/v0.4.3.zip
 
 # Unzip the file:
-unzip v0.4.2.zip
+unzip v0.4.3.zip
 
 # Move all script files to the created folder
 mv ~/easyepg-0.4.2/* ~/easyepg/
