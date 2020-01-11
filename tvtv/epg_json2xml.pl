@@ -202,15 +202,27 @@ foreach my $attributes ( @attributes ) {
 			}
 			
 			# IMAGE (condition)
-			if( defined $listings->{'artwork'}{'moviePoster'} ) {
-				my $image = $listings->{'artwork'}{'moviePoster'} ;
-				$image =~ s/^/https:\/\/www.tvtv.us\/tvm\/i\/image\/show\/960x1440\//g; 
-				print "  <icon src=\"" . $image . "\" />\n";
-			}else{
-				if( defined $listings->{'showPicture'} ) {
-				my $image = $listings->{'showPicture'} ;
-				$image =~ s/^/https:\/\/www.tvtv.us\/tvm\/i\/image\/show\/960x1440\//g; 
-				print "  <icon src=\"" . $image . "\" />\n";
+			if( defined $listings->{'artwork'}{'moviePoster'} and defined $listings->{'showPicture'} ) {
+				if( $listings->{'artwork'}{'moviePoster'} ne "" ) {
+					my $image = $listings->{'artwork'}{'moviePoster'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
+				} elsif( $listings->{'showPicture'} ne "" ) {
+					my $image = $listings->{'showPicture'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
+				}
+			} elsif( defined $listings->{'artwork'}{'moviePoster'} ) {
+				if( $listings->{'artwork'}{'moviePoster'} ne "" ) {
+					my $image = $listings->{'artwork'}{'moviePoster'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
+				}
+			} elsif( defined $listings->{'showPicture'} ) {
+				if( $listings->{'showPicture'} ne "" ) {
+					my $image = $listings->{'showPicture'} ;
+					$image =~ s/^/https:\/\/www.tvtv.XXX\/tvm\/i\/image\/show\/960x1440\//g; 
+					print "  <icon src=\"" . $image . "\" />\n";
 				}	
 			} 
 			
@@ -246,7 +258,7 @@ foreach my $attributes ( @attributes ) {
 				print "  <desc lang=\"$languageVER\">$desc</desc>\n";
 			}
 			
- 			#CREDITS (condition)
+ 			# CREDITS (condition)
 			if ( $director eq ''){
 				undef $director;
 			} 
