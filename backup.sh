@@ -322,14 +322,14 @@ fi
 
 if [ -e tvtv/ca ]
 then
-	echo "Backing up: TVTV CANNADA"
+	echo "Backing up: TVTV CANADA"
 	cp tvtv/ca/user/userfile		easyepg_backup/tvtv_ca_user_userfile
 	cp tvtv/ca/chlist_old		easyepg_backup/tvtv_ca_chlist_old
 	cp tvtv/ca/channels.json 	easyepg_backup/tvtv_ca_channels.json
 	cp tvtv/ca/init.json 		easyepg_backup/tvtv_ca_init.json
 	cp tvtv/ca/settings.json 	easyepg_backup/tvtv_ca_settings.json
 else
-	echo "Skipping backup: TVTV CANNADA - no setup found"
+	echo "Skipping backup: TVTV CANADA - no setup found"
 fi
 
 # EXTERNAL 1
