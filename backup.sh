@@ -574,14 +574,14 @@ else
 	echo "Skipping backup: TVTV USA - XML file not found"
 fi
 
-# ZATTOO CH
+# TVTV CA
 
 if [ -e xml/tvtv_ca.xml ]
 then
-	echo "Backing up XML: TVTV CANNADA"
+	echo "Backing up XML: TVTV CANADA"
 	cp xml/tvtv_ca.xml		easyepg_backup/xml_tvtv_ca.xml
 else
-	echo "Skipping backup: TVTV CANNADA - XML file not found"
+	echo "Skipping backup: TVTV CANADA - XML file not found"
 fi
 
 # EXTERNAL 1

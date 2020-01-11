@@ -206,7 +206,6 @@ mkdir tvtv 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/tvtv.sh 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/settings.sh 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/compare_crid.pl 2> /dev/null
-echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/save_page.js 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/epg_json2xml.pl 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/ch_json2xml.pl 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/cid_json.pl 2> /dev/null
@@ -220,11 +219,11 @@ sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/epg_json2xml
 sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/settings.sh > tvtv/us/settings.sh
 sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/url_printer.pl > tvtv/us/url_printer.pl
 
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' easyepg/tvtv/tvtv.sh > tvtv/ca/tvtv.sh
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' easyepg/tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' easyepg/tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' easyepg/tvtv/settings.sh > tvtv/ca/settings.sh
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANNADA/g;s/XYZ/CN/g' easyepg/tvtv/url_printer.pl > tvtv/ca/url_printer.pl
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/tvtv.sh > tvtv/ca/tvtv.sh
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/settings.sh > tvtv/ca/settings.sh
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/url_printer.pl > tvtv/ca/url_printer.pl
 
 
 # DONE
