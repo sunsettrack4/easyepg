@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
@@ -2051,7 +2051,7 @@ then
 						then
 							sed -i 's/\&/\&amp;/g' /tmp/file
 						
-							sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
+							sed -i "1i<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann -->\n<\!-- created on $(date) -->\n<tv>" /tmp/file
 							sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>' /tmp/file
 							sed '$s/.*/&\n<\/tv>/g' /tmp/file > combine/$folder/$folder.xml
 							rm /tmp/combined_programmes

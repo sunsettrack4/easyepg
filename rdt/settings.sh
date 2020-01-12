@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
@@ -435,7 +435,7 @@ do
 		echo " --------------------------------------------"
 		echo " RADIOTIMES EPG SIMPLE XMLTV GRABBER         "
 		echo " powered by easyEPG Grabber $(grep 'VER=' /tmp/initrun.txt | sed 's/VER=//g')"
-		echo " (c) 2019 Jan-Luca Neumann / sunsettrack4    "
+		echo " (c) 2019-2020 Jan-Luca Neumann / sunsettrack4    "
 		echo " --------------------------------------------"
 		echo ""
 		sleep 2s

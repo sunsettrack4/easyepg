@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #		
 #      Collaborators:
@@ -295,7 +295,7 @@ perl epg_json2xml.pl > waipu_epg 2>epg_warnings.txt && rm workfile
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                           "
 cat waipu_epg >> waipu_channels && mv waipu_channels waipu && rm waipu_epg
-sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' waipu
+sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann -->\n<tv>' waipu
 sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" waipu
 sed -i '$s/.*/&\n\n<\/tv>/g' waipu
 mv waipu waipu.xml

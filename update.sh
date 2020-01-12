@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg
 #
 #      Collaborators:
@@ -187,17 +187,6 @@ echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/chlist_printer.pl 2> /dev/nul
 echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/compare_menu.pl 2> /dev/null
 echo "vdf/ vdf/de/" | xargs -n 1 cp -v easyepg/vdf/url_printer.pl 2> /dev/null
 
-# EXTERNAL
-echo "Updating External..."
-
-mkdir ext 2> /dev/null
-
-echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ext.sh 2> /dev/null
-echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/settings.sh 2> /dev/null
-echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/epg_ext.pl 2> /dev/null
-echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ch_ext.pl 2> /dev/null
-echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/compare_menu.pl 2> /dev/null
-
 # TVTV
 echo "Updating TVTV..."
 
@@ -213,18 +202,28 @@ echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/chlist_printer.pl
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/compare_menu.pl 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/url_printer.pl 2> /dev/null
 
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/tvtv.sh > tvtv/us/tvtv.sh
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/ch_json2xml.pl > tvtv/us/ch_json2xml.pl
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/epg_json2xml.pl > tvtv/us/epg_json2xml.pl
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/settings.sh > tvtv/us/settings.sh
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/url_printer.pl > tvtv/us/url_printer.pl
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/tvtv.sh > tvtv/us/tvtv.sh 2> /dev/null
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/ch_json2xml.pl > tvtv/us/ch_json2xml.pl 2> /dev/null
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/epg_json2xml.pl > tvtv/us/epg_json2xml.pl 2> /dev/null
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/settings.sh > tvtv/us/settings.sh 2> /dev/null
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/url_printer.pl > tvtv/us/url_printer.pl 2> /dev/null
 
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/tvtv.sh > tvtv/ca/tvtv.sh
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/settings.sh > tvtv/ca/settings.sh
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/url_printer.pl > tvtv/ca/url_printer.pl
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/tvtv.sh > tvtv/ca/tvtv.sh 2> /dev/null
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl 2> /dev/null
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl 2> /dev/null
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/settings.sh > tvtv/ca/settings.sh 2> /dev/null
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/url_printer.pl > tvtv/ca/url_printer.pl 2> /dev/null
 
+# EXTERNAL
+echo "Updating External..."
+
+mkdir ext 2> /dev/null
+
+echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ext.sh 2> /dev/null
+echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/settings.sh 2> /dev/null
+echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/epg_ext.pl 2> /dev/null
+echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/ch_ext.pl 2> /dev/null
+echo "ext/ ext/oa/ ext/ob/ ext/oc/" | xargs -n 1 cp -v easyepg/ext/compare_menu.pl 2> /dev/null
 
 # DONE
 echo "UPDATE FINISHED!"

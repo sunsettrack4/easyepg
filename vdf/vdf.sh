@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#      Copyright (C) 2019 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg/hzn
 #
 #      Collaborators:
@@ -408,7 +408,7 @@ perl epg_json2xml.pl > vodafone_epg 2>epg_warnings.txt && rm /tmp/epg_workfile &
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                           "
 cat vodafone_epg >> vodafone_channels && mv vodafone_channels vodafone && rm vodafone_epg
-sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019 Jan-Luca Neumann -->\n<tv>' vodafone
+sed -i '1i<?xml version="1.0" encoding="UTF-8" ?>\n<\!-- EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann -->\n<tv>' vodafone
 sed -i "s/<tv>/<\!-- created on $(date) -->\n&\n\n<!-- CHANNEL LIST -->\n/g" vodafone
 sed -i '$s/.*/&\n\n<\/tv>/g' vodafone
 mv vodafone vodafone.xml
