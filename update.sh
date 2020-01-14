@@ -33,7 +33,7 @@ cp easyepg/prog_combine.pl prog_combine.pl 2> /dev/null
 cp easyepg/LICENSE LICENSE 2> /dev/null
 cp easyepg/update.sh update.sh 2> /dev/null
 cp easyepg/branch-debaschdi.sh branch-debaschdi.sh 2> /dev/null
-cp easyepg/testing.sh testing.sh 2> /dev/null
+cp easyepg/README.md README.md 2> /dev/null
 cp easyepg/testing.sh testing.sh 2> /dev/null
 cp easyepg/backup.sh backup.sh 2> /dev/null
 cp easyepg/restore.sh restore.sh 2> /dev/null
@@ -50,8 +50,7 @@ echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/h
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/settings.sh 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/chlist_printer.pl 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/compare_menu.pl 2> /dev/null
-echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/hzn.sh 2> /dev/null
-echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/hzn.sh 2> /dev/null
+echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/url_printer.pl 2> /dev/null
 
 sed 's/XX/DE/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl > hzn/de/url_printer.pl 2> /dev/null
 sed 's/XX/AT/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl > hzn/at/url_printer.pl 2> /dev/null
@@ -111,6 +110,7 @@ echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/ch_json2xml.pl 2> /dev/null
 echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/cid_json.pl 2> /dev/null
 echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/chlist_printer.pl 2> /dev/null
 echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/compare_menu.pl 2> /dev/null
+echo "tvp/ tvp/uk/" | xargs -n 1 cp -v easyepg/tvp/compare_crid.pl 2> /dev/null
 
 
 # TELEKOM
