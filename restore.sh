@@ -441,6 +441,7 @@ then
 	cp tkm/epg_json2xml.pl		tkm/de/epg_json2xml.pl
 	cp tkm/tkm.sh				tkm/de/tkm.sh
 	cp tkm/settings.sh			tkm/de/settings.sh
+	cp tkm/proxy.sh			tkm/de/proxy.sh
 	cp tkm/url_printer.pl		tkm/de/url_printer.pl
 	
 	cp easyepg_backup/tkm_de_init.json			tkm/de/init.json
