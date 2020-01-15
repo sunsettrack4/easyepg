@@ -37,16 +37,16 @@ echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/h
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/compare_menu.pl 2> /dev/null
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/url_printer.pl 2> /dev/null
 
-sed 's/XX/DE/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl > hzn/de/url_printer.pl 2> /dev/null
-sed 's/XX/AT/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl > hzn/at/url_printer.pl 2> /dev/null
-sed 's/XX/CH/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl > hzn/ch/url_printer.pl 2> /dev/null
-sed 's/XX/NL/g;s/YYY/nld/g' easyepg/hzn/url_printer.pl > hzn/nl/url_printer.pl 2> /dev/null
-sed 's/XX/PL/g;s/YYY/pol/g' easyepg/hzn/url_printer.pl > hzn/pl/url_printer.pl 2> /dev/null
-sed 's/XX/IE/g;s/YYY/eng/g' easyepg/hzn/url_printer.pl > hzn/ie/url_printer.pl 2> /dev/null
-sed 's/XX/SK/g;s/YYY/slk/g' easyepg/hzn/url_printer.pl > hzn/sk/url_printer.pl 2> /dev/null
-sed 's/XX/CZ/g;s/YYY/ces/g' easyepg/hzn/url_printer.pl > hzn/cz/url_printer.pl 2> /dev/null
-sed 's/XX/HU/g;s/YYY/hun/g' easyepg/hzn/url_printer.pl > hzn/hu/url_printer.pl 2> /dev/null
-sed 's/XX/RO/g;s/YYY/ron/g' easyepg/hzn/url_printer.pl > hzn/ro/url_printer.pl 2> /dev/null
+sed 's/XX/DE/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/de/url_printer.pl
+sed 's/XX/AT/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/at/url_printer.pl
+sed 's/XX/CH/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ch/url_printer.pl
+sed 's/XX/NL/g;s/YYY/nld/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/nl/url_printer.pl
+sed 's/XX/PL/g;s/YYY/pol/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/pl/url_printer.pl
+sed 's/XX/IE/g;s/YYY/eng/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ie/url_printer.pl
+sed 's/XX/SK/g;s/YYY/slk/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/sk/url_printer.pl
+sed 's/XX/CZ/g;s/YYY/ces/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/cz/url_printer.pl
+sed 's/XX/HU/g;s/YYY/hun/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/hu/url_printer.pl
+sed 's/XX/RO/g;s/YYY/ron/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ro/url_printer.pl
 
 
 # ZATTOO
@@ -64,8 +64,8 @@ echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/cid_json.pl 2> /dev/n
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/chlist_printer.pl 2> /dev/null
 echo "ztt/ ztt/de/ ztt/ch/" | xargs -n 1 cp -v easyepg/ztt/compare_menu.pl 2> /dev/null
 
-sed 's/\[XX\]/[DE]/g;s/XXXX/DE/g' easyepg/ztt/settings.sh > ztt/de/settings.sh 2> /dev/null
-sed 's/\[XX\]/[CH]/g;s/XXXX/CH/g' easyepg/ztt/settings.sh > ztt/ch/settings.sh 2> /dev/null
+sed 's/\[XX\]/[DE]/g;s/XXXX/DE/g' easyepg/ztt/settings.sh 2> /dev/null > ztt/de/settings.sh
+sed 's/\[XX\]/[CH]/g;s/XXXX/CH/g' easyepg/ztt/settings.sh 2> /dev/null > ztt/ch/settings.sh
 
 
 # SWISSCOM
@@ -187,17 +187,17 @@ echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/chlist_printer.pl
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/compare_menu.pl 2> /dev/null
 echo "tvtv/ tvtv/us/ tvtv/ca/" | xargs -n 1 cp -v easyepg/tvtv/url_printer.pl 2> /dev/null
 
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/tvtv.sh > tvtv/us/tvtv.sh 2> /dev/null
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/ch_json2xml.pl > tvtv/us/ch_json2xml.pl 2> /dev/null
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/epg_json2xml.pl > tvtv/us/epg_json2xml.pl 2> /dev/null
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/settings.sh > tvtv/us/settings.sh 2> /dev/null
-sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/url_printer.pl > tvtv/us/url_printer.pl 2> /dev/null
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/tvtv.sh 2> /dev/null > tvtv/us/tvtv.sh
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/ch_json2xml.pl 2> /dev/null > tvtv/us/ch_json2xml.pl
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/epg_json2xml.pl 2> /dev/null > tvtv/us/epg_json2xml.pl
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/settings.sh 2> /dev/null > tvtv/us/settings.sh
+sed 's/XXX/us/g;s/ZZZ/2381D/g;s/YYY/USA/g;s/XYZ/USA/g' easyepg/tvtv/url_printer.pl 2> /dev/null > tvtv/us/url_printer.pl
 
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/tvtv.sh > tvtv/ca/tvtv.sh 2> /dev/null
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/ch_json2xml.pl > tvtv/ca/ch_json2xml.pl 2> /dev/null
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/epg_json2xml.pl > tvtv/ca/epg_json2xml.pl 2> /dev/null
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/settings.sh > tvtv/ca/settings.sh 2> /dev/null
-sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/url_printer.pl > tvtv/ca/url_printer.pl 2> /dev/null
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/tvtv.sh 2> /dev/null > tvtv/ca/tvtv.sh
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/ch_json2xml.pl 2> /dev/null > tvtv/ca/ch_json2xml.pl
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/epg_json2xml.pl 2> /dev/null > tvtv/ca/epg_json2xml.pl
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/settings.sh 2> /dev/null > tvtv/ca/settings.sh
+sed 's/XXX/ca/g;s/ZZZ/1743/g;s/YYY/CANADA/g;s/XYZ/CN/g' easyepg/tvtv/url_printer.pl 2> /dev/null > tvtv/ca/url_printer.pl
 
 # EXTERNAL
 echo "Updating External..."
