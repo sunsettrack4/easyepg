@@ -683,7 +683,7 @@ mkdir combine 2> /dev/null
 
 # DEFINE FOLDERS
 
-ls easyepg_backup/ | grep "combine" | sed "s/\(.*combine_\)\(.*\)-.*/\2/g" | uniq > /tmp/combine_list
+ls easyepg_backup/ | grep "combine" | grep ".xml" | sed "s/\(combine_\)\(.*\)\(.xml\)/\2/g" | uniq > /tmp/combine_list
 
 if [ ! -s /tmp/combine_list ]
 then
