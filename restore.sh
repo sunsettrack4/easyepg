@@ -443,6 +443,7 @@ then
 	cp tkm/settings.sh			tkm/de/settings.sh
 	cp tkm/proxy.sh			tkm/de/proxy.sh
 	cp tkm/url_printer.pl		tkm/de/url_printer.pl
+	cp tkm/web_magentatv_de.php tkm/de/web_magentatv_de.php
 	
 	cp easyepg_backup/tkm_de_init.json			tkm/de/init.json
 	cp easyepg_backup/tkm_de_chlist_old			tkm/de/chlist_old
