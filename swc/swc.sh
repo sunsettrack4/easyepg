@@ -313,7 +313,7 @@ perl cid_json.pl > swc_cid.json && rm chlist
 # CONVERT JSON INTO XML: EPG
 printf "\rConverting EPG JSON file into XML format...          "
 #perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt && rm /tmp/epg_workfile 2> /dev/null
-perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt 2> /dev/null
+perl epg_json2xml.pl > swisscom_epg 2>epg_warnings.txt 
 
 # COMBINE: CHANNELS + EPG
 printf "\rCreating EPG XMLTV file...                           "
