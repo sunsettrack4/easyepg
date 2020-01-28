@@ -386,12 +386,10 @@ find cache/ -type f -print0 | xargs -0 cat >/tmp/workfile 2> /dev/null
 
 # SORT BY CID AND START TIME
 printf "\rSorting data by channel ID and start time...         "
-sed -i 's/\"startDateTimeMillis\"/~\"startDateTimeMillis\"/g' /tmp/workfile 2> /dev/null
-sed -i 's/\"channelId\"/~\"channelId\"/g' /tmp/workfile 2> /dev/null
-sort -t "~" -k 2 /tmp/workfile >/tmp/workfile2 2> /dev/null 
-sort -t "~" -k 3 /tmp/workfile2 >/tmp/workfile 2> /dev/null
-sed -i 's/~\"startDateTimeMillis\"/\"startDateTimeMillis\"/g' /tmp/workfile 2> /dev/null
-sed -i 's/~\"channelId\"/\"channelId\"/g' /tmp/workfile 2> /dev/null
+sed -i 's/\(.*\)\("startDateTimeMillis":[^,]*,\)\(.*\)/\2\1\2\3/g' /tmp/workfile 2> /dev/null
+sed -i 's/\(.*\)\("channelId":[^,]*,\)\(.*\)/\2\1\2\3/g' /tmp/workfile 2> /dev/null
+sort -u /tmp/workfile > /tmp/workfile2 2> /dev/null
+sed 's/\(.*\)\({"_id".*\)/\2/g' /tmp/workfile2 > /tmp/workfile 2> /dev/null
 
 
 # VALIDATE JSON FILE
