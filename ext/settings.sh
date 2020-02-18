@@ -177,7 +177,7 @@ do
 			nl /tmp/chvalues > /tmp/chvalues_count
 			sed -i 's/\(     \)\([0-9].*\)/[\2/g;s/\(    \)\([0-9].*\)/[\2/g;s/\(   \)\([0-9].*\)/[\2/g;s/[\t]/] /g;s/\&amp;/\&/g' /tmp/chvalues_count
 			mv /tmp/chvalues_count /tmp/chvalues
-			sed -i 's/.*/"&" "" off \\/g' /tmp/chvalues
+			sed -i 's/\r//g;s/.*/"&" "" off \\/g' /tmp/chvalues
 			sed -i '$s/.*/&\n2>\/tmp\/chconf/g' /tmp/chvalues
 			cat /tmp/chvalues >> /tmp/chmenu
 			
@@ -186,7 +186,7 @@ do
 			if [ -s /tmp/chconf ]
 			then
 				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
-				cp /tmp/chlist chlist_old
+				# cp /tmp/chlist chlist_old
 				dialog --backtitle "[X1110] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list added!\nPlease run the grabber to add the channels to the setup modules!" 7 50
 				echo "H" > /tmp/value
 			else
@@ -198,6 +198,8 @@ do
 			fi
 		else
 			perl compare_menu.pl > /tmp/enabled_chvalues 2> /dev/null
+			sed -i 's/\r//g' /tmp/chvalues
+			sed -i 's/\r//g' /tmp/comm_menu_enabled
 			comm -12 <(sort -u /tmp/enabled_chvalues) <(sort -u /tmp/chvalues) > /tmp/comm_menu_enabled
 			comm -2 -3 <(sort -u /tmp/chvalues) <(sort -u /tmp/enabled_chvalues) > /tmp/comm_menu_disabled
 			sed -i 's/.*/&" [ON]/g' /tmp/comm_menu_enabled
@@ -217,7 +219,7 @@ do
 			then
 				sed 's/" "/","/g;s/\\\[[0-9][^]]*\] //g;s/\\(/(/g;s/\\)/)/g;s/.*/{"channels":[&]}/g;s/\\\&/\&amp;/g;s/\\//g' /tmp/chconf > channels.json
 				dialog --backtitle "[X1130] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "New channel list saved!\nPlease run the grabber to add new channels to the setup modules!" 7 50
-				cp /tmp/chlist chlist_old
+				# cp /tmp/chlist chlist_old
 				echo "H" > /tmp/value
 			else
 				dialog --backtitle "[X1140] EASYEPG SIMPLE XMLTV GRABBER > EXTERNAL SETTINGS > CHANNEL LIST" --title "INFO" --msgbox "Channel list creation aborted!\nPlease note that at least 1 channel must be included in channel list!" 7 50
