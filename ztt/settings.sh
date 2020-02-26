@@ -621,13 +621,13 @@ do
 		# Z3810 NO
 		if [ $response = 1 ]
 		then
-			dialog --backtitle "[Z3810] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service not deleted!" 5 32
+			dialog --backtitle "[Z3810] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Cache not deleted!" 5 32
 			echo "H" > /tmp/value
 						
 		# Z3820 YES
 		elif [ $response = 0 ] 
 		then
-			dialog --backtitle "[Z3820] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Service deleted!" 5 30
+			dialog --backtitle "[Z3820] EASYEPG SIMPLE XMLTV GRABBER > ZATTOO SETTINGS > DELETE CACHE" --title "INFO" --msgbox "Cache deleted!" 5 30
 			rm -rf cache/* init.txt 2> /dev/null
 			echo "H" > /tmp/value
 							
