@@ -85,46 +85,46 @@ foreach my $configname ( @configname ) {
 			
 		# DAY 1
 		if( $day_setting == 1 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=24&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=24&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-2
 		} elsif( $day_setting == 2 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=48&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=48&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-3
 		} elsif( $day_setting == 3 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=72&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=72&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-4
 		} elsif( $day_setting == 4 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=96&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=96&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-5
 		} elsif( $day_setting == 5 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=120&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=120&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-6
 		} elsif( $day_setting == 6 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=144&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=144&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-7
 		} elsif( $day_setting == 7 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=168&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=168&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-8
 		} elsif( $day_setting == 8 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=192&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=192&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-9
 		} elsif( $day_setting == 9 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=216&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=216&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-10
 		} elsif( $day_setting == 10 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=240&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=240&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-11
 		} elsif( $day_setting == 11 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=264&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=264&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-12
 		} elsif( $day_setting == 12 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=288&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=288&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-13
 		} elsif( $day_setting == 13 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=312&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=312&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		# DAYS 1-14
 		} elsif( $day_setting == 7 ) {
-			print "curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedule?startdate=" . $date1 . "&hours=336&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
+			print "curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedule?startdate=" . $date1 . "&hours=336&totalwidthunits=898&channels=" . $new_id . "' | grep \"$new_id\" > mani/$new_id\n";
 		}
 	
 	} else {

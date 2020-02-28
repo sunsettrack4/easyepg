@@ -71,7 +71,7 @@ rm /tmp/chlist chlist /tmp/workfile workfile 2> /dev/null
 #
 
 printf "\rFetching channel list... "
-curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedulesettings?media=tv' > /tmp/chlist
+curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedulesettings?media=tv' > /tmp/chlist
 jq '.' /tmp/chlist > /tmp/workfile
 
 printf "\rChecking manifest files... "
@@ -495,8 +495,8 @@ ls cache/new > compare 2> /dev/null
 comm -2 -3 <(sort -u day/daydlnew_1 2> /dev/null) <(sort -u compare 2> /dev/null) > day/daynew
 rm compare
 
-sed -i "s/\(.*\)_TV/curl -s 'https:\/\/immediate-prod.apigee.net\/broadcast-content\/1\/episodes\/\1' | grep '+id+:+\1' > cache\/new\/&/g" day/daynew
-sed -i "s/\(.*\)_MV/curl -s 'https:\/\/immediate-prod.apigee.net\/broadcast-content\/1\/films\/\1' | grep '+id+:+\1' > cache\/new\/&/g" day/daynew
+sed -i "s/\(.*\)_TV/curl -s 'https:\/\/broadcastservices.imdserve.com\/broadcast-content\/1\/episodes\/\1' | grep '+id+:+\1' > cache\/new\/&/g" day/daynew
+sed -i "s/\(.*\)_MV/curl -s 'https:\/\/broadcastservices.imdserve.com\/broadcast-content\/1\/films\/\1' | grep '+id+:+\1' > cache\/new\/&/g" day/daynew
 sed -i 's/+id+:+/"id":"/g' day/daynew
 
 cat day/daynew > day/common
@@ -679,7 +679,7 @@ rm workfile chlist 2> /dev/null
 
 # DOWNLOAD CHANNEL LIST + RYTEC/EIT CONFIG FILES (JSON)
 printf "\rRetrieving channel list and config files...          "
-curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedulesettings?media=tv' > /tmp/chlist
+curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedulesettings?media=tv' > /tmp/chlist
 jq '.' /tmp/chlist > chlist
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/rdt_channels.json > rdt_channels.json
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/rdt_genres.json > rdt_genres.json

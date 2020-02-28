@@ -1,0 +1,8 @@
+{ "settings": {
+"day": "7",
+"cid": "disabled",
+"genre": "enabled",
+"category": "enabled",
+"episode": "xmltv_ns",
+"settings": "true" }
+}

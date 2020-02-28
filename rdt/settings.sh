@@ -161,7 +161,7 @@ do
 		echo 'dialog --backtitle "[R1100] EASYEPG SIMPLE XMLTV GRABBER > RADIOTIMES SETTINGS > CHANNEL LIST" --title "CHANNELS" --checklist "Please choose the channels you want to grab:" 15 50 10 \' > /tmp/chmenu
 		
 		printf "\rFetching channel list...               "
-		curl -s 'https://immediate-prod.apigee.net/broadcast/v1/schedulesettings?media=tv' > /tmp/workfile
+		curl -s 'https://broadcastservices.imdserve.com/broadcast/v1/schedulesettings?media=tv' > /tmp/workfile
 		jq '.' /tmp/workfile > /tmp/chlist 
 		
 		printf "\rLoading channel configuration..."
