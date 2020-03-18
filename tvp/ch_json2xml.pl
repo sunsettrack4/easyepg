@@ -97,11 +97,11 @@ foreach my $attributes ( @attributes ) {
         # ####################
         
         # DEFINE CHANNEL ID + NAME
-		my $cname   = $attributes->{'name'};
+		my $cname   = $attributes->{'title'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 		# DEFINE LOGO
-		my $logo	= $attributes->{'logo'}{'colour'};
+		my $logo	= $attributes->{'logo'};
         
         # DEFINE LANGUAGE VERSION
         my $languageVER =  $initdata->{'language'};

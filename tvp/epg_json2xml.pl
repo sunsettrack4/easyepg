@@ -107,7 +107,8 @@ my $languageVER =  $initdata->{'language'};
 my @attributes = @{ $data->{'attributes'} };
 foreach my $attributes ( @attributes ) {
     foreach my $param ( @$attributes ) {
-		my @programmes = @{ $param->{'programmes'} };
+		my $cid   = $param->{'id'};
+		my @programmes = @{ $param->{'tiles'} };
 		
 		foreach my $programmes ( @programmes ) {
 			
@@ -118,7 +119,6 @@ foreach my $attributes ( @attributes ) {
 			# DEFINE TIMES AND CHANNEL ID
 			my $start = $programmes->{'start'};
 			my $end   = $programmes->{'end'};
-			my $cid   = $programmes->{'channelId'};
 			
 			# CONVERT FROM TIMESTAMP TO XMLTV DATE FORMAT
 			$start =~ s/[-:T]//g;
@@ -127,13 +127,14 @@ foreach my $attributes ( @attributes ) {
 			$end   =~ s/\+/ \+/g; 
 			
 			# DEFINE PROGRAM STRINGS
-			my $image     = $programmes->{'thumbnail'};
+			my $image     = $programmes->{'image'};
+			$image        =~ s/(.*.jpg)(.*)/$1/g;
 			my $title     = $programmes->{'title'};
-			my $subtitle  = $programmes->{'subtitle'}; 
+			my $subtitle  = $programmes->{'episode_title'}; 
 			my $desc      = $programmes->{'synopsis'};
 			my $genre     = $programmes->{'category'};
-			my $series    = $programmes->{'seasonNumber'};
-			my $episode   = $programmes->{'episodeNumber'};
+			my $series    = $programmes->{'season'};
+			my $episode   = $programmes->{'episode'};
 			
 			# DEFINE RYTEC CHANNEL ID (language)
 			my $rytec = $chdata->{'channels'}{$countryVER};

@@ -37,19 +37,11 @@ then
 	exit 0
 fi
 
-if ! curl --write-out %{http_code} --silent --output /dev/null https://tvplayer.com | grep -q "200"
+if ! curl --write-out %{http_code} --silent --output /dev/null https://tvplayer.com/tvguide | grep -q "200"
 then
 	printf "Service provider unavailable!\n\n"
 	exit 0
 fi
-
-date1=$(date '+%Y%m%d')
-date2=$(date -d '1 day' '+%Y%m%d')
-date3=$(date -d '2 days' '+%Y%m%d')
-date4=$(date -d '3 days' '+%Y%m%d')
-date5=$(date -d '4 days' '+%Y%m%d')
-date6=$(date -d '5 days' '+%Y%m%d')
-date7=$(date -d '6 days' '+%Y%m%d')
 
 
 # ##################
@@ -73,13 +65,13 @@ rm day/epgdata 2> /dev/null
 
 printf "\rDownloading EPG manifest files... "
 
-if grep -q '"day": "[1-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date1 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
-if grep -q '"day": "[2-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date2 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
-if grep -q '"day": "[3-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date3 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
-if grep -q '"day": "[4-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date4 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
-if grep -q '"day": "[5-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date5 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
-if grep -q '"day": "[6-7]"' settings.json; then curl -s https://tvplayer.com/tvguide?date=$date6 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
-if grep -q '"day": "[7]"'   settings.json; then curl -s https://tvplayer.com/tvguide?date=$date7 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' >> day/epgdata; fi
+if grep -q '"day": "[1-7]"' settings.json; then curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1 }/g' >> day/epgdata; fi
+if grep -q '"day": "[2-7]"' settings.json; then curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date -d '1 day' '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1 }/g' >> day/epgdata; fi
+if grep -q '"day": "[3-7]"' settings.json; then curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date -d '2 days' '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1 }/g' >> day/epgdata; fi
+if grep -q '"day": "[4-7]"' settings.json; then curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date -d '3 days' '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1 }/g' >> day/epgdata; fi
+if grep -q '"day": "[5-7]"' settings.json; then curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date -d '4 days' '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1 }/g' >> day/epgdata; fi
+if grep -q '"day": "[6-7]"' settings.json; then curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date -d '5 days' '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1 }/g' >> day/epgdata; fi
+if grep -q '"day": "[7]"'   settings.json; then curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date -d '6 days' '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1 }/g' >> day/epgdata; fi
 
 echo  "DONE!" && printf "\n"
 
@@ -88,7 +80,7 @@ echo  "DONE!" && printf "\n"
 # SHOW ERROR MESSAGE + ABORT PROCESS IF CHANNEL IDs WERE CHANGED
 #
 
-curl -s https://tvplayer.com/tvguide?date=$date1 | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' > /tmp/chlist
+curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1}/g' > /tmp/chlist
 perl chlist_printer.pl > /tmp/compare.json
 perl compare_menu.pl 2>errors.txt > /tmp/xxx
 

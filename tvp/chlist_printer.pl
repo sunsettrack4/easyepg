@@ -83,7 +83,7 @@ foreach my $newattributes ( @newchannels_name2id ) {
 	#
         
 	# DEFINE NEW CHANNEL NAME
-	my $newcname   = $newattributes->{'name'};
+	my $newcname   = $newattributes->{'title'};
 	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE NEW CHANNEL ID
@@ -105,7 +105,7 @@ foreach my $newattributes ( @newchannels_id2name ) {
 	#
         
 	# DEFINE NEW CHANNEL NAME
-	my $newcname   = $newattributes->{'name'};
+	my $newcname   = $newattributes->{'title'};
 	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE NEW CHANNEL ID
@@ -132,7 +132,7 @@ foreach my $oldattributes ( @oldchannels_name2id ) {
 	#
 								
 	# DEFINE OLD CHANNEL NAME
-	my $oldcname   = $oldattributes->{'name'};
+	my $oldcname   = $oldattributes->{'title'};
 	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 	
 	# DEFINE OLD CHANNEL ID
@@ -154,7 +154,7 @@ foreach my $oldattributes ( @oldchannels_id2name ) {
 	#
 								
 	# DEFINE OLD CHANNEL NAME
-	my $oldcname   = $oldattributes->{'name'};
+	my $oldcname   = $oldattributes->{'title'};
 	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE OLD CHANNEL ID

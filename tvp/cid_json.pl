@@ -56,7 +56,7 @@ foreach my $attributes ( @attributes ) {
     # ####################
         
     # DEFINE CHANNEL NAME
-	my $cname   = $attributes->{'name'};
+	my $cname   = $attributes->{'title'};
 	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		
 	# DEFINE CHANNEL ID

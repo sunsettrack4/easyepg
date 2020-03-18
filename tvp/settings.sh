@@ -152,14 +152,14 @@ do
 		
 		printf "\rLoading channel list..."
 		
-		if ! curl --write-out %{http_code} --silent --output /dev/null https://tvplayer.com | grep -q "200"
+		if ! curl --write-out %{http_code} --silent --output /dev/null https://tvplayer.com/tvguide | grep -q "200"
 		then
 			printf "\rService provider unavailable!"
 			sleep 2s
 			exit 0
 		fi
 
-		curl -s https://tvplayer.com/tvguide?date=$(date '+%Y-%m-%d') | grep "var channels" | sed 's/\(.*var channels = \)\(.*\)}\];/{ "attributes": \2}]}/g' > /tmp/chlist
+		curl -s -H "x-requested-with: XMLHttpRequest" https://tvplayer.com/tvguide-ajax?date=$(date '+%Y-%m-%d')T00%3A00%3A00.000%2B00%3A00 | sed 's/\(.*\)/{ "attributes": \1}/g' > /tmp/chlist
 		
 		printf "\rLoading channel configuration..."
 		perl cid_json.pl > /tmp/chvalues
