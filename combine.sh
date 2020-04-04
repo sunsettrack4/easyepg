@@ -299,7 +299,7 @@ then
 		
 		if [ -s /tmp/channels ]
 		then
-			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g' /tmp/channels
+			sed -i 's/\\\[/[/g;s/\\\]/]/g;s/\\(/(/g;s/\\)/)/g;s/\\\&/\&/g;s/\\#/#/g' /tmp/channels
 			sed -i 's/ "\[HORIZON/\n"\[HORIZON/g;s/ "\[ZATTOO/\n"\[ZATTOO/g;s/ "\[SWISSCOM/\n"\[SWISSCOM/g;s/ "\[TVPLAYER/\n"\[TVPLAYER/g;s/ "\[MAGENTATV/\n"\[MAGENTATV/g;s/ "\[RADIOTIMES/\n"\[RADIOTIMES/g;s/ "\[WAIPU.TV/\n"\[WAIPU.TV/g;s/ "\[TV-SPIELFILM/\n"\[TV-SPIELFILM/g;s/ "\[VODAFONE/\n"\[VODAFONE/g;s/ "\[TVTV/\n"\[TVTV/g;s/ "\[EXTERNAL/\n"\[EXTERNAL/g' /tmp/channels
 			
 			if [ -e /tmp/setupname ]
