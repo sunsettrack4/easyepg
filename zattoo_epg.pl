@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-#      Copyright (C) 2020 Jan-Luca Neumann
+#      Copyright (C) 2019-2020 Jan-Luca Neumann
 #      https://github.com/sunsettrack4/easyepg/
 #
 #      Collaborators:
@@ -2342,7 +2342,7 @@ foreach my $channel ( sort { lc $a cmp lc $b } keys %ch_keys ) {
 	if( $cid eq "1" and defined $rytec_db->{ $ch_keys{$channel}->{name} } ) {
 		$writer->startTag( "channel", "id" => $rytec_db->{ $ch_keys{$channel}->{name} } );
 	} elsif( $cid eq "1" ) {
-		print "[W] Channel \"" . $ch_keys{$channel} . "\" not found in Rytec ID list!\n";
+		print "[W] Channel \"" . $ch_keys{$channel}->{name} . "\" not found in Rytec ID list!\n";
 		$writer->startTag( "channel", "id" => $ch_keys{$channel}->{name} );
 	} else {
 		$writer->startTag( "channel", "id" => $ch_keys{$channel}->{name} );
