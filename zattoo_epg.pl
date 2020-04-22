@@ -27,6 +27,9 @@
 use strict;
 use warnings;
 
+use utf8;
+use Encode;
+
 use LWP;
 use LWP::Simple;
 use LWP::UserAgent;
@@ -619,6 +622,7 @@ sub chlist_request {
 
 # DEFINE SELECTED CHANNELS
 my @ch_selection;
+my @chm_selection;
 
 if( -e "channels.json" ) {
 	
@@ -821,24 +825,30 @@ if( $firstlogin eq "true" ) {
 	}
 		
 	# MENU
-	@ch_selection = $d->checklist( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > CHANNEL LIST',
-								   title => "$provider | CHANNEL LIST",
-								   listheight => 13,
-								   height => 15,
-								   width => 55,
-								   text => 'Please choose the channels you want to grab:',
-								   list => [ @channels ]
-								 );
+	@chm_selection = $d->checklist( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > CHANNEL LIST',
+								    title => "$provider | CHANNEL LIST",
+								    listheight => 13,
+								    height => 15,
+								    width => 55,
+								    text => 'Please choose the channels you want to grab:',
+								    list => [ @channels ]
+								  );
 		
 	# ABORT PROCESS IF CHECKLIST RETURNS WITH ZERO ENTRIES OR WITH RESULT "0"
-	if( @ch_selection == 1 ) {
-		foreach my $ch_selection ( @ch_selection ) {
-			if( $ch_selection eq "0" ) {
+	if( @chm_selection == 1 ) {
+		foreach my $chm_selection ( @chm_selection ) {
+			if( $chm_selection eq "0" ) {
 				die "\rChannel selection aborted\n";
 			}
 		}
-	} elsif( ! @ch_selection ) {
+	} elsif( ! @chm_selection ) {
 		die "\rChannel selection aborted: No channel selected\n";
+	}				
+	
+	# SAVE CHANNEL CONFIGURATION, DECODE UTF8
+	foreach my $ch_selection ( @chm_selection ) {
+		$ch_selection = decode_utf8($ch_selection);
+		push( @ch_selection, $ch_selection );
 	}
 	
 	# SET ID CHECK DATA
@@ -846,12 +856,12 @@ if( $firstlogin eq "true" ) {
 	$old_id2name = { %id2name };
 
 	# CREATE JSON PARAMS
-	my $channels_json = to_json( { channels => \@ch_selection }, { pretty => 1 } );	# SELECTED CHANNELS
+	my $channels_json = to_json( { channels => \@chm_selection }, { pretty => 1 } );	# SELECTED CHANNELS
 	my $idcheck_json  = to_json( { new_name2id => \%name2id, new_id2name => \%id2name }, { pretty => 1 } );	# COMPARISM LIST
 	my $epg_json      = to_json( { day => 7, cid => 0, genre => 1, category => 1, episode => "xmltv_ns", forks => 16, simple => 0 }, { pretty => 1 });	# EPG DEFAULT SETTINGS
 
 	# SAVE JSON TO FILE
-	open(my $fha, '>', 'channels.json'); # SELECTED CHANNELS
+	open(my $fha, '>:utf8', 'channels.json'); # SELECTED CHANNELS
 	print $fha $channels_json;
 	close $fha;
 
@@ -1209,26 +1219,28 @@ until( $selection eq "0" or $selection eq "7" ) {
 		my $new_id2name = $idcheck->{new_id2name};
 		
 		### CHECK CHANNEL CONDITIONS
+		my %chmenu_config;
 		my %applied_channels;
+		my $key_counter = 0;
 		my @channels;
 		
 		foreach my $old_channel ( @ch_selection ) {
 			
-			# OLD CHANNEL NAME IN NEW CHANNEL LIST? - YES: CREATE MENU ENTRY - NO: CHECK FURTHER
+			# OLD CHANNEL NAME IN NEW CHANNEL LIST? - YES: ENABLE MENU ENTRY - NO: CHECK FURTHER
 			if( defined $new_name2id->{$old_channel} ) {
 				
-				my @channels_new = ( $old_channel, [ $new_name2id->{$old_channel}, 1 ] );
-				push( @channels, @channels_new );
+				$key_counter = $key_counter + 1;
+				%chmenu_config = ( %chmenu_config, $key_counter => { name => $old_channel, id => $new_name2id->{$old_channel}, enabled => 1 } );
 				%applied_channels = ( %applied_channels, $old_channel => 1 );
 				
 			# OLD ID OF OLD CHANNEL NAME IN NEW CHANNEL LIST? - YES: CHECK FURTHER - NO: NOTHING
 			} elsif( defined $new_id2name->{ $old_name2id->{$old_channel} } ) {
 				
-				# OTHER OLD CHANNEL NAME WITH OLD ID OF THE ACTUAL CHANNEL NAME IN NEW CHANNEL LIST? - YES: NOTHING - NO: CREATE MENU ENTRY
+				# OTHER OLD CHANNEL NAME WITH OLD ID OF THE ACTUAL CHANNEL NAME IN NEW CHANNEL LIST? - YES: NOTHING - NO: ENABLE MENU ENTRY
 				if( not defined $old_name2id->{ $new_id2name->{ $old_name2id->{$old_channel} } } ) {
 					
-					my @channels_new = ( $new_id2name->{ $old_name2id->{$old_channel} }, [ $old_name2id->{$old_channel}, 1 ] );
-					push( @channels, @channels_new );
+					$key_counter = $key_counter + 1;
+					%chmenu_config = ( %chmenu_config, $key_counter => { name => $new_id2name->{ $old_name2id->{$old_channel} }, id => $old_name2id->{$old_channel}, enabled => 1 } );
 					%applied_channels = ( %applied_channels, $old_name2id->{$old_channel} => 1 );
 					
 				}
@@ -1243,12 +1255,23 @@ until( $selection eq "0" or $selection eq "7" ) {
 				
 			# NEW CHANNEL NAME ALREADY DEFINED IN MENU?
 			if( not defined $applied_channels->{known}->{$new_channel} ) {
-					
-				my @channels_new = ( $new_channel, [ $new_name2id->{$new_channel}, 0 ] );
-				push( @channels, @channels_new );
+				
+				$key_counter = $key_counter + 1;
+				%chmenu_config = ( %chmenu_config, $key_counter => { name => $new_channel, id => $new_name2id->{$new_channel}, enabled => 0 } );
 					
 			}
 				
+		}
+		
+		my $chmenu_config = { entries => \%chmenu_config };
+		my %ch_keys = %{ $chmenu_config->{entries} };
+		
+		# SORT CHANNELS, CREATE LIST
+		foreach my $chmenu_config ( sort { lc $ch_keys{$a}->{name} cmp lc $ch_keys{$b}->{name} } keys %ch_keys ) {
+		
+			my @channels_new = ( $ch_keys{$chmenu_config}->{name}, [ $ch_keys{$chmenu_config}->{id}, $ch_keys{$chmenu_config}->{enabled} ] );
+			push( @channels, @channels_new );
+		
 		}
 			
 		# MENU
@@ -1273,9 +1296,12 @@ until( $selection eq "0" or $selection eq "7" ) {
 	
 		if( $selection ne "X" ) {
 			
-			# SAVE NEW CHANNEL CONFIGURATION 
+			# SAVE NEW CHANNEL CONFIGURATION, DECODE UTF8
 			undef @ch_selection;
-			push( @ch_selection, @new_ch_selection );
+			foreach my $ch_selection ( @new_ch_selection ) {
+				$ch_selection = decode_utf8($ch_selection);
+				push( @ch_selection, $ch_selection );
+			}
 			$old_id2name = { %id2name };
 			$old_name2id = { %name2id };
 			
@@ -1284,14 +1310,14 @@ until( $selection eq "0" or $selection eq "7" ) {
 			my $idcheck_json  = to_json( { new_name2id => \%name2id, new_id2name => \%id2name }, { pretty => 1 } );	# COMPARISM LIST
 
 			# SAVE JSON TO FILE
-			open(my $fha, '>', 'channels.json'); # SELECTED CHANNELS
+			open(my $fha, '>:utf8', 'channels.json'); # SELECTED CHANNELS
 			print $fha $channels_json;
 			close $fha;
 			
 			open(my $fhb, '>:utf8', 'chconfig.json'); # CHANNEL IDs
 			print $fhb $idcheck_json;
 			close $fhb;
-				
+			
 			# SUCCESS MESSAGE
 			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CHANNEL LIST',
 						title => "$provider | CHANNEL LIST",
@@ -1556,8 +1582,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 						                 '4', '4 forks',
 						                 '8', '8 forks',
 						                 '16', '16 forks',
-						                 '32', '32 forks',
-						                 '64', '64 forks' ] );
+						                 '32', '32 forks' ] );
 			
 		# ABORT, RETURN TO MAIN MENU
 		if( $forks eq "0" ) {
@@ -1687,11 +1712,14 @@ my @duplicate_check;
 my @cid_check;
 my %name2id;
 my %id2name;
+my %id2logo;
 
 foreach my $ch_groups ( @dl_ch_groups ) {
 	
 	my $cid   = $ch_groups->{"cid"};
 	my $cname = $ch_groups->{"title"};
+	my $logo  = $ch_groups->{"qualities"}[0]{"logo_black_84"};
+	$logo     =~ s/(.*)(\/84x48.png)/https:\/\/images.zattic.com$1\/210x120.png/g;
 	
 	# CHECK DUPLICATES
 	my @new_cname = ( "$cname" );
@@ -1730,6 +1758,8 @@ foreach my $ch_groups ( @dl_ch_groups ) {
 		%name2id = ( %name2id, %name2id_new );
 		my %id2name_new = ( $cid => $cname );
 		%id2name = ( %id2name, %id2name_new );
+		my %id2logo_new = ( $cid => $logo );
+		%id2logo = ( %id2logo, %id2logo_new );
 			
 	}
 
@@ -1738,6 +1768,7 @@ foreach my $ch_groups ( @dl_ch_groups ) {
 # SET NEW CONFIGURATION LISTS
 my $new_name2id = { %name2id };
 my $new_id2name = { %id2name };
+my $new_id2logo = { %id2logo };
 
 ### CHECK CONFIGURATION, COMPARE OLD/NEW CHANNEL ID DATA
 
@@ -1751,19 +1782,19 @@ foreach my $old_channel ( @ch_selection ) {
 	# OLD CHANNEL NAME IN NEW CHANNEL LIST?
 	if( defined $new_name2id->{$old_channel} ) {
 		
-		%ch_config_new = ( $new_name2id->{$old_channel} => $old_channel );
+		%ch_config_new = ( $new_name2id->{$old_channel} => { name => $old_channel, logo => $new_id2logo->{ $new_name2id->{$old_channel} } } );
 		%ch_config     = ( %ch_config, %ch_config_new );
 		
 		if( $new_name2id->{$old_channel} ne $old_name2id->{$old_channel} ) {
 			
-			print "[I] Channel " . $old_channel . "received new ID " . $new_name2id->{$old_channel} . "!\n";
+			print "[I] Channel \"" . $old_channel . "\" received new ID \"" . $new_name2id->{$old_channel} . "\"!\n";
 			
 		}
 	
 	# OLD CHANNEL NAME IN OLD CHANNEL LIST?
 	} elsif( not defined $old_name2id->{$old_channel} ) {
 		
-			print "[W] Channel " . $old_channel . " not found in configuration files!\n";
+			print "[W] Channel \"" . $old_channel . "\" not found in configuration files!\n";
 				
 	# OLD ID OF OLD CHANNEL NAME IN NEW CHANNEL LIST? - YES: CHECK FURTHER - NO: NOTHING
 	} elsif( defined $new_id2name->{ $old_name2id->{$old_channel} } ) {
@@ -1771,14 +1802,14 @@ foreach my $old_channel ( @ch_selection ) {
 		# OTHER OLD CHANNEL NAME WITH OLD ID OF THE ACTUAL CHANNEL NAME IN NEW CHANNEL LIST? - YES: NOTHING - NO: CREATE MENU ENTRY
 		if( not defined $old_name2id->{ $new_id2name->{ $old_name2id->{$old_channel} } } ) {
 			
-			%ch_config_new = ( $old_name2id->{$old_channel} => $old_channel );
+			%ch_config_new = ( $old_name2id->{$old_channel} => { name => $old_channel, logo => $new_id2logo->{ $old_name2id->{$old_channel} } } );
 			%ch_config     = ( %ch_config, %ch_config_new );
 			
-			print "[I] Channel " . $old_channel . "received new channel name " . $new_id2name->{ $old_name2id->{$old_channel} } . "!\n";
+			print "[I] Channel \"" . $old_channel . "\" received new channel name \"" . $new_id2name->{ $old_name2id->{$old_channel} } . "\"!\n";
 			
 		} else {
 			
-			print "[W] Renamed channel " . $old_channel . "already exists in old channel configuration!\n";
+			print "[W] Renamed channel \"" . $old_channel . "\" already exists in old channel configuration!\n";
 			
 		}
 			
@@ -1890,8 +1921,11 @@ foreach my $time ( @time_values ) {
 		die "ERROR: Failed to retrieve guide data\n\n";
 	}
 	
+	# CHANNEL LIST
+	my %ch_keys = %{ $ch_config->{channels} };
+	
 	# FOR EACH SELECTED CHANNEL ID...
-	foreach my $channel ( keys %{ $ch_config->{channels} } ) {
+	foreach my $channel ( keys %ch_keys ) {
 
 		my @ch_guide;
 		
@@ -1939,6 +1973,7 @@ foreach my $time ( @time_values ) {
 					}
 					
 					if( defined $image ) {
+						$image =~ s/(http:)(.*)(format_480x360.jpg)/https:$2original.jpg/g;
 						%data = ( %data, image => $image );
 					}
 					
@@ -2292,6 +2327,10 @@ my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, ENCODING => 'ut
 # FIRST DECLARATION
 $writer->xmlDecl("UTF-8");
 
+# COMMENT
+$writer->comment("EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann");
+$writer->comment("created on " . localtime() );
+
 # TV
 $writer->startTag("tv");
 
@@ -2300,20 +2339,22 @@ my %ch_keys = %{ $ch_config->{channels} };
 
 foreach my $channel ( sort { lc $a cmp lc $b } keys %ch_keys ) {
 	
-	if( $cid eq "1" and defined $rytec_db->{ $ch_keys{$channel} } ) {
-		$writer->startTag( "channel", "id" => $rytec_db->{ $ch_keys{$channel} } );
+	if( $cid eq "1" and defined $rytec_db->{ $ch_keys{$channel}->{name} } ) {
+		$writer->startTag( "channel", "id" => $rytec_db->{ $ch_keys{$channel}->{name} } );
 	} elsif( $cid eq "1" ) {
 		print "[W] Channel \"" . $ch_keys{$channel} . "\" not found in Rytec ID list!\n";
-		$writer->startTag( "channel", "id" => $ch_keys{$channel} );
+		$writer->startTag( "channel", "id" => $ch_keys{$channel}->{name} );
 	} else {
-		$writer->startTag( "channel", "id" => $ch_keys{$channel} );
+		$writer->startTag( "channel", "id" => $ch_keys{$channel}->{name} );
 	}
 	
 	$writer->startTag( "display-name", "lang" => "de" );
 	
-	$writer->characters( $ch_keys{$channel} );
+	$writer->characters( $ch_keys{$channel}->{name} );
 	
 	$writer->endTag( "display-name" );
+	
+	$writer->emptyTag( "icon", "src" => $ch_keys{$channel}->{logo} );
 	
 	$writer->endTag( "channel" );
 	
@@ -2328,7 +2369,7 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 	
 	# DEFINE CHANNEL ID
 	my $channel_id   = $prog->{channel};
-	my $channel_name = $ch_config->{channels}->{$channel_id};
+	my $channel_name = $ch_config->{channels}->{$channel_id}->{name};
 	
 	# START / END / CHANNEL ID
 	if( $cid eq "1" and defined $rytec_db->{ $channel_name } ) {
