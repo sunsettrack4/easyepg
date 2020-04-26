@@ -2427,9 +2427,9 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 	$writer->endTag( "title" );
 	
 	# SUB TITLE
-	if( defined $prog->{"episode-title"} ) {
+	if( defined $prog->{episode_title} ) {
 		$writer->startTag( "sub-title", "lang" => "de" );
-		$writer->characters( $prog->{"episode-title"} );
+		$writer->characters( $prog->{episode_title} );
 		$writer->endTag( "sub-title" );
 	}
 	
