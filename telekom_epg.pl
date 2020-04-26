@@ -19,9 +19,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with easyepg. If not, see <http://www.gnu.org/licenses/>.
 
-# ###############################
-# EASYEPG ZATTOO GRABBER MODULE #
-# ###############################
+# ################################
+# EASYEPG TELEKOM GRABBER MODULE #
+# ################################
 
 # PERL MODULES
 use strict;
@@ -38,6 +38,7 @@ use HTTP::Status;
 use HTTP::Request::Params;
 use HTTP::Request::Common;
 use HTTP::Cookies;
+use HTTP::Headers;
 use HTML::TreeBuilder;
 use UI::Dialog;
 use Parallel::ForkManager;
@@ -46,6 +47,12 @@ use JSON;
 use XML::Writer;
 use IO::File;
 use POSIX;
+
+# SET VALUES
+my $firstlogin;
+
+# BUILD MENU
+my $d = new UI::Dialog ( order => [ 'dialog', 'ascii' ] );
 
 
 #
@@ -57,7 +64,7 @@ use POSIX;
 # SET SELECTION VALUE FOR MAIN MENU
 my $selection;
 
-if( -e "userfile.json" ) {
+if( -e "channels.json" and -e "chconfig.json" ) {
 	
 	# ASK DATA
 	my $answer = ask_data();
@@ -112,257 +119,17 @@ sub ask_data {
 
 
 #
-# LOGIN PROCESS: CREDENTIALS
+# AUTH PROCESS: RETRIEVE COOKIE DATA
 #
 
-# Check the login credentials required to use this provider. Check if the credentials file is available and contains all required/correct values.
-	
-# SET VALUES
-my $provider;
-my $login;
-my $pass;
-my $firstlogin;
-	
-# BUILD MENU
-my $d = new UI::Dialog ( order => [ 'dialog', 'ascii' ] );
-	
-# CHECK IF FILE EXISTS
-if( -e "userfile.json" ) {
-	
-	# READ JSON INPUT FILE: USERFILE
-	my $userfile;
-	{
-		local $/; #Enable 'slurp' mode
-		open my $dfh, "<", "userfile.json" or die  "[E] Unable to read file: userfile.json. Please check file permissions.\n";
-		$userfile = <$dfh>;
-		close $dfh;
-	}
-	
-	# PARSE FILE
-	my $userdata;
-	eval{
-		$userdata = decode_json($userfile);
-	};
-	
-	# CHECK EXPECTED VALUES
-	if( defined $userdata ) {
-		$provider = $userdata->{"provider"};
-		$login    = $userdata->{"login"};
-		$pass     = $userdata->{"password"};
-	}
-	
-	# EXPECTED VALUES UNAVAILABLE = REQUEST NEW DATA
-	if( not defined $provider or not defined $login or not defined $pass ) {
-		unlink "userfile.json";
-		undef $provider;
-		undef $login;
-		undef $pass;
-		$firstlogin = "true";
-		print "[W] Wrong login data (0)\n";
-		
-	# PROVIDER MUST BE A KNOWN ONE
-	} elsif(    $provider eq "zattoo.com" or 
-				$provider eq "www.1und1.tv" or 
-				$provider eq "mobiltv.quickline.com" or
-				$provider eq "tvplus.m-net.de" or
-				$provider eq "player.waly.tv" or
-				$provider eq "www.meinewelt.cc" or
-				$provider eq "www.bbv-tv.net" or
-				$provider eq "www.vtxtv.ch" or
-				$provider eq "www.myvisiontv.ch" or
-				$provider eq "iptv.glattvision.ch" or
-				$provider eq "www.saktv.ch" or
-				$provider eq "nettv.netcologne.de" or
-				$provider eq "tvonline.ewe.de" or
-				$provider eq "www.quantum-tv.com" or
-				$provider eq "tv.salt.ch" or
-				$provider eq "tvonline.swb-gruppe.de" or
-				$provider eq "tv.eir.ie" ) {
-					
-					print "[I] Userdata successfully loaded!\n";
-					$firstlogin = "false";
-	
-	# IF PROVIDER DOMAIN IS UNKNOWN = REQUEST NEW DATA			
-	} else {
-		
-		unlink "userfile.json";
-		undef $provider;
-		undef $login;
-		undef $pass;
-		$firstlogin = "true";
-		print "[W] Wrong login data (1)\n";
-		
-	}
-
-# FILE DOES NOT EXIST = REQUEST NEW DATA
-} elsif ( $selection ne "7" ) {
-	
-	$firstlogin = "true";
-
-} else {
-	
-	die "[E] Userfile not found, please enter UI mode to enter your settings.\n";
-	
-}
-	
-# SELECT PROVIDER, ENTER CREDENTIALS
-if( $firstlogin eq "true" ) {
-		
-	# CHOOSE PROVIDER
-	$provider = $d->menu(      title => 'PROVIDER SELECTION',
-							   backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > PROVIDER',
-							   text => 'Please select the provider domain:',
-							   width => 55,
-							   listheight => 13,
-							   height => 15,
-							   list => [ 'zattoo.com', 'Zattoo',
-										 'www.1und1.tv', '1&1 TV',
-										 'mobiltv.quickline.com', 'Quickline Mobil-TV',
-										 'tvplus.m-net.de', 'M-net TVplus',
-										 'player.waly.tv', 'WALY.TV',
-										 'www.meinewelt.cc', 'Meine Welt unterwegs',
-										 'www.bbv-tv.net', 'BBV TV',
-										 'www.vtxtv.ch', 'VTX TV',
-										 'www.myvisiontv.ch', 'myVision mobile TV',
-										 'iptv.glattvision.ch', 'glattvision+',
-										 'www.saktv.ch', 'SAK TV',
-										 'nettv.netcologne.de', 'NetTV',
-										 'tvonline.ewe.de', 'EWE TV App',
-										 'www.quantum-tv.com', 'Quantum TV',
-										 'tv.salt.ch', 'Salt TV',
-										 'tvonline.swb-gruppe.de', 'swb TV App',
-										 'tv.eir.ie', 'eir TV' ]
-							  );
-	
-	# USER ABORTED THE PROCESS
-	if( $provider eq "0" ) {
-		die "[E] Login process aborted (0)\n";
-	}
-
-	# ENTER LOGIN NAME (ZATTOO = EMAIL, RESELLER = USERNAME)
-	if( $provider eq "zattoo.com" ) {
-		$login = $d->inputbox( title => "ZATTOO | LOGIN PAGE",
-							   height => 8,
-							   width => 50,
-							   backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-							   text => '\nPlease enter your email address:' );
-	} else {
-		$login = $d->inputbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-							   height => 8,
-							   width => 50,
-							   title => "$provider | LOGIN PAGE",
-							   text => '\nPlease enter your username:' );
-	}					   
-
-	# ESCAPE LOGIN
-	if( $login eq "0" ) {
-		die "[E] Login process aborted (1)\n";
-	}
-
-	# ZATTOO LOGIN MUST BE EMAIL
-	if( $provider eq "zattoo.com" ) {
-		until( $login =~ /(.*)@(.*).(.*)/ ) {
-			$login = $d->inputbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-								   height => 8,
-								   width => 50,
-								   title => 'ZATTOO | LOGIN PAGE',
-								   beepbefore => 1,
-								   text => 'Wrong input detected!\nPlease enter your email address:',
-								   entry => 'username@mail.com' );
-			
-			# ESCAPE LOGIN
-			if( $login eq "0" ) {
-				die "[E] Login process aborted (2)\n";
-			}
-
-		}
-
-	# PROVIDER LOGIN MUST NOT BE EMPTY
-	} else {
-
-		until( $login ne "" ) {
-
-			$login = $d->inputbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-								   height => 8,
-								   width => 50,
-								   title => "$provider | LOGIN PAGE",
-								   beepbefore => 1,
-								   text => 'Empty input detected!\nPlease enter your username:',
-								   entry => 'username' );
-				
-			# ESCAPE LOGIN
-			if( $login eq "0" ) {
-				die "[E] Login process aborted (3)\n";
-			}
-
-		}
-
-	}
-					   
-	# ENTER PASSWORD
-	if( $provider eq "zattoo.com" ) {
-		 $pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-							   height => 8,
-							   width => 50,
-							   title => 'ZATTOO | LOGIN PAGE',
-							   text => "EMAIL: $login\nPlease enter your password:" );
-
-	} else {
-
-		$pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-							  height => 8,
-							  width => 50,
-							  title => "$provider | LOGIN PAGE",
-							  text => "USER: $login\nPlease enter your password:" );
-
-	}
-
-	# PASSWORD MUST NOT BE EMPTY
-	until( $pass ne "" ) {
-
-		if( $provider eq "zattoo.com" ) {
-			$pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-								  title => 'ZATTOO | LOGIN PAGE',
-								  beepbefore => 1,
-								  height => 8,
-								  width => 50,
-								  text => "Empty input detected!\nPlease enter your password:" );
-
-		} else {
-
-			$pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-								  title => "$provider | LOGIN PAGE",
-								  beepbefore => 1,
-								  height => 8,
-								  width => 50,
-								  text => "Empty input detected!\nPlease enter your password:" );
-
-		}
-
-	}
-					
-	# ESCAPE LOGIN
-	if( $pass eq "0" ) {
-
-		die "[E] Login process aborted (4)\n";
-
-	}
-
-}
-
-
-#
-# LOGIN PROCESS: RETRIEVE COOKIE DATA
-#
-
-# Get beaker session cookie required for all upcoming URL requests of this provider. If credentials are wrong, request new data from the user.
+# Get session cookie required for all upcoming URL requests of this provider.
 
 # USE CREDENTIALS TO LOGIN TO WEBSERVICE, RETURN SESSION DATA
 my $session;
 
 # START LOGIN PROCESS, EVALUATE STATUS
 eval{
-     $session = login_process();
+    $session = login_process();
 };
 
 # IF LOGIN PROCESS DIED, EXIT SCRIPT
@@ -371,9 +138,10 @@ if( not defined $session ) {
 }
 
 # RETRIEVE SESSION CONFIGRUATION FOR UPCOMING PROCESSES
-my $powerid 	= $session->{powerid};
-my $country 	= $session->{country};
-my $login_token = $session->{login_token};
+my $j_token = $session->{j_token};
+my $c_token = $session->{c_token};
+my $csrf_token = $session->{csrf_token};
+
 
 sub login_process {
 
@@ -381,250 +149,123 @@ sub login_process {
 	# [SUB] LOGIN PROCESS
 	#
 	
-	# BUILD MENU
-	my $d = new UI::Dialog ( order => [ 'dialog', 'ascii' ] );
-	
 	# SET VALUES TO BE DEFINED IN OUR LOGIN PROCESS
 	my $login_success = "-";
-	my $country;
-	my $powerid;
 	my $login_token;
 	
 	# LOGIN TO WEBSERVICE UNTIL RESULT IS SUCCESSFUL
 	until( $login_success eq "true" ) {
 		
-		# GET APPTOKEN
-		my $main_url;
-		if( $provider eq "zattoo.com" ) {
-			$main_url = "https://zattoo.com/int/";
-		} else {
-			$main_url = "https://$provider/";
-		}
-			
-		my $main_agent    = LWP::UserAgent->new(
-			agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0"
-		);
-
-		my $main_request  = HTTP::Request::Common::GET($main_url);
-		my $main_response = $main_agent->request($main_request);
-
-		if( $main_response->is_error ) {
-			die "[E] UNABLE TO LOGIN TO WEBSERVICE! (no internet connection / service unavailable)\n\nRESPONSE:\n\n" . $main_response->content . "\n";
-		}
+		# LOGIN URL
+		my $login_url = "https://web.magentatv.de/EPG/JSON/Login?&T=PC_firefox_72";
 		
-		# PARSE WEBPAGE TO GET APPTOKEN
-		my $parser        = HTML::Parser->new;
-		my $main_content  = $main_response->content;
-
-		if( not defined $main_content) {
-			die "[E] UNABLE TO LOGIN TO WEBSERVICE! (empty webpage content)\n";
-		}
-
-		my $zattootree   = HTML::TreeBuilder->new;
-		$zattootree->parse($main_content);
-
-		if( not defined $zattootree) {
-			die "[E] UNABLE TO LOGIN TO WEBSERVICE! (unable to parse webpage)\n";
-		}
-
-		my @scriptvalues = $zattootree->look_down('type' => 'text/javascript');
-		my $apptoken     = $scriptvalues[0]->as_HTML;
-						
-		if( defined $apptoken ) {
-			$apptoken        =~ s/(.*window.appToken = ')(.*)(';.*)/$2/g;
-		} else {
-			die "[E] UNABLE TO LOGIN TO WEBSERVICE! (unable to retrieve appToken)\n";
-		}
-
-		# GET TEMPORARY SESSION ID REQUIRED TO LOGIN
-		my $session_url    = "https://$provider/zapi/session/hello";
-
-		my $session_agent  = LWP::UserAgent->new(
-			agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0"
+		my $login_agent    = LWP::UserAgent->new(
+			agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0",
 		);
-
-		my $session_request  = HTTP::Request::Common::POST($session_url, ['client_app_token' => uri_escape($apptoken), 'uuid' => uri_escape('d7512e98-38a0-4f01-b820-5a5cf98141fe'), 'lang' => uri_escape('en'), 'format' => uri_escape('json')]);
-		my $session_response = $session_agent->request($session_request);
-		my $session_token    = $session_response->header('Set-cookie');
-						
-		if( defined $session_token ) {
-			$session_token       =~ s/(.*)(beaker.session.id=)(.*)(; Path.*)/$3/g;
-		} else {
-			die "[E] UNABLE TO LOGIN TO WEBSERVICE! (unable to retrieve Session ID)\n";
-		}
-
-		if( $session_response->is_error ) {
-			die "[E] LOGIN FAILED! (invalid response)\nRESPONSE:\n\n" . $session_response->content . "\n";
-		}
-
-		# GET UNIQUE LOGIN COOKIE / SESSION ID
-		my $login_url    = "https://$provider/zapi/v2/account/login";
-						
-		my $login_agent   = LWP::UserAgent->new(
-			agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0"
-		);
-						
-		my $cookie_jar    = HTTP::Cookies->new;
-		$cookie_jar->set_cookie(0,'beaker.session.id',$session_token,'/',$provider,443);
-		$login_agent->cookie_jar($cookie_jar);
-
-		my $login_request  = HTTP::Request::Common::POST($login_url, ['login' => $login, 'password' => $pass ]);
+		
+		# FORM DATA
+		my $login_data = '{"userId":"Guest","mac":"00:00:00:00:00:00"}';
+		
+		# REQUEST
+		my $login_request  = HTTP::Request::Common::POST( $login_url, Content => $login_data );
 		my $login_response = $login_agent->request($login_request);
 		
-		# LOGIN FAILED
-		if( $login_response->is_error and $selection ne "7" ) {
-			
-			# RE-ENTER LOGIN NAME
-			if( $provider eq "zattoo.com" ) {
-				$login = $d->inputbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-									   title => "ZATTOO | LOGIN PAGE",
-									   height => 8,
-									   width => 50,
-									   beepbefore => 1,
-									   text => 'Email or password incorrect!\nPlease re-enter your email address:' );
-			} else {
-				$login = $d->inputbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-									   title => "$provider | LOGIN PAGE",
-									   height => 8,
-									   width => 50,
-									   beepbefore => 1,
-									   text => 'Email or password incorrect!\nPlease re-enter your username:' );
-			}					   
-
-			# ESCAPE LOGIN
-			if( $login eq "0" ) {
-				die "[E] Login process aborted (5)\n";
-			}
-
-			# ZATTOO LOGIN MUST BE EMAIL
-			if( $provider eq "zattoo.com" ) {
-				until( $login =~ /(.*)@(.*).(.*)/ ) {
-					$login = $d->inputbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-										   title => 'ZATTOO | LOGIN PAGE',
-										   height => 8,
-										   width => 50,
-										   text => 'Wrong input detected!\nPlease re-enter your email address:',
-										   beepbefore => 1,
-										   entry => 'username@mail.com' );
-					
-					# ESCAPE LOGIN
-					if( $login eq "0" ) {
-						die "[E] Login process aborted (6)\n";
-					}
-				}
-			# PROVIDER LOGIN MUST NOT BE EMPTY
-			} else {
-				until( $login ne "" ) {
-					$login = $d->inputbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-										   title => "$provider | LOGIN PAGE",
-										   height => 8,
-										   width => 50,
-										   text => 'Empty input detected!\nPlease re-enter your username:',
-										   beepbefore => 1,
-										   entry => 'username' );
-					
-					# ESCAPE LOGIN
-					if( $login eq "0" ) {
-						die "[E] Login process aborted (7)\n";
-					}
-				}
-			}
-						   
-			# RE-ENTER PASSWORD
-			if( $provider eq "zattoo.com" ) {
-				$pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-									  title => 'ZATTOO | LOGIN PAGE',
-									  height => 8,
-									  width => 50,
-									  text => "EMAIL; $login\nPlease re-enter your password:" );
-			} else {
-				$pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-									  title => "$provider | LOGIN PAGE",
-									  height => 8,
-									  width => 50,
-									  text => "USER: $login\nPlease re-enter your password:" );
-			}
-			
-			# PASSWORD MUST NOT BE EMPTY
-			until( $pass ne "" ) {
-				if( $provider eq "zattoo.com" ) {
-					$pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-										  title => 'ZATTOO | LOGIN PAGE',
-										  beepbefore => 1,
-										  height => 8,
-										  width => 50,
-										  text => 'Empty input detected!\nPlease re-enter your password:' );
-				} else {
-					$pass = $d->password( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > LOGIN',
-										  title => "$provider | LOGIN PAGE",
-										  beepbefore => 1,
-										  height => 8,
-										  width => 50,
-										  text => 'Empty input detected!\nPlease re-enter your password:' );
-				}
-			}
-						
-			# ESCAPE LOGIN
-			if( $pass eq "0" ) {
-				die "[E] Login process aborted (8)\n";
-			}
+		if( $login_response->is_error ) {
+			die "[E] UNABLE TO LOGIN WEBSERVICE! (no internet connection / service unavailable)\n\nRESPONSE:\n\n" . $login_response->content . "\n";
+		}
 		
-		} elsif( $login_response->is_error and $selection eq "7" ) {
+		# GET JSESSION ID FOR THE 1ST TIME
+		my $pre_j_token    = $login_response->header('Set-cookie');
+		
+		if( defined $pre_j_token ) {
+			$pre_j_token       =~ s/(.*)(JSESSIONID=)(.*)(; Path=.*)/$3/g;
+		} else {
+			die "[E] UNABLE TO LOGIN TO WEBSERVICE! (unable to retrieve 1st JSESSION ID)\n";
+		}
+		
+		# SAVE JSESSION ID COOKIE
+		my $cookie_jar    = HTTP::Cookies->new;
+		$cookie_jar->set_cookie(0,'JSESSIONID',$pre_j_token,'/EPG/','web.magentatv.de',443);
+		
+		# AUTH URL
+		my $auth_url = "https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup&T=PC_firefox_72";
+		
+		my $auth_agent    = LWP::UserAgent->new(
+			agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0",
+		);
+		
+		# SET COOKIES
+		$auth_agent->cookie_jar($cookie_jar);
+		
+		# FORM DATA
+		my $auth_data = '{"terminalid":"00:00:00:00:00:00","mac":"00:00:00:00:00:00","terminaltype":"MACWEBTV","utcEnable":1,"timezone":"UTC","userType":3,"terminalvendor":"Unknown","preSharedKeyID":"PC01P00002","cnonce":"a01e0e9cbb670e8f850b16b69ed8ae3d","areaid":"1","templatename":"default","usergroup":"-1","subnetId":"4901"}';
+		
+		# REQUEST
+		my $auth_request  = HTTP::Request::Common::POST($auth_url, Content => $auth_data );
+		my $auth_response = $auth_agent->request($auth_request);
+
+		if( $auth_response->is_error ) {
+			die "[E] UNABLE TO GET WEBSERVICE AUTHORIZATION! (service unavailable)\n\nRESPONSE:\n\n" . $auth_response->content . "\n";
+		}
+		
+		# EXTRACT COOKIES: JSESSIONID, CSESSIONID / EXTRACT DATA: CSRFTOKEN
+		my @cookies = @{ $cookie_jar->extract_cookies($auth_response)->{_headers}->{"set-cookie"} };
+		
+		if( @cookies ) {
 			
-			die "[E] Login error, please enter UI mode to enter your login data.\n";
+			foreach my $cookie ( @cookies ) {
+				
+				if( $cookie =~ /(JSESSIONID=)(.*)(; Path=\/EPG\/)/ ) {
+					
+					$cookie =~ s/(JSESSIONID=)(.*)(; Path=\/EPG\/.*)/$2/g;
+					
+					if( not defined $2 ) {
+						die "[E] UNABLE TO GET WEBSERVICE AUTHORIZATION! (unable to retrieve JSESSIONID)\n";
+					}
+					
+					$j_token = $2;
+					
+				} elsif( $cookie =~ /(CSESSIONID=)(.*)(; Path=\/EPG\/)/ ) {
+					
+					$cookie =~ s/(CSESSIONID=)(.*)(; Path=\/EPG\/.*)/$2/g;
+					
+					if( not defined $2 ) {
+						die "[E] UNABLE TO GET WEBSERVICE AUTHORIZATION! (unable to retrieve CSESSIONID)\n";
+					}
+					
+					$c_token = $2;
+				}
+				
+			}
 			
 		} else {
 			
-			# LOGIN SUCCESSFUL
-			print "[I] WEBSERVICE LOGIN OK!\n";
-			$login_success = "true";
+			die "[E] UNABLE TO GET WEBSERVICE AUTHORIZATION! (cookies unavailable)\n";
 			
-			# SAVE SESSION COOKIE
-			$login_token    = $login_response->header('Set-cookie');
-			
-			# VERIFY COOKIE DATA
-			if( $login_token =~ /beaker.session.id/ ) {
-				$login_token    =~ s/(.*)(beaker.session.id=)(.*)(; Path.*)/$3/g;
-			} else {
-				die "[E] Unable to get Session ID from cookie\n";
-			}
-			
-			# ANALYSE ACCOUNT
-			my $analyse_login;
-			
-			eval{
-				$analyse_login = decode_json($login_response->content);
-			};
-
-			if( not defined $analyse_login ) {
-				die "[E] Unable to parse user data\n";
-			}
-			
-			# SAVE ACCOUNT INFORMATION
-			$powerid        = $analyse_login->{"session"}->{"power_guide_hash"};
-			if( $provider eq "zattoo.com" ) {
-				$country        = $analyse_login->{"session"}->{"service_region_country"};
-			} else {
-				$country		= "XX";
-			}
-			
-			# VERIFY ACCOUNT VARIABLES
-			if( not defined $powerid or not defined $country ) {
-				die "[E] Unable to define account variables\n";
-			}
-			
-			# CREATE JSON PARAMS
-			my $login_json    = to_json( { provider => $provider, login => $login, password => $pass }, { pretty => 1 });
-			
-			# SAVE JSON TO FILE
-			open(my $fhc, '>', 'userfile.json'); # LOGIN DATA
-			print $fhc $login_json;
-			close $fhc;
 		}
-	}
+		
+		my $auth_file;
+		
+		eval{
+			$auth_file = decode_json( $auth_response->content );
+		};
+		
+		if( not defined $auth_file ) {
+			die "[E] Failed to parse JSON file: Auth\n";
+		}
+		
+		if( not defined $auth_file->{csrfToken} ) {
+			die "[E] Unable to retrieve csrfToken\n";
+		}
+
+		print "[I] LOGIN TO WEBSERVICE OK!\n";
+		$login_success = "true";
+		$csrf_token = $auth_file->{csrfToken};
+
+	}	
 	
 	# RETURN UPDATED CREDENTIALS AND SESSION CONFIGURATIONS
-	$session = { powerid => $powerid, country => $country, login_token => $login_token };
+	$session = { j_token => $j_token, c_token => $c_token, csrf_token => $csrf_token };
 	return $session;
 	
 }
@@ -634,7 +275,7 @@ sub login_process {
 # CHANNEL LIST 
 #
 	
-# Check if channels.json file can be found and parsed. If condition is false, download and parse latest Zattoo channel list and present a checklist to the user.
+# Check if channels.json file can be found and parsed. If condition is false, download and parse latest channel list and present a checklist to the user.
 # The channel list must be checked for duplicates. If channel name is duplicated, append count number to the name. If channel ID is duplicated, remove the duplicated entry.
 # To recognize changed channel names or IDs, a comparism list will be created. Additionally, a set of default EPG settings will be saved into another file.
 
@@ -645,23 +286,31 @@ sub chlist_request {
 	#
 	
 	# URL
-	my $channel_url = "https://$provider/zapi/v3/cached/$powerid/channels?";
-
-	# COOKIE
-	my $cookie_jar    = HTTP::Cookies->new;
-	$cookie_jar->set_cookie(0,'beaker.session.id',$login_token,'/',$provider,443);
+	my $channel_url = "https://web.magentatv.de/EPG/JSON/AllChannel?SID=first&T=PC_firefox_72";
 	
 	# CHANNEL M3U REQUEST
 	my $channel_agent = LWP::UserAgent->new(
 		agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0"
 	);
-					
+	
+	# FORM DATA				
+	my $channel_data = '{"properties":[{"name":"logicalChannel","include":"/channellist/logicalChannel/contentId,/channellist/logicalChannel/type,/channellist/logicalChannel/name,/channellist/logicalChannel/chanNo,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href,/channellist/logicalChannel/foreignsn,/channellist/logicalChannel/externalCode,/channellist/logicalChannel/sysChanNo,/channellist/logicalChannel/physicalChannels/physicalChannel/mediaId,/channellist/logicalChannel/physicalChannels/physicalChannel/fileFormat,/channellist/logicalChannel/physicalChannels/physicalChannel/definition"}],"metaDataVer":"Channel/1.1","channelNamespace":"2","filterlist":[{"key":"IsHide","value":"-1"}],"returnSatChannel":0}';
+	
+	# COOKIES
+	my $cookie_jar    = HTTP::Cookies->new({});
+	$cookie_jar->set_cookie(0,'JSESSIONID',$j_token,'/EPG','web.magentatv.de',443);
+	$cookie_jar->set_cookie(0,'JSESSIONID',$j_token,'/EPG/','web.magentatv.de',443);
+	$cookie_jar->set_cookie(0,'CSESSIONID',$c_token,'/EPG/','web.magentatv.de',443);
+	$cookie_jar->set_cookie(0,'CSRFSESSION',$csrf_token,'/EPG/','web.magentatv.de',443);
 	$channel_agent->cookie_jar($cookie_jar);
-	my $channel_request  = HTTP::Request::Common::GET($channel_url);
+	
+	# REQUEST, INCLUDING CSRF TOKEN HEADER
+	my $channel_request  = HTTP::Request::Common::POST($channel_url, ":X_CSRFToken" => $csrf_token, Content => $channel_data );
+	
 	my $channel_response = $channel_agent->request($channel_request);
 			
 	if( $channel_response->is_error ) {
-		die "[E] Channel URL: Invalid response\nRESPONSE:\n\n" . $channel_response->content . "\n";
+		die "[E] Channel URL: Invalid response\nRESPONSE:\n" . $channel_response->code . "\n" . $channel_response->content . "\n";
 	}
 
 	# READ JSON
@@ -675,10 +324,16 @@ sub chlist_request {
 		die "[E] Failed to parse JSON file: Channel list\n";
 	}
 	
-	my $ch_file_check = $ch_file->{channels}[0];
+	my $ch_file_check = $ch_file->{channellist}[0];
 	
-	if( not defined $ch_file_check->{cid} or not defined $ch_file_check->{title} ) {
-		die "[E] Failed to retrieve channel name or ID in file checker\n";
+	if( not defined $ch_file_check->{contentId} or not defined $ch_file_check->{name} ) {
+		
+		if( defined $ch_file_check->{errorCode} ) {
+			die "[E] Failed to load channel list (no authorization)\n";
+		} else {
+			die "[E] Failed to load channel list (required content missing)\n";
+		}
+		
 	}
 	
 	return $ch_file;
@@ -831,7 +486,7 @@ if( $firstlogin eq "true" and $selection ne "7" ) {
 	}
 
 	# RETRIEVE DATA FROM CHANNEL LIST
-	my @ch_groups = @{ $ch_file->{'channels'} };
+	my @ch_groups = @{ $ch_file->{'channellist'} };
 	
 	# SET UP VALUES FOR UPCOMING PROCESSES
 	my @channels;
@@ -840,9 +495,9 @@ if( $firstlogin eq "true" and $selection ne "7" ) {
 	my %name2id;
 	my %id2name;
 
-	foreach my $ch_groups ( sort { lc $a->{"title"} cmp lc $b->{"title"} } @ch_groups ) {
-		my $cid   = $ch_groups->{"cid"};
-		my $cname = $ch_groups->{"title"};
+	foreach my $ch_groups ( sort { lc $a->{"name"} cmp lc $b->{"name"} } @ch_groups ) {
+		my $cid   = $ch_groups->{"contentId"};
+		my $cname = $ch_groups->{"name"};
 		
 		# CHECK DUPLICATES
 		my @new_cname = ( "$cname" );
@@ -890,11 +545,11 @@ if( $firstlogin eq "true" and $selection ne "7" ) {
 	}
 		
 	# MENU
-	@chm_selection = $d->checklist( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > CHANNEL LIST',
-								    title => "$provider | CHANNEL LIST",
+	@chm_selection = $d->checklist( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > CHANNEL LIST',
+								    title => "TELEKOM | CHANNEL LIST",
 								    listheight => 13,
 								    height => 15,
-								    width => 55,
+								    width => 70,
 								    text => 'Please choose the channels you want to grab:',
 								    list => [ @channels ]
 								  );
@@ -942,8 +597,8 @@ if( $firstlogin eq "true" and $selection ne "7" ) {
 	}
 		
 	# SUCCESS MESSAGE
-	$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > CHANNEL LIST',
-				title => "$provider | CHANNEL LIST",
+	$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > CHANNEL LIST',
+				title => "TELEKOM | CHANNEL LIST",
 				height => 5,
 				width => 40,
 				text => 'Channel list saved successfully!'
@@ -954,6 +609,7 @@ if( $firstlogin eq "true" and $selection ne "7" ) {
 	die "[E] Wrong or missing channel configuration, please enter UI mode to set up your channels.\n";
 
 }
+
 
 #
 # CHECK EPG SETTINGS
@@ -1122,10 +778,10 @@ if( -e "epgconfig.json" ) {
 until( $selection eq "0" or $selection eq "7" ) {
 	
 	# MENU
-	$selection = $d->menu( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS',
-						   title => "$provider | SETTINGS",
-						   listheight => 13,
-						   height => 17,
+	$selection = $d->menu( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS',
+						   title => "TELEKOM | SETTINGS",
+						   listheight => 12,
+						   height => 16,
 						   width => 60,
 						   text => 'Please select the option you want to change:',
 						   list => [ '1', 'MODIFY CHANNEL LIST',
@@ -1136,7 +792,6 @@ until( $selection eq "0" or $selection eq "7" ) {
 									 '6', "EPISODE FORMAT (currently: $episode)",
 									 '7', 'RUN XML SCRIPT',
 									 '8', "NUMBER OF PARALLEL FORKS (currently: $forks)",
-									 '9', "SIMPLE GRABBER MODE (enabled: $simple)",
 									 'R', 'REMOVE GRABBER INSTANCE' ] );
 		
 	# ABORT
@@ -1159,8 +814,8 @@ until( $selection eq "0" or $selection eq "7" ) {
 		if( not defined $menu_ch_file ) {
 			
 			# ERROR MESSAGE
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CHANNEL LIST',
-						title => "$provider | CHANNEL LIST",
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CHANNEL LIST',
+						title => "TELEKOM | CHANNEL LIST",
 						height => 5,
 						width => 40,
 						text => 'ERROR: Channel list could not be loaded from provider!'
@@ -1170,19 +825,19 @@ until( $selection eq "0" or $selection eq "7" ) {
 		}
 
 		# RETRIEVE DATA FROM CHANNEL LIST
-		my @ch_groups = @{ $menu_ch_file->{'channels'} };
+		my @ch_groups = @{ $menu_ch_file->{'channellist'} };
 		
 		# SET UP VALUES OF NEW CHANNEL LIST
-		my @menu_ch_groups = @{ $menu_ch_file->{'channels'} };
+		my @menu_ch_groups = @{ $menu_ch_file->{'channellist'} };
 		my @duplicate_check;
 		my @new_channels;
 		my @cid_check;
 		my %name2id;
 		my %id2name;
 
-		foreach my $ch_groups ( sort { $a->{"title"} cmp $b->{"title"} } @menu_ch_groups ) {
-			my $cid   = $ch_groups->{"cid"};
-			my $cname = $ch_groups->{"title"};
+		foreach my $ch_groups ( sort { $a->{"name"} cmp $b->{"name"} } @menu_ch_groups ) {
+			my $cid   = $ch_groups->{"contentId"};
+			my $cname = $ch_groups->{"name"};
 			
 			# CHECK DUPLICATES
 			my @new_cname = ( "$cname" );
@@ -1288,8 +943,8 @@ until( $selection eq "0" or $selection eq "7" ) {
 		}
 			
 		# MENU
-		my @new_ch_selection = $d->checklist( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CHANNEL LIST',
-								   title => "$provider | CHANNEL LIST",
+		my @new_ch_selection = $d->checklist( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CHANNEL LIST',
+								   title => "TELEKOM | CHANNEL LIST",
 								   listheight => 13,
 								   height => 15,
 								   width => 55,
@@ -1332,8 +987,8 @@ until( $selection eq "0" or $selection eq "7" ) {
 			close $fhb;
 			
 			# SUCCESS MESSAGE
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CHANNEL LIST',
-						title => "$provider | CHANNEL LIST",
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CHANNEL LIST',
+						title => "TELEKOM | CHANNEL LIST",
 						height => 5,
 						width => 40,
 						text => 'Channel list saved successfully!'
@@ -1347,7 +1002,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		my $day_old = $day;
 			
 		# MENU
-		$day = $d->menu( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > TIME PERIOD',
+		$day = $d->menu( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > TIME PERIOD',
 					     title      => 'EPG GRABBER',
 						 listheight => 10,
 						 height     => 14,
@@ -1386,7 +1041,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 			print $fh $epg_json;
 			close $fh;
 				
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > TIME PERIOD', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > TIME PERIOD', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 26,
@@ -1402,7 +1057,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 			print $fh $epg_json;
 			close $fh;
 				
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > TIME PERIOD', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > TIME PERIOD', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 42,
@@ -1413,7 +1068,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 	} elsif( $selection eq "3" ) {
 			
 		# MENU
-		$cid = $d->yesno( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CONVERT CHANNEL IDs',
+		$cid = $d->yesno( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CONVERT CHANNEL IDs',
 				      title      => 'CHANNEL IDs',
 						  height     => 8,
 						  width      => 55,
@@ -1429,7 +1084,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		# YES
 		if( $cid eq "1" ) {				
 			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CONVERT CHANNEL IDs', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CONVERT CHANNEL IDs', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 30,
@@ -1438,7 +1093,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		# NO
 		} else {
 			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CONVERT CHANNEL IDs', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CONVERT CHANNEL IDs', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 32,
@@ -1450,7 +1105,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 	} elsif( $selection eq "4" ) {
 			
 		# MENU
-		$genre = $d->yesno( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CONVERT CATEGORIES',
+		$genre = $d->yesno( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CONVERT CATEGORIES',
 					        title      => 'CATEGORIES',
 						    height     => 5,
 						    width      => 55,
@@ -1466,7 +1121,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		# YES
 		if( $genre eq "1" ) {				
 
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CONVERT CATEGORIES', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CONVERT CATEGORIES', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 30,
@@ -1475,7 +1130,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		# NO
 		} else {
 			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > CONVERT CATEGORIES', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > CONVERT CATEGORIES', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 32,
@@ -1487,7 +1142,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 	} elsif( $selection eq "5" ) {
 		
 		# MENU
-		$category = $d->yesno( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > MULTIPLE CATEGORIES',
+		$category = $d->yesno( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > MULTIPLE CATEGORIES',
 					           title      => 'MULTIPLE CATEGORIES',
 						       height     => 5,
 						       width      => 60,
@@ -1503,7 +1158,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		# YES
 		if( $category eq "1" ) {				
 			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > MULTIPLE CATEGORIES', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > MULTIPLE CATEGORIES', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 35,
@@ -1512,7 +1167,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		# NO
 		} else {
 			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > MULTIPLE CATEGORIES', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > MULTIPLE CATEGORIES', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 35,
@@ -1526,7 +1181,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		my $episode_old = $episode;
 			
 		# MENU
-		$episode = $d->menu( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > EPISODE FORMAT',
+		$episode = $d->menu( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > EPISODE FORMAT',
 					         title      => 'EPISODE',
 						     listheight => 10,
 						     height     => 14,
@@ -1550,7 +1205,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 			print $fh $epg_json;
 			close $fh;
 			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > EPISODE FORMAT', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > EPISODE FORMAT', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 40,
@@ -1568,7 +1223,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 			print $fh $epg_json;
 			close $fh;
 			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > EPISODE FORMAT', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > EPISODE FORMAT', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 40,
@@ -1584,7 +1239,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 		my $forks_old = $forks;
 			
 		# MENU
-		$forks = $d->menu( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > NUMBER OF FORKS',
+		$forks = $d->menu( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > NUMBER OF FORKS',
 					       title      => 'NUMBER OF FORKS',
 						   listheight => 10,
 						   height     => 14,
@@ -1613,54 +1268,17 @@ until( $selection eq "0" or $selection eq "7" ) {
 			print $fh $epg_json;
 			close $fh;
 				
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > NUMBER OF FORKS', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > NUMBER OF FORKS', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 42,
 						text      => "EPG grabber enabled with $forks fork(s)!" );
 		}
 	
-	# SIMPLE GRABBER MODE
-	} elsif( $selection eq "9" ) {
-		
-		# MENU
-		$simple = $d->yesno( backtitle  => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > SIMPLE GRABBER MODE',
-					         title      => 'SIMPLE GRABBER MODE',
-						     height     => 6,
-						     width      => 60,
-						     text       => 'Do you want to use simple grabber mode?\nMissing data: Description, credits, year, country etc.' );
-			
-		# CREATE JSON PARAMS
-		my $epg_json      = to_json( { day => $day, cid => $cid, genre => $genre, category => $category, episode => $episode, forks => $forks, simple => $simple }, { pretty => 1 });
-			
-		open(my $fh, '>', 'epgconfig.json'); # EPG CONFIG DATA
-		print $fh $epg_json;
-		close $fh;
-			
-		# YES
-		if( $simple eq "1" ) {				
-			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > SIMPLE GRABBER MODE', 
-						title     => 'INFO', 
-						height    => 5,
-						width     => 35,
-						text      => "Simple grabber mode enabled!" );
-			
-		# NO
-		} else {
-			
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > SIMPLE GRABBER MODE', 
-						title     => 'INFO', 
-						height    => 5,
-						width     => 35,
-						text      => "Simple grabber mode disabled!" );
-		
-		}
-	
 	# REMOVE GRABBER INSTANCE
 	} elsif( $selection eq "R" ) {
 			
-		my $delete = $d->yesno( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > DELETE INSTANCE',
+		my $delete = $d->yesno( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > DELETE INSTANCE',
 								title     => 'WARNING',
 								height    => 5,
 								width     => 50,
@@ -1673,7 +1291,7 @@ until( $selection eq "0" or $selection eq "7" ) {
 			unlink "chconfig.json";
 			unlink "epgconfig.json";
 					
-			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > ZATTOO > SETTINGS > DELETE INSTANCE', 
+			$d->msgbox( backtitle => '* EASYEPG SIMPLE XMLTV GRABBER > TELEKOM > SETTINGS > DELETE INSTANCE', 
 						title     => 'INFO', 
 						height    => 5,
 						width     => 30,
@@ -1717,10 +1335,10 @@ if( not defined $dl_ch_file ) {
 }
 
 # RETRIEVE DATA FROM CHANNEL LIST
-my @ch_groups = @{ $dl_ch_file->{'channels'} };
+my @ch_groups = @{ $dl_ch_file->{channellist} };
 
 # SET UP VALUES OF NEW CHANNEL LIST
-my @dl_ch_groups = @{ $dl_ch_file->{'channels'} };
+my @dl_ch_groups = @{ $dl_ch_file->{channellist} };
 my @duplicate_check;
 my @cid_check;
 my %name2id;
@@ -1729,11 +1347,32 @@ my %id2logo;
 
 foreach my $ch_groups ( @dl_ch_groups ) {
 	
-	my $cid   = $ch_groups->{"cid"};
-	my $cname = $ch_groups->{"title"};
-	my $logo  = $ch_groups->{"qualities"}[0]{"logo_black_84"};
-	$logo     =~ s/(.*)(\/84x48.png)/https:\/\/images.zattic.com$1\/210x120.png/g;
+	my $cid   = $ch_groups->{contentId};
+	my $cname = $ch_groups->{name};
+	my $logo;
 	
+	# LOGO SEARCH
+	my @logo = @{ $ch_groups->{pictures} };
+	my $image_location;
+	if( @logo ) {
+		
+		while( my( $image_id, $img ) = each( @logo ) ) {
+			
+			if( $img->{imageType} eq "15" ) {
+				$image_location = $image_id;
+				last;
+			}
+			
+		}
+			
+		if( defined $image_location ) {
+			$logo = $ch_groups->{pictures}[$image_location]{href};
+		} else {
+			$logo = "http://programm-manager.telekom.de/media/5907a60bfb29f7bd3d141b1dc36ab3c74d4b6e5b.png";
+		}
+		
+	}
+
 	# CHECK DUPLICATES
 	my @new_cname = ( "$cname" );
 	push ( @duplicate_check, @new_cname );
@@ -1834,89 +1473,120 @@ my $ch_config = { channels => \%ch_config };
 
 ### DOWNLOAD MAIN PROGRAMME LISTS
 
-# DATES
-my @time_values;
+# URL
+my $guide_url = "https://web.magentatv.de/EPG/JSON/ExecuteBatch?PlayBillList&SID=guidebatch&T=PC_firefox_72";
 
-foreach my $time_value ( 1 .. $day ) {
-	
-	my $time_start  = gmtime() + ( 86400 * ( $time_value - 1 ) );
-	my $time_end    = gmtime() + ( 86400 * ( $time_value ) );
+# REQUEST PARAM
+my $guide_agent = LWP::UserAgent->new(
+	agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0"
+);
 
-	my $time_start_date   = $time_start->ymd . " 06:00";
-	my $time_end_date     = $time_end->ymd . " 06:00";
-	
-	my $time_start_secs   = Time::Piece->strptime( "$time_start_date", "%Y-%m-%d %H:%M" );
-	my $time_end_secs     = Time::Piece->strptime( "$time_end_date", "%Y-%m-%d %H:%M" );
+# COOKIES
+my $cookie_jar    = HTTP::Cookies->new({});
+$cookie_jar->set_cookie(0,'JSESSIONID',$j_token,'/EPG','web.magentatv.de',443);
+$cookie_jar->set_cookie(0,'JSESSIONID',$j_token,'/EPG/','web.magentatv.de',443);
+$cookie_jar->set_cookie(0,'CSESSIONID',$c_token,'/EPG/','web.magentatv.de',443);
+$cookie_jar->set_cookie(0,'CSRFSESSION',$csrf_token,'/EPG/','web.magentatv.de',443);
+$guide_agent->cookie_jar($cookie_jar);
 
-	my $start_epoch  = $time_start_secs->strftime("%s");
-	my $end_epoch    = $time_end_secs->strftime("%s");
+# TIMESTAMPS
+my $time_start  = gmtime();
+my $time_end    = gmtime() + ( 86400 * $day );
+
+my $time_start_date   = $time_start->ymd . " 06:00:00";
+my $time_end_date     = $time_end->ymd . " 05:59:59";
 	
-	my @time = ( { start => $start_epoch, end => $end_epoch } );
+my $time_start_secs   = Time::Piece->strptime( "$time_start_date", "%Y-%m-%d %H:%M:%S" );
+my $time_end_secs     = Time::Piece->strptime( "$time_end_date", "%Y-%m-%d %H:%M:%S" );
+
+my $start_epoch  = $time_start_secs->strftime("%Y%m%d%H%M%S");
+my $end_epoch    = $time_end_secs->strftime("%Y%m%d%H%M%S");
+
+# CHANNEL LIST
+my %ch_keys = %{ $ch_config->{channels} };
+
+# GENERATE FORM DATA
+my @request_form;
+my @element;
+my $programme_counter = 0;
+
+# GET ARRAY OF 15 CHANNEL ELEMENTS
+foreach my $channel ( keys %ch_keys ) {
 	
-	push( @time_values, @time );
+	my $prop_form  = { "name" => "playbill", "include" => "channelid,name,subName,starttime,endtime,cast,country,producedate,ratingid,pictures,introduce,genres,subNum,seasonNum" };
+	my $param_form = { "channelid" => $channel, "type" => 2, "offset" => 0, "count" => -1, "isFillProgram" => 1, "properties" => [ $prop_form ], "endtime" => $end_epoch, "begintime" => $start_epoch };
+	my $list_form  = { "name" => "PlayBillList", "param" => $param_form };
+	
+	if( $programme_counter < 15 ) {
+		
+		push( @request_form, $list_form );
+		$programme_counter = $programme_counter + 1;
+	
+	} else {
+		
+		my $form_list = { "requestList" => \@request_form };
+		my $form_json = encode_json( $form_list );
+		push( @element, $form_json );
+		undef @request_form;
+		
+		push( @request_form, $list_form );
+		$programme_counter = 1;
+	
+	}
+	
+}
+
+# PUSH ELEMENTS LEFT
+if( @request_form ) {
+	
+	my $form_list = { "requestList" => \@request_form };
+	my $form_json = encode_json( $form_list );
+	push( @element, $form_json );
+	undef @request_form;
 
 }
 
-
 # PARALLEL FORK MANAGER - SETUP
-my @programme_listings;
 my $pm = Parallel::ForkManager->new($forks);
-my $counter = 0;
+my @programme_details;
+my $size = @element;
+my $pm_counter = 0;
 
 $pm->run_on_finish(
-	
+		
 	sub {
 		
 		my( $pid, $exit_code, $ident, $signal, $core, $ds ) = @_;
-		
+			
 		if( not defined $ds ) {
-			die "[E] No datastructure received from child process (guide download)!\n";
+			die "[E] No datastructure received from child process (programme download)!\n";
 		} else {
-			$counter = ( $counter + 1);
-			my $percentage = ( $counter / $day ) * 100;
+			$pm_counter = ( $pm_counter + 1 );
+			my $percentage = ( $pm_counter / $size ) * 100;
 			$percentage = POSIX::round($percentage);
-			print "\r[I] Processing download: $percentage%";
+			print "\r[I] Processing download: $percentage% ($pm_counter/$size)";
 		}
 		
-		push( @programme_listings, @{ $ds->{results} } );
-		
+		@programme_details = ( @programme_details, @{ $ds->{results} } );
 	}
-	
+		
 );
 
-# START DOWNLOAD
-
-print "* Downloading guides...\n\n";
-
-foreach my $time ( @time_values ) {
+foreach my $json_element ( @element ) {
 	
 	$pm->start and next;
 	
-	my $start = $time->{start};
-	my $end   = $time->{end};
-	
 	my @listings;
 	
-	# URL
-	my $guide_url = "https://$provider/zapi/v3/cached/$powerid/guide?start=$start&end=$end";
-	
-	# COOKIE
-	my $cookie_jar    = HTTP::Cookies->new;
-	$cookie_jar->set_cookie(0,'beaker.session.id',$login_token,'/',$provider,443);
-	
-	# CHANNEL M3U REQUEST
-	my $guide_agent = LWP::UserAgent->new(
-		agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0"
-	);
-					
-	$guide_agent->cookie_jar($cookie_jar);
-	my $guide_request  = HTTP::Request::Common::GET($guide_url);
+	# REQUEST, INCLUDING CSRF TOKEN HEADER
+	my $guide_request  = HTTP::Request::Common::POST($guide_url, ":X_CSRFToken" => $csrf_token, Content => $json_element );
+		
 	my $guide_response = $guide_agent->request($guide_request);
-			
+				
 	if( $guide_response->is_error ) {
-		die "[E] Guide URL: Invalid response\nRESPONSE:\n\n" . $guide_response->content . "\n";
+		die "[E] Channel URL: Invalid response\nRESPONSE:\n" . $guide_response->content . "\n";
 	}
-
+	
 	# READ JSON
 	my $guide_file;
 		
@@ -1925,131 +1595,252 @@ foreach my $time ( @time_values ) {
 	};
 						
 	if( not defined $guide_file ) {
-		die "[E] Failed to parse JSON file: Guide\n\n";
+		die "[E] Failed to parse JSON file: Guide\n";
 	}
+
+	my @guide_file;
 	
-	my $guide_file_check = $guide_file->{channels};
+	eval{
+		@guide_file = @{ $guide_file->{responseList} };
+	};
 	
-	if( not defined $guide_file_check ) {
-		die "[E] Failed to retrieve guide data\n\n";
+	if( ! @guide_file ) {
+		die "[E] Failed to retrieve guide data\n";
 	}
 	
 	# CHANNEL LIST
-	my %ch_keys = %{ $ch_config->{channels} };
-	
-	# FOR EACH SELECTED CHANNEL ID...
-	foreach my $channel ( keys %ch_keys ) {
-
-		my @ch_guide;
+	foreach my $response ( @guide_file ) {
 		
-		# ...CHECK IF THE CHANNEL IS AVAILABLE IN THE LIST
-		if( defined $guide_file->{channels}->{$channel} ) {
+		my @playbill_list;
+		
+		if( defined $response->{msg}->{counttotal} ) {
 			
-			@ch_guide = @{ $guide_file->{channels}->{$channel} };
-			
-			# ...CHECK IF CHANNEL CONTAINS DATA
-			if( @ch_guide ) {
+			if( $response->{msg}->{counttotal} ne "0" ) {
 				
-				# ...GET THE CHANNEL'S DATA
-				foreach my $ch_guide_info ( @ch_guide ) {
-			
-					my $start 			= $ch_guide_info->{s};
-					my $end   			= $ch_guide_info->{e};
-					my $startTIME 		= gmtime($start)->strftime('%Y%m%d%H%M%S') . ' +0000';
-					my $endTIME   		= gmtime($end)->strftime('%Y%m%d%H%M%S') . ' +0000';
-					my $title 			= $ch_guide_info->{t};
-					my $episode_title 	= $ch_guide_info->{et};
-					my $episode_number 	= $ch_guide_info->{e_no};
-					my $series_number 	= $ch_guide_info->{s_no};
-					my $image 			= $ch_guide_info->{i_url};
-					my $category        = $ch_guide_info->{c};
-					my $genre           = $ch_guide_info->{g};
-					my $id	            = $ch_guide_info->{id};
+				eval{
+					@playbill_list = @{ $response->{msg}->{playbilllist} };
+				};
+		
+				if( ! @playbill_list ) {
+					die "[E] Failed to retrieve playbill data\n";
+				}
+				
+				# GET THE CHANNEL'S DATA
+				foreach my $ch_guide_info ( @playbill_list ) {
 					
-					# ...CHECK IF START/END TIME + ID + TITLE ARE AVAILABLE
-					if( not defined $start or not defined $end or not defined $id ) {
+					# DATA
+					my $start 			= $ch_guide_info->{starttime};
+					my $end   			= $ch_guide_info->{endtime};
+					$start =~ s/[-: ]//g;
+					$end   =~ s/[-: ]//g;
+					$start =~ s/UTC.*//g;
+					$end =~ s/UTC.*//g;
+					my $channel         = $ch_guide_info->{channelid};
+					my $title 			= $ch_guide_info->{name};
+					my $episode_title 	= $ch_guide_info->{subName};
+					my $episode_number 	= $ch_guide_info->{subNum};
+					my $series_number 	= $ch_guide_info->{seasonNum};
+					my $image 			= $ch_guide_info->{pictures};
+					my $genre           = $ch_guide_info->{genres};
+					my $description     = $ch_guide_info->{introduce};
+					my $year            = $ch_guide_info->{producedate};
+					my $country         = $ch_guide_info->{country};
+					my $age             = $ch_guide_info->{ratingid};
+					my $director        = $ch_guide_info->{cast}->{director};
+					my $actor           = $ch_guide_info->{cast}->{actor};
+					
+					# ...APPEND DATA + CHECK IF START/END TIME + TITLE ARE IN THE LIST
+					if( not defined $start or not defined $end ) {
 						die "[E] Missing required data from guide programmes!\n";
 					} elsif( not defined $title ) {
 						$title = "No programme title available";
 					}
 					
-					# ...APPEND DATA
-					my %data = ( channel => $channel, start => $startTIME, end => $endTIME, title => $title, id => $id );
+					my %data = ( channel => $channel, start => $start, end => $end, title => $title );
 					
-					# ...CHECK IF EPISODE TITLE IS AVAILABLE IN THE LIST
+					# ...CHECK IF EPISODE TITLE IS AVAILABLE IN THE LIST		
 					if( defined $episode_title ) {		
 						if( $episode_title ne "" ) {
 							%data = ( %data, episode_title => $episode_title );
 						}
 					}
 					
-					# ...CHECK IF EPISODE NUMBER IS AVAILABLE IN THE LIST
+					# ...CHECK IF EPISODE NUMBER IS AVAILABLE IN THE LIST		
 					if( defined $episode_number ) {
 						if( $episode_number ne "" ) {
 							%data = ( %data, episode_number => $episode_number );
 						}
 					}
 					
-					# ...CHECK IF SERIES NUMBER IS AVAILABLE IN THE LIST
+					# ...CHECK IF SERIES NUMBER IS AVAILABLE IN THE LIST		
 					if( defined $series_number ) {
 						if( $series_number ne "" ) {
 							%data = ( %data, series_number => $series_number );
 						}
 					}
 					
-					# ...CHECK IF IMAGE IS AVAILABLE IN THE LIST
+					# ...CHECK IF IMAGE IS AVAILABLE IN THE LIST		
 					if( defined $image ) {
-						if( $image ne "" ) {
-							$image =~ s/(http:)(.*)(format_480x360.jpg)/https:$2original.jpg/g;
-							%data = ( %data, image => $image );
+						my @image;
+						my $img_loc;
+						
+						eval{
+							@image = @{ $image };
+						};
+					
+						if ( @image ) {
+							while( my( $image_id, $img ) = each( @image ) ) {		# SEARCH FOR IMAGE WITH THE HIGHEST RESOLUTION
+								my @res = @{ $img->{'resolution'} };
+								my $img = $img->{'href'};
+								foreach my $res ( @res ) {
+									if( $res eq '1920' ) {			# FULL HD 16:9
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '1440' ) {		# FULL HD 4:3
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '1280' ) {		# HD 16:9
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '1280' ) {		# HD 16:9
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '960' ) {		# SD 16:9
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '720' ) {		# SD 4:3
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '480' ) {		# LOW SD 16:9
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '360' ) {		# LOW SD 4:3
+										$img_loc = $image_id;
+										last;
+									} elsif( $res eq '180' ) {		# JUST... WHY?!
+										$img_loc = $image_id;
+										last;
+									}
+								}
+							}
+							if( defined $img_loc ) {
+								$image = $image[$img_loc]{'href'};
+								%data = ( %data, image => $image );
+							}
 						}
 					}
 					
-					# ...CHECK IF CATEGORY IS AVAILABLE IN THE LIST
-					if( defined $category ) {
-						
-						my @category = @{ $category };
-					
-						if( defined $category[0] ) {
-							%data = ( %data, category_1 => $category[0] );
-						}
-								
-						if( defined $category[1] ) {
-							%data = ( %data, category_2 => $category[1] );
-						}
-						
-						if( defined $category[2] ) {
-							%data = ( %data, category_3 => $category[2] );
-						}
-					
-					}
-					
-					# ...CHECK IF GENRE IS AVAILABLE IN THE LIST
+					# ...CHECK IF GENRE IS AVAILABLE IN THE LIST		
 					if( defined $genre ) {
 						
-						my @genre = @{ $genre };
-					
-						if( defined $genre[0] ) {
-							%data = ( %data, genre_1 => $genre[0] );
-						}
-								
-						if( defined $genre[1] ) {
-							%data = ( %data, genre_2 => $genre[1] );
-						}
+						my @genres;
 						
-						if( defined $genre[2] ) {
-							%data = ( %data, genre_3 => $genre[2] );
+						if( $genre =~ /,/ ) {
+							
+							@genres = split ",",  $genre;
+							
+							if( defined $genres[0] ) {
+								%data = ( %data, genre_1 => $genres[0] );
+							}
+							
+							if( defined $genres[1] ) {
+								%data = ( %data, genre_2 => $genres[1] );
+							}
+							
+							if( defined $genres[2] ) {
+								%data = ( %data, genre_3 => $genres[2] );
+							}
+							
+						} elsif( $genre ne "" ) {
+							
+							%data = ( %data, genre_1 => $genre );
+							
 						}
 						
 					}
 					
+					# ...CHECK IF DESCRIPTION IS AVAILABLE IN THE LIST
+					if( defined $description ) {
+						if( $description ne "" ) {
+							%data = ( %data, description => $description );
+						}
+					}
+					
+					# ...CHECK IF YEAR IS AVAILABLE IN THE LIST
+					if( defined $year ) {
+						if( $year ne "" ) {
+							$year =~ s/-.*//g;
+							%data = ( %data, year => $year );
+						}
+					}
+					
+					# ...CHECK IF COUNTRY IS AVAILABLE IN THE LIST
+					if( defined $country ) {
+						if( $country ne "" ) {
+							%data = ( %data, country => uc($country) );
+						}
+					}
+					
+					# ...CHECK IF AGE RATING IS AVAILABLE IN THE LIST
+					if( defined $age ) {
+						if( $age ne "-1" and $age ne "" ) {
+							%data = ( %data, age => $age );
+						}
+					}
+					
+					# ...CHECK IF DIRECTOR IS AVAILABLE IN THE LIST
+					if( defined $director ) {
+						
+						my @director;
+						
+						if( $director =~ /,/ ) {
+							
+							@director = split ",", $director;
+							%data = ( %data, director => \@director );
+							
+						} elsif( $director ne "" ) {
+							
+							%data = ( %data, director => [ $director ] );
+							
+						}
+						
+					}
+					
+					# ...CHECK IF ACTOR IS AVAILABLE IN THE LIST
+					if( defined $actor ) {
+						
+						my @actor;
+						
+						if( $actor =~ /,/ ) {
+							
+							@actor = split ",", $actor;
+							%data = ( %data, actor => \@actor );
+							
+						} elsif( $actor ne "" ) {
+							
+							%data = ( %data, actor => [ $actor ] );
+							
+						}
+						
+					}
+							
 					push( @listings, { %data } );
 					
 				}
 				
+			} else {
+				
+				# PLAYBILLLIST COUNT = 0
+				print "\r[W] No playbill data found in results\n";
+				
 			}
 			
-		}	
+		} else {
+			
+			# NO PLAYBILLLIST COUNT FOUND
+			die "[E] Failed to retrieve playbill data (2)\n";
+			
+		}
 		
 	}
 	
@@ -2059,231 +1850,13 @@ foreach my $time ( @time_values ) {
 
 $pm->wait_all_children();
 
-print "\r[I] Processing download: 100%\n\n";
-
-my $programme_details;
-
-if( $simple eq "0") {
-
-	### PREPARING DETAILS DOWNLOAD - GET ARRAY OF 620 ID-ELEMENTS
-
-	print "* Preparing details download...\n\n";
-
-	my $programme_counter = 0;
-	my $programme_element;
-	my @element;
-
-	# FOREACH PROGRAMME ELEMENT...
-	foreach my $listing ( @programme_listings ) {
-		
-		# ...GET PROGRAMME ID
-		my $programme_id = $listing->{id};
-		
-		# ...SET FIRST ID INTO STRING
-		if( $programme_counter == 0 ) {
-			
-			$programme_element = $programme_id;
-			$programme_counter = 1;
-			
-		# ...APPEND NEXT ID INTO STRING
-		} else {
-			
-			$programme_element = $programme_element . "," . $programme_id;
-			$programme_counter = ( $programme_counter + 1 );
-		}
-		
-		# PUSH ID STRING INTO ARRAY, UNDEFINE STRING, RESET COUNTER
-		if( $programme_counter == 620 ) {
-			
-			push( @element, ( $programme_element ) );
-			undef $programme_element;
-			$programme_counter = 0;
-			
-		}
-
-	}
-
-	# IF ARRAY ELEMENT COULD NOT REACH 620 IDs - PUSH LAST STRING INTO ARRAY
-	if( defined $programme_element ) {
-		push( @element, ( $programme_element ) );
-	}
-
-	if( ! @element ) {
-		die "[E] Programme element array is empty!\n";
-	}
-
-
-	### DOWNLOAD PROGRAMME DETAILS
-
-	print "* Downloading programme details...\n\n";
-
-	# PARALLEL FORK MANAGER - SETUP
-	my $pm2 = Parallel::ForkManager->new($forks);
-	my %programme_details;
-	my $size = @element;
-	my $pm2_counter = 0;
-
-	$pm2->run_on_finish(
-		
-		sub {
-			
-			my( $pid, $exit_code, $ident, $signal, $core, $ds ) = @_;
-			
-			if( not defined $ds ) {
-				die "[E] No datastructure received from child process (programme download)!\n";
-			} else {
-				$pm2_counter = ( $pm2_counter + 1 );
-				my $percentage = ( $pm2_counter / $size ) * 100;
-				$percentage = POSIX::round($percentage);
-				print "\r[I] Processing download: $percentage% ($pm2_counter/$size)";
-			}
-			
-			%programme_details = ( %programme_details, %{ $ds->{results} } );
-		}
-		
-	);
-
-	foreach my $element ( @element ) {
-		
-		$pm2->start and next;
-		
-		my %listings_final;
-		
-		# URL
-		my $programme_url = "https://$provider/zapi/v2/cached/program/power_details/$powerid?program_ids=$element";
-		
-		# COOKIE
-		my $cookie_jar    = HTTP::Cookies->new;
-		$cookie_jar->set_cookie(0,'beaker.session.id',$login_token,'/',$provider,443);
-		
-		# CHANNEL M3U REQUEST
-		my $programme_agent = LWP::UserAgent->new(
-			agent => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/72.0"
-		);
-						
-		$programme_agent->cookie_jar($cookie_jar);
-		my $programme_request  = HTTP::Request::Common::GET($programme_url);
-		my $programme_response = $programme_agent->request($programme_request);
-				
-		if( $programme_response->is_error ) {
-			die "[E] Programme URL: Invalid response\nRESPONSE:\n\n" . $programme_response->content . "\n";
-		}
-
-		# READ JSON
-		my $programme_file;
-			
-		eval{
-			$programme_file    = decode_json($programme_response->content);
-		};
-							
-		if( not defined $programme_file ) {
-			die "[E] Failed to parse JSON file: Programme\n";
-		}
-		
-		my $programme_file_check = $programme_file->{programs};
-		
-		if( not defined $programme_file_check ) {
-			die "[E] Failed to retrieve programme data\n";
-		}
-		
-		my @programme;
-		
-		eval{
-			@programme = @{ $programme_file->{programs} };
-		};
-		
-		if( ! @programme ) {
-			die "[E] Failed to verify programme array data\n";
-		}
-		
-		# FOR EACH SELECTED CHANNEL ID...
-		foreach my $programme ( @programme ) {
-			
-			my %listings;
-			
-			my $id          = $programme->{id};
-			my $description = $programme->{d};
-			my $year        = $programme->{year};
-			my $country     = $programme->{country};
-			my $age         = $programme->{yp_r};
-			my $director    = $programme->{cr}->{director};
-			my $actor       = $programme->{cr}->{actor};
-			
-			# ...CHECK IF DESCRIPTION IS AVAILABLE IN THE LIST
-			if( defined $description ) {
-				if( $description ne "" ) {
-					%listings = ( %listings, description => $description );
-				}
-			}
-			
-			# ...CHECK IF YEAR IS AVAILABLE IN THE LIST
-			if( defined $year ) {
-				if( $year ne "" ) {
-					%listings = ( %listings, year => $year );
-				}
-			}
-			
-			# ...CHECK IF COUNTRY IS AVAILABLE IN THE LIST
-			if( defined $country ) {
-				if( $country ne "" ) {
-					%listings = ( %listings, country => $country );
-				}
-			}
-			
-			# ...CHECK IF AGE RATING IS AVAILABLE IN THE LIST
-			if( defined $age ) {
-				if( $age ne "" ) {
-					%listings = ( %listings, age => $age );
-				}
-			}
-			
-			# ...CHECK IF DIRECTOR IS AVAILABLE IN THE LIST
-			if( defined $director ) {
-				my @director;
-				
-				eval{ 
-					@director = @{ $director };
-				};
-				
-				if( @director ) {
-					%listings = ( %listings, director => \@director );
-				}
-			}
-			
-			# ...CHECK IF ACTOR IS AVAILABLE IN THE LIST
-			if( defined $actor ) {
-				my @actor = @{ $actor };
-				
-				eval{
-					@actor = @{ $actor };
-				};
-				
-				if( @actor ) {
-					%listings = ( %listings, actor => \@actor );
-				}
-				
-			}
-			
-			%listings_final = ( %listings_final, $id => \%listings );
-			
-		}		
-		
-		$pm2->finish( 0, { results => \%listings_final } );
-		
-	}
-
-	$pm2->wait_all_children();
-
-	$programme_details = { %programme_details };
-	
-}
 
 print "\n\n=== FILE CREATION PROCESS ===\n\n* Preparing EPG file creation...\n\n";
 
 ### DOWNLOAD RYTEC
 
 # URL
-my $rytec_url = "https://raw.githubusercontent.com/sunsettrack4/config_files/master/ztt_channels.json";
+my $rytec_url = "https://raw.githubusercontent.com/sunsettrack4/config_files/master/tkm_channels.json";
 
 # CHANNEL M3U REQUEST
 my $rytec_agent = LWP::UserAgent->new(
@@ -2308,7 +1881,7 @@ if( not defined $rytec_file ) {
 	die "[E] Failed to parse JSON file: Rytec\n";
 }
 
-my $rytec_db = $rytec_file->{channels}->{$country};
+my $rytec_db = $rytec_file->{channels}->{DE};
 
 if( not defined $rytec_db ) {
 	print "[W] Failed to retrieve Rytec data\n";
@@ -2318,7 +1891,7 @@ if( not defined $rytec_db ) {
 ### DOWNLOAD EIT GENRE
 
 # URL
-my $eit_url = "https://raw.githubusercontent.com/sunsettrack4/config_files/master/ztt_genres.json";
+my $eit_url = "https://raw.githubusercontent.com/sunsettrack4/config_files/master/tkm_genres.json";
 
 # CHANNEL M3U REQUEST
 my $eit_agent = LWP::UserAgent->new(
@@ -2343,7 +1916,7 @@ if( not defined $rytec_file ) {
 	die "[E] Failed to parse JSON file: EIT\n";
 }
 
-my $eit_db = $eit_file->{categories}->{$country};
+my $eit_db = $eit_file->{categories}->{DE};
 
 if( not defined $eit_db ) {
 	print "[W] Failed to retrieve EIT data\n";
@@ -2357,7 +1930,7 @@ if( not defined $eit_db ) {
 print "* Creating EPG file...\n\n";
 
 # DECLARE OUTPUT FILE
-my $output = IO::File->new(">zattoo.xml");
+my $output = IO::File->new(">telekom.xml");
  
 # CREATE WRITER OBJECT
 my $writer = XML::Writer->new(OUTPUT => $output, DATA_MODE => 1, ENCODING => 'utf-8' );
@@ -2368,13 +1941,10 @@ $writer->xmlDecl("UTF-8");
 # COMMENT
 $writer->comment("EPG XMLTV FILE CREATED BY THE EASYEPG PROJECT - (c) 2019-2020 Jan-Luca Neumann");
 $writer->comment("created on " . localtime() );
-$writer->comment("SOURCE: $provider");
+$writer->comment("SOURCE: TELEKOM DE (MAGENTA TV)");
 
 # TV
 $writer->startTag("tv");
-
-# CHANNEL LIST
-my %ch_keys = %{ $ch_config->{channels} };
 
 foreach my $channel ( sort { lc $a cmp lc $b } keys %ch_keys ) {
 	
@@ -2404,7 +1974,7 @@ my %already_not_found;
 my $already_not_found;
 
 # PROGRAMME LIST
-foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} cmp $b->{start} } @programme_listings ) {
+foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} cmp $b->{start} } @programme_details ) {
 	
 	# DEFINE CHANNEL ID
 	my $channel_id   = $prog->{channel};
@@ -2434,19 +2004,19 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 	}
 	
 	# DESCRIPTION
-	if( defined $programme_details->{ $prog->{id} }->{description} ) {
+	if( defined $prog->{description} ) {
 		$writer->startTag( "desc", "lang" => "de" );
-		$writer->characters( $programme_details->{ $prog->{id} }->{description} );
+		$writer->characters( $prog->{description} );
 		$writer->endTag( "desc" );
 	}
 	
 	# CREDITS
-	if( defined $programme_details->{ $prog->{id} }->{director} or defined $programme_details->{ $prog->{id} }->{actor} ) {
+	if( defined $prog->{director} or defined $prog->{actor} ) {
 		
 		$writer->startTag( "credits" );
 		
-		if( defined $programme_details->{ $prog->{id} }->{director} ) {
-			my @director = @{ $programme_details->{ $prog->{id} }->{director} };
+		if( defined $prog->{director} ) {
+			my @director = @{ $prog->{director} };
 			foreach my $director ( @director ) {
 				$writer->startTag( "director" );
 				$writer->characters( $director );
@@ -2454,8 +2024,8 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 			}
 		}
 		
-		if( defined $programme_details->{ $prog->{id} }->{actor} ) {
-			my @actor = @{ $programme_details->{ $prog->{id} }->{actor} };
+		if( defined $prog->{actor} ) {
+			my @actor = @{ $prog->{actor} };
 			foreach my $actor ( @actor ) {
 				$writer->startTag( "actor" );
 				$writer->characters( $actor );
@@ -2468,16 +2038,16 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 	}
 	
 	# DATE
-	if( defined $programme_details->{ $prog->{id} }->{year} ) {
+	if( defined $prog->{year} ) {
 		$writer->startTag( "date" );
-		$writer->characters( $programme_details->{ $prog->{id} }->{year} );
+		$writer->characters( $prog->{year} );
 		$writer->endTag( "date" );
 	}
 	
 	# COUNTRY
-	if( defined $programme_details->{ $prog->{id} }->{country} ) {
+	if( defined $prog->{country} ) {
 		$writer->startTag( "country" );
-		$writer->characters( $programme_details->{ $prog->{id} }->{country} );
+		$writer->characters( $prog->{country} );
 		$writer->endTag( "country" );
 	}
 	
@@ -2485,7 +2055,7 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 	my %already_defined;
 	my $already_defined;
 	
-	# CATEGORY 1 (ZATTOO GENRE 1 FOUND)
+	# CATEGORY 1
 	if( defined $prog->{genre_1} ) {
 		
 		$writer->startTag( "category", "lang" => "de" );
@@ -2519,46 +2089,12 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 		
 		$writer->endTag( "category" );
 		
-	# CATEGORY 1 (ZATTOO GENRE 1 NOT FOUND, CHECK FOR ZATTOO CATEGORY VALUE)
-	} elsif( defined $prog->{category_1 } ) {
-		
-		$writer->startTag( "category", "lang" => "de" );
-		
-		# EIT ENABLED AND FOUND = PRINT EIT + MARK EIT CATEGORY AS "ALREADY DEFINED"
-		if( $genre eq "1" and defined $eit_db->{ $prog->{category_1} } ) {
-			
-			$writer->characters( $eit_db->{ $prog->{category_1} } );
-			%already_defined = ( %already_defined, $eit_db->{ $prog->{category_1} } => 1 );
-			$already_defined = { category => \%already_defined };
-			
-		# EIT ENABLED BUT NOT FOUND
-		} elsif( $genre eq "1" ) {
-			
-			# IF EIT IS NOT ALREADY DEFINED AS "MISSING" = PRINT VALUE + MARK EIT AS "MISSING"
-			if( not defined $already_not_found->{category}->{ $prog->{category_1} } ) {
-				
-				print "[W] Category (C) \"" . encode_utf8($prog->{category_1}) . "\" not found in EIT list!\n";
-				%already_not_found = ( %already_not_found, $prog->{category_1} => 1 );
-				$already_not_found = { category => \%already_not_found };
-				
-			}
-			
-			$writer->characters( $prog->{category_1} );
-			
-		# EIT DISABLED = PRINT VALUE
-		} else {
-			
-			$writer->characters( $prog->{category_1} );
-			
-		}
-		
-		$writer->endTag( "category" );
 	}
 	
 	# MULTIPLE CATEGORIES ENABLED
 	if( $category eq "1" ) {
 		
-		# CATEGORY2 (ZATTOO GENRE 2)
+		# CATEGORY2
 		if( defined $prog->{genre_2} ) {
 			
 			# EIT ENABLED AND FOUND
@@ -2606,7 +2142,7 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 			
 		} 
 	
-		# CATEGORY3 (ZATTOO GENRE 3)
+		# CATEGORY3
 		if( defined $prog->{genre_3} ) {
 			
 			# EIT ENABLED AND FOUND
@@ -2699,10 +2235,10 @@ foreach my $prog ( sort { lc $a->{channel} cmp lc $b->{channel} || $a->{start} c
 			
 	
 	# AGE RATING
-	if( defined $programme_details->{ $prog->{id} }->{age} ) {
+	if( defined $prog->{age} ) {
 		$writer->startTag( "rating" );
 		$writer->startTag( "value" );
-		$writer->characters( $programme_details->{ $prog->{id} }->{age} );
+		$writer->characters( $prog->{age} );
 		$writer->endTag( "value" );
 		$writer->endTag( "rating" );
 	}
