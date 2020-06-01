@@ -61,7 +61,7 @@ foreach my $items ( @items ) {
 		
 	# DEFINE CHANNEL ID
 	my $cid     = $items->{'id'};
-        
+
     # ###################
 	# PRINT JSON OUTPUT #
 	# ###################

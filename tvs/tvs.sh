@@ -73,6 +73,12 @@ jq '.' /tmp/workfile > /tmp/chlist
 sed -i -e 1c'\{\n "items": \[' /tmp/chlist
 echo '}' >> /tmp/chlist
 
+######################################
+# Dirty Workaround until TVS fix their Channellist
+sed 's/MDR-ST/MDR/g;s/MDR-SN/MDR/g;s/MDR-TH/MDR/g;s/BR-N/BR/g;s/BR-S/BR/g;s/NDR-NI/N3/g;s/NDR-HH/N3/g;s/NDR-MV/N3/g;s/NDR-SH/N3/g;s/RB-TV/N3/g;s/RBB-BB/RBB/g;s/RBB-B/RBB/g;s/SWRBW/SWR/g;s/SR/SWR/g;s/SWRRP/SWR/g;s/WDR-AC/WDR/g;s/WDR-BI/WDR/g;s/WDR-BN/WDR/g;s/WDR-DO/WDR/g;s/WDR-DU/WDR/g;s/WDR-D/WDR/g;s/WDR-E/WDR/g;s/WDR-K/WDR/g;s/WDR-MS/WDR/g;s/WDR-SI/WDR/g;s/WDR-W/WDR/g' /tmp/chlist > /tmp/ch_hack
+cp /tmp/ch_hack /tmp/chlist
+#######################################
+
 printf "\rChecking manifest files... "
 perl chlist_printer.pl > /tmp/compare.json
 perl url_printer.pl 2>errors.txt | sed '/DUMMY/d' > mani/common
