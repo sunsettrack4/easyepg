@@ -233,6 +233,7 @@ cp chlist /tmp/chlist
 ######################################
 # Dirty Workaround until TVS fix their Channellist
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/chlist_hack_tvs.json > /tmp/chlist
+cp /tmp/chlist chlist
 #######################################
 
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/tvs_channels.json > tvs_channels.json
