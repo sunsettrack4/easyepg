@@ -224,6 +224,7 @@ foreach my $attributes ( @attributes ) {
 			
 			# TITLE (language)
 			$title =~ s/\&/\&amp;/g;
+                        $title =~ s/<3/love/g;
 			print "  <title lang=\"" . $languageVER . "\">" . $title . "</title>\n";
 			
 			# SUBTITLE (condition) (language)
