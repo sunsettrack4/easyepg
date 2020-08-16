@@ -381,6 +381,7 @@ foreach my $attributes ( $data->{attributes} ) {
 			
 			# AGE RATING (condition)
 			if( defined $age) {
+				$age =~ s/FSK //g;
 				print "  <rating>\n    <value>$age</value>\n  </rating>\n";
 			}
 			
