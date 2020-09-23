@@ -166,7 +166,7 @@ do
 		
 		printf "\rFetching channel list... "
 		
-		if ! curl --write-out %{http_code} --silent --output /dev/null https://tvair.swisscom.ch/tv-guide | grep -q "200"
+		if ! curl --write-out %{http_code} --silent --output /dev/null https://tv.blue.ch/tv-guide | grep -q "200"
 		then
 			printf "\rService provider unavailable!"
 			sleep 2s

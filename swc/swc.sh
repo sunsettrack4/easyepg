@@ -41,7 +41,7 @@ then
 	exit 0
 fi
 
-if ! curl --write-out %{http_code} --silent --output /dev/null https://tvair.swisscom.ch/tv-guide | grep -q "200"
+if ! curl --write-out %{http_code} --silent --output /dev/null https://tv.blue.ch/tv-guide | grep -q "200"
 then
 	printf "Service provider unavailable!\n\n"
 	exit 0
