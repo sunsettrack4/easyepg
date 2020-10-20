@@ -230,6 +230,7 @@ foreach my $attributes ( @attributes ) {
 			# SUBTITLE (condition) (language)
 			if( defined $subtitle ) {
 				$subtitle =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY	
+				$subtitle =~ s/<[^>]*>//g;  # REMOVE XML STRINGS WITHIN JSON VALUE
 				print "  <sub-title lang=\"$languageVER\">$subtitle</sub-title>\n";
 			}
 			
