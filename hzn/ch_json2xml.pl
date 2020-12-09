@@ -64,7 +64,7 @@ my $chlist_config;
 # READ INIT FILE
 my $init;
 {
-	local $/; #Enable 'slurp' mode
+    local $/; #Enable 'slurp' mode
     open my $fh, '<', "init.json" or die;
     $init = <$fh>;
     close $fh;
@@ -73,7 +73,7 @@ my $init;
 # READ SETTINGS FILE
 my $settings;
 {
-	local $/; #Enable 'slurp' mode
+    local $/; #Enable 'slurp' mode
     open my $fh, '<', "settings.json" or die;
     $settings = <$fh>;
     close $fh;
@@ -97,10 +97,10 @@ foreach my $channels ( @channels ) {
 		my $item = $schedule->{'station'};
 		
 		# ####################
-        # DEFINE JSON VALUES #
-        # ####################
+        	# DEFINE JSON VALUES #
+       		# ####################
         
-        # DEFINE CHANNEL ID + NAME
+        	# DEFINE CHANNEL ID + NAME
 		my $cname   = $item->{'title'};
 		$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 		$cname =~ s///g;		 # REMOVE "SELECTED AREA"
@@ -111,25 +111,25 @@ foreach my $channels ( @channels ) {
 		my @logo	= @{ $item->{'images'} };
 		my $image_location;
         
-        # DEFINE LANGUAGE VERSION
-        my $languageVER =  $initdata->{'language'};
+        	# DEFINE LANGUAGE VERSION
+        	my $languageVER =  $initdata->{'language'};
         
-        # DEFINE RYTEC CHANNEL ID (language)
+        	# DEFINE RYTEC CHANNEL ID (language)
 		my $rytec = $chdata->{'channels'}{$countryVER};
 		
 		# DEFINE SELECTED CHANNELS
 		my @configdata = @{ $configdata->{'channels'} };
 		
 		# DEFINE SETTINGS
-        my $setup_general  = $setupdata->{'settings'};
-        my $setup_cid      = $setup_general->{'cid'};
+        	my $setup_general  = $setupdata->{'settings'};
+        	my $setup_cid      = $setup_general->{'cid'};
         
-        # DEFINE SETTINGS VALUES
-        my $enabled  = "enabled";
-        my $disabled = "disabled";
+       		# DEFINE SETTINGS VALUES
+        	my $enabled  = "enabled";
+        	my $disabled = "disabled";
         
         
-        # ##################
+        	# ##################
 		# PRINT XML OUTPUT #
 		# ##################
         
@@ -153,18 +153,20 @@ foreach my $channels ( @channels ) {
 						if( $image->{'assetType'} eq "station-logo-large" ) {
 							$image_location = $image_id;
 							last;
-							}
 						}
-						if( defined $image_location ) {
-							my $logo_def 	= $item->{'images'}[$image_location]{'url'};
-							$logo_def		=~ s/\?w.*//g;
-							print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
-							print "<icon src=\"$logo_def\" /></channel>\n";
-						} else {
-							print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";	
-						}
-					}	
-				}
+					}
+					if( defined $image_location ) {
+						my $logo_def 	= $item->{'images'}[$image_location]{'url'};
+						$logo_def		=~ s/\?w.*//g;
+						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
+						print "<icon src=\"$logo_def\" /></channel>\n";
+					} else {
+						print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";	
+					}
+				} else {
+					print "<display-name lang=\"$languageVER\">" . $cname . "</display-name></channel>\n";
+				}	
 			}
 		}
+	}
 }
