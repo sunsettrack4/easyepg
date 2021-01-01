@@ -251,7 +251,34 @@ do
 			fi
 		else
 			perl chlist_printer.pl > /tmp/compare.json
-			perl compare_menu.pl > /tmp/enabled_chvalues 2> /dev/null
+			perl compare_menu.pl > /tmp/enabled_chvalues 2>errors.txt
+			
+			sort -u errors.txt > /tmp/errors_sorted.txt && mv /tmp/errors_sorted.txt errors.txt
+
+			if [ -s errors.txt ]
+			then
+				clear
+				echo ""
+				echo "================= CHANNEL LIST: LOG ==================="
+				echo ""
+				echo "NOTICE: Channels with ERROR messages are unselected automatically."
+				echo ""
+				
+				input="errors.txt"
+				while IFS= read -r var
+				do
+					echo "$var"
+				done < "$input"
+				
+				echo ""
+				echo "======================================================="
+				echo ""
+				read -n 1 -s -r -p "Press any key to continue..."
+				
+			else
+				rm errors.txt 2> /dev/null
+			fi
+			
 			comm -12 <(sort -u /tmp/enabled_chvalues) <(sort -u /tmp/chvalues) > /tmp/comm_menu_enabled
 			comm -2 -3 <(sort -u /tmp/chvalues) <(sort -u /tmp/enabled_chvalues) > /tmp/comm_menu_disabled
 			sed -i 's/.*/&" [ON]/g' /tmp/comm_menu_enabled

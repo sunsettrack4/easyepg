@@ -46,6 +46,11 @@ my $json;
 # CONVERT JSON TO PERL STRUCTURES
 my $data   = decode_json($json);
 
+# CREATE REPORT FILE TO CHECK DUPLICATES
+open my $fh, ">", "/tmp/report.txt";
+print $fh "{\"channels\":[]}";
+close $fh;
+
 print "{ \"cid\":\n  {\n";
 
 my @channels = @{ $data->{'channels'} };
@@ -69,13 +74,54 @@ foreach my $channels ( @channels ) {
 		# DEFINE CHANNEL ID
 		my $cid     = $item->{'id'};
 		
-        
-        # ###################
+		# ########################################
+		# UPDATE REPORT FILE TO CHECK DUPLICATES #
+		# ########################################
+		
+		do {
+			open my $input_h, "<:encoding(UTF-8)", "/tmp/report.txt";
+			open my $output_h, ">:encoding(UTF-8)", "/tmp/report_temp.txt";
+			while(my $string = <$input_h>) {
+				$string =~ s/]/"$cname"]/g;
+				$string =~ s/""/","/g;
+				print $output_h "$string";
+			}
+		};
+
+		unlink "/tmp/report.txt" while -f "/tmp/report.txt";
+		rename "/tmp/report_temp.txt" => "/tmp/report.txt";
+		
+		my $report;
+		{
+			local $/; #Enable 'slurp' mode
+			open my $fh, "<", "/tmp/report.txt";
+			$report = <$fh>;
+			close $fh;
+		}
+		
+		my $reportdata = decode_json($report);
+		
+		my @report = @{ $reportdata->{'channels'} };
+		
+		my %count;		
+		$count{$_}++ for (sort @report);
+		
+		
+		# ###################
 		# PRINT JSON OUTPUT #
 		# ###################
-        
-		# CHANNEL ID (condition)
-		print "  \"$cid\":\"$cname\",\n";
+				
+		for( keys %count) {
+			if( $_ eq $cname ) {
+				if( $count{$_} == 1 ) {
+					print "  \"" . $cid . "\":\"" . $cname . "\",\n";
+				} elsif( $count{$_} == 2 ) {
+					print "  \"" . $cid . "\":\"" . $cname . " (2)\",\n";
+				} elsif( $count{$_} == 3 ) {
+					print "  \"" . $cid . "\":\"" . $cname . " (3)\",\n";
+				}
+			}
+		}
 	}
 }
 

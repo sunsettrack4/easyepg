@@ -73,6 +73,11 @@ my $configdata   = decode_json($chlist_config);
 
 # TOOL: NAME ==> ID
 
+# CREATE REPORT FILE TO CHECK DUPLICATES 
+open my $fh, ">", "/tmp/report.txt";
+print $fh "{\"channels\":[]}";
+close $fh;
+
 print "{ \"newname2id\": {\n";
 
 my @newchannels_name2id = @{ $newdata->{'channels'} };
@@ -96,12 +101,64 @@ foreach my $newchannels ( @newchannels_name2id ) {
 		# DEFINE NEW CHANNEL ID
 		my $newcid     = $newitem->{'id'};
 		
-		# PRINT NEW CHANNEL NAMES
-		print "\"$newcname\": \"$newcid\",\n";
+		
+		# ########################################
+		# UPDATE REPORT FILE TO CHECK DUPLICATES #
+		# ########################################
+		
+		do {
+			open my $input_h, "<:encoding(UTF-8)", "/tmp/report.txt";
+			open my $output_h, ">:encoding(UTF-8)", "/tmp/report_temp.txt";
+			while(my $string = <$input_h>) {
+				$string =~ s/]/"$newcname"]/g;
+				$string =~ s/""/","/g;
+				print $output_h "$string";
+			}
+		};
+
+		unlink "/tmp/report.txt" while -f "/tmp/report.txt";
+		rename "/tmp/report_temp.txt" => "/tmp/report.txt";
+		
+		my $report;
+		{
+			local $/; #Enable 'slurp' mode
+			open my $fh, "<", "/tmp/report.txt";
+			$report = <$fh>;
+			close $fh;
+		}
+		
+		my $reportdata = decode_json($report);
+		
+		my @report = @{ $reportdata->{'channels'} };
+		
+		my %count;		
+		$count{$_}++ for (sort @report);
+
+
+        # ###################
+		# PRINT JSON OUTPUT #
+		# ###################
+				
+		for( keys %count) {
+			if( $_ eq $newcname ) {
+				if( $count{$_} == 1 ) {
+					print "  \"" . $newcname . "\":\"" . $newcid. "\",\n";
+				} elsif( $count{$_} == 2 ) {
+					print "  \"" . $newcname . " (2)\":\"" . $newcid. "\",\n";
+				} elsif( $count{$_} == 3 ) {
+					print "  \"" . $newcname . " (3)\":\"" . $newcid. "\",\n";
+				}
+			}
+		}
 	}
 }
 
 # TOOL: ID ==> NAME
+
+# CREATE REPORT FILE TO CHECK DUPLICATES (2)
+open my $fh2, ">", "/tmp/report.txt";
+print $fh2 "{\"channels\":[]}";
+close $fh2;
 
 print "\"DUMMY\": \"DUMMY\" },\n\"newid2name\": {\n";
 
@@ -126,8 +183,55 @@ foreach my $newchannels ( @newchannels_id2name ) {
 		# DEFINE NEW CHANNEL ID
 		my $newcid     = $newitem->{'id'};
 		
-		# PRINT NEW CHANNEL NAMES newcid
-		print "\"$newcid\": \"$newcname\",\n";
+		
+		# ########################################
+		# UPDATE REPORT FILE TO CHECK DUPLICATES #
+		# ########################################
+		
+		do {
+			open my $input_h, "<:encoding(UTF-8)", "/tmp/report.txt";
+			open my $output_h, ">:encoding(UTF-8)", "/tmp/report_temp.txt";
+			while(my $string = <$input_h>) {
+				$string =~ s/]/"$newcname"]/g;
+				$string =~ s/""/","/g;
+				print $output_h "$string";
+			}
+		};
+
+		unlink "/tmp/report.txt" while -f "/tmp/report.txt";
+		rename "/tmp/report_temp.txt" => "/tmp/report.txt";
+		
+		my $report;
+		{
+			local $/; #Enable 'slurp' mode
+			open my $fh, "<", "/tmp/report.txt";
+			$report = <$fh>;
+			close $fh;
+		}
+		
+		my $reportdata = decode_json($report);
+		
+		my @report = @{ $reportdata->{'channels'} };
+		
+		my %count;		
+		$count{$_}++ for (sort @report);
+
+
+        # ###################
+		# PRINT JSON OUTPUT #
+		# ###################
+				
+		for( keys %count) {
+			if( $_ eq $newcname ) {
+				if( $count{$_} == 1 ) {
+					print "  \"" . $newcid . "\":\"" . $newcname . "\",\n";
+				} elsif( $count{$_} == 2 ) {
+					print "  \"" . $newcid . "\":\"" . $newcname . " (2)\",\n";
+				} elsif( $count{$_} == 3 ) {
+					print "  \"" . $newcid . "\":\"" . $newcname . " (3)\",\n";
+				}
+			}
+		}
 	}
 }
 
@@ -137,6 +241,11 @@ foreach my $newchannels ( @newchannels_id2name ) {
 # ##################
 
 # TOOL: NAME ==> ID
+
+# CREATE REPORT FILE TO CHECK DUPLICATES (3)
+open my $fh3, ">", "/tmp/report.txt";
+print $fh3 "{\"channels\":[]}";
+close $fh3;
 
 print "\"DUMMY\": \"DUMMY\" },\n\"oldname2id\": {\n";
 						
@@ -160,13 +269,65 @@ foreach my $oldchannels ( @oldchannels_name2id ) {
 
 		# DEFINE OLD CHANNEL ID
 		my $oldcid     = $olditem->{'id'};
-							
-		# PRINT OLD CHANNEL NAMES
-		print "\"$oldcname\": \"$oldcid\",\n";
+		
+		
+		# ########################################
+		# UPDATE REPORT FILE TO CHECK DUPLICATES #
+		# ########################################
+		
+		do {
+			open my $input_h, "<:encoding(UTF-8)", "/tmp/report.txt";
+			open my $output_h, ">:encoding(UTF-8)", "/tmp/report_temp.txt";
+			while(my $string = <$input_h>) {
+				$string =~ s/]/"$oldcname"]/g;
+				$string =~ s/""/","/g;
+				print $output_h "$string";
+			}
+		};
+
+		unlink "/tmp/report.txt" while -f "/tmp/report.txt";
+		rename "/tmp/report_temp.txt" => "/tmp/report.txt";
+		
+		my $report;
+		{
+			local $/; #Enable 'slurp' mode
+			open my $fh, "<", "/tmp/report.txt";
+			$report = <$fh>;
+			close $fh;
+		}
+		
+		my $reportdata = decode_json($report);
+		
+		my @report = @{ $reportdata->{'channels'} };
+		
+		my %count;		
+		$count{$_}++ for (sort @report);
+
+
+        # ###################
+		# PRINT JSON OUTPUT #
+		# ###################
+				
+		for( keys %count) {
+			if( $_ eq $oldcname ) {
+				if( $count{$_} == 1 ) {
+					print "  \"" . $oldcname . "\":\"" . $oldcid . "\",\n";
+				} elsif( $count{$_} == 2 ) {
+					print "  \"" . $oldcname . " (2)\":\"" . $oldcid . "\",\n";
+				} elsif( $count{$_} == 3 ) {
+					print "  \"" . $oldcname . " (3)\":\"" . $oldcid . "\",\n";
+				}
+			}
+		}
 	}
 }
 
 # TOOL: ID ==> NAME
+
+# CREATE REPORT FILE TO CHECK DUPLICATES (4)
+open my $fh4, ">", "/tmp/report.txt";
+print $fh4 "{\"channels\":[]}";
+close $fh4;
 
 print "\"DUMMY\": \"DUMMY\" },\n\"oldid2name\": {\n";
 						
@@ -190,12 +351,270 @@ foreach my $oldchannels ( @oldchannels_id2name ) {
 
 		# DEFINE OLD CHANNEL ID
 		my $oldcid     = $olditem->{'id'};
-							
-		# PRINT OLD CHANNEL NAMES
-		print "\"$oldcid\": \"$oldcname\",\n";
+		
+		
+		# ########################################
+		# UPDATE REPORT FILE TO CHECK DUPLICATES #
+		# ########################################
+		
+		do {
+			open my $input_h, "<:encoding(UTF-8)", "/tmp/report.txt";
+			open my $output_h, ">:encoding(UTF-8)", "/tmp/report_temp.txt";
+			while(my $string = <$input_h>) {
+				$string =~ s/]/"$oldcname"]/g;
+				$string =~ s/""/","/g;
+				print $output_h "$string";
+			}
+		};
+
+		unlink "/tmp/report.txt" while -f "/tmp/report.txt";
+		rename "/tmp/report_temp.txt" => "/tmp/report.txt";
+		
+		my $report;
+		{
+			local $/; #Enable 'slurp' mode
+			open my $fh, "<", "/tmp/report.txt";
+			$report = <$fh>;
+			close $fh;
+		}
+		
+		my $reportdata = decode_json($report);
+		
+		my @report = @{ $reportdata->{'channels'} };
+		
+		my %count;		
+		$count{$_}++ for (sort @report);
+
+
+        # ###################
+		# PRINT JSON OUTPUT #
+		# ###################
+				
+		for( keys %count) {
+			if( $_ eq $oldcname ) {
+				if( $count{$_} == 1 ) {
+					print "  \"" . $oldcid . "\":\"" . $oldcname . "\",\n";
+				} elsif( $count{$_} == 2 ) {
+					print "  \"" . $oldcid . "\":\"" . $oldcname . " (2)\",\n";
+				} elsif( $count{$_} == 3 ) {
+					print "  \"" . $oldcid . "\":\"" . $oldcname . " (3)\",\n";
+				}
+			}
+		}
 	}
 }	
 
+
+# ###############
+# CHANNEL LOGOS #
+# ###############
+
+# TOOL: NEW NAME ==> LOGO
+
+# CREATE REPORT FILE TO CHECK DUPLICATES (5)
+open my $fh5, ">", "/tmp/report.txt";
+print $fh5 "{\"channels\":[]}";
+close $fh5;
+
+print "\"DUMMY\": \"DUMMY\" },\n\"newname2logo\": {\n";
+
+my @newchannels_name2logo = @{ $newdata->{'channels'} };
+foreach my $newchannels ( @newchannels_name2logo ) {
+	my @newschedule = @{ $newchannels->{'stationSchedules'} };
+	
+	foreach my $newschedule ( @newschedule ) {
+		my $newitem = $newschedule->{'station'};
+		
+		
+		#
+		# DEFINE JSON VALUES
+		#
+        
+		# DEFINE NEW CHANNEL NAME
+		my $newcname   = $newitem->{'title'};
+		$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+		$newcname =~ s///g;		# REMOVE "SELECTED AREA"
+		$newcname =~ s///g;
+		$newcname =~ s/\ \ /\ /g;
+		
+		# DEFINE LOGO
+		my @logo	= @{ $newitem->{'images'} };
+		my $image_location;
+		
+		
+		# ########################################
+		# UPDATE REPORT FILE TO CHECK DUPLICATES #
+		# ########################################
+		
+		do {
+			open my $input_h, "<:encoding(UTF-8)", "/tmp/report.txt";
+			open my $output_h, ">:encoding(UTF-8)", "/tmp/report_temp.txt";
+			while(my $string = <$input_h>) {
+				$string =~ s/]/"$newcname"]/g;
+				$string =~ s/""/","/g;
+				print $output_h "$string";
+			}
+		};
+
+		unlink "/tmp/report.txt" while -f "/tmp/report.txt";
+		rename "/tmp/report_temp.txt" => "/tmp/report.txt";
+		
+		my $report;
+		{
+			local $/; #Enable 'slurp' mode
+			open my $fh, "<", "/tmp/report.txt";
+			$report = <$fh>;
+			close $fh;
+		}
+		
+		my $reportdata = decode_json($report);
+		
+		my @report = @{ $reportdata->{'channels'} };
+		
+		my %count;		
+		$count{$_}++ for (sort @report);
+		
+		
+		# ###################
+		# PRINT JSON OUTPUT #
+		# ###################
+				
+		for( keys %count) {
+			if( $_ eq $newcname ) {
+				if( $count{$_} == 1 ) {
+					print "  \"" . $newcname . "\":\"";
+				} elsif( $count{$_} == 2 ) {
+					print "  \"" . $newcname . " (2)\":\"";
+				} elsif( $count{$_} == 3 ) {
+					print "  \"" . $newcname . " (3)\":\"";
+				}
+			}
+		}
+		
+		# CHANNEL NAME + LOGO (language) (loop)
+		if( @logo ) {
+			while( my( $image_id, $image ) = each( @logo ) ) {
+				if( $image->{'assetType'} eq "station-logo-large" ) {
+					$image_location = $image_id;
+					last;
+				}
+			}
+			if( defined $image_location ) {
+				my $logo_def 	= $newitem->{'images'}[$image_location]{'url'};
+				$logo_def		=~ s/\?w.*//g;
+				print $logo_def . "\",\n";
+			} else {
+				print "\",\n";
+			}	
+		} else {
+			print "\",\n";
+		}     
+	}
+}
+
+
+# TOOL: OLD NAME ==> LOGO
+
+# CREATE REPORT FILE TO CHECK DUPLICATES (6)
+open my $fh6, ">", "/tmp/report.txt";
+print $fh6 "{\"channels\":[]}";
+close $fh6;
+
+print "\"DUMMY\": \"DUMMY\" },\n\"oldname2logo\": {\n";
+
+my @oldchannels_name2logo = @{ $olddata->{'channels'} };
+foreach my $oldchannels ( @oldchannels_name2logo ) {
+	my @oldschedule = @{ $oldchannels->{'stationSchedules'} };
+	
+	foreach my $oldschedule ( @oldschedule ) {
+		my $olditem = $oldschedule->{'station'};
+		
+		
+		#
+		# DEFINE JSON VALUES
+		#
+        
+		# DEFINE NEW CHANNEL NAME
+		my $oldcname   = $olditem->{'title'};
+		$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
+		$oldcname =~ s///g;		# REMOVE "SELECTED AREA"
+		$oldcname =~ s///g;
+		$oldcname =~ s/\ \ /\ /g;
+		
+		# DEFINE LOGO
+		my @logo	= @{ $olditem->{'images'} };
+		my $image_location;
+		
+		
+		# ########################################
+		# UPDATE REPORT FILE TO CHECK DUPLICATES #
+		# ########################################
+		
+		do {
+			open my $input_h, "<:encoding(UTF-8)", "/tmp/report.txt";
+			open my $output_h, ">:encoding(UTF-8)", "/tmp/report_temp.txt";
+			while(my $string = <$input_h>) {
+				$string =~ s/]/"$oldcname"]/g;
+				$string =~ s/""/","/g;
+				print $output_h "$string";
+			}
+		};
+
+		unlink "/tmp/report.txt" while -f "/tmp/report.txt";
+		rename "/tmp/report_temp.txt" => "/tmp/report.txt";
+		
+		my $report;
+		{
+			local $/; #Enable 'slurp' mode
+			open my $fh, "<", "/tmp/report.txt";
+			$report = <$fh>;
+			close $fh;
+		}
+		
+		my $reportdata = decode_json($report);
+		
+		my @report = @{ $reportdata->{'channels'} };
+		
+		my %count;		
+		$count{$_}++ for (sort @report);
+		
+		
+		# ###################
+		# PRINT JSON OUTPUT #
+		# ###################
+				
+		for( keys %count) {
+			if( $_ eq $oldcname ) {
+				if( $count{$_} == 1 ) {
+					print "  \"" . $oldcname . "\":\"";
+				} elsif( $count{$_} == 2 ) {
+					print "  \"" . $oldcname . " (2)\":\"";
+				} elsif( $count{$_} == 3 ) {
+					print "  \"" . $oldcname . " (3)\":\"";
+				}
+			}
+		}
+		
+		# CHANNEL NAME + LOGO (language) (loop)
+		if( @logo ) {
+			while( my( $image_id, $image ) = each( @logo ) ) {
+				if( $image->{'assetType'} eq "station-logo-large" ) {
+					$image_location = $image_id;
+					last;
+				}
+			}
+			if( defined $image_location ) {
+				my $logo_def 	= $olditem->{'images'}[$image_location]{'url'};
+				$logo_def		=~ s/\?w.*//g;
+				print $logo_def . "\",\n";
+			} else {
+				print "\",\n";
+			}	
+		} else {
+			print "\",\n";
+		}
+	}
+}
 							
 # #######################
 # CHANNEL CONFIGURATION #

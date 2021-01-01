@@ -65,18 +65,39 @@ my @configname  = @{ $data->{'config'} };
 foreach my $configname ( @configname ) {
 	
 	# DEFINE IDs
-	my $old_id = $old_name2id->{$configname};
 	my $new_id = $new_name2id->{$configname};
-	
-	# FIND MATCH - NEW + OLD CHANNEL ID VIA CONFIG NAME
-	if( $new_id eq $old_id ) {
+	my $old_id = $old_name2id->{$configname};
+			
+	# FIND CHANNEL NAME IN NEW CHANNEL LIST
+	if( defined $new_id ) {
+		
+		if( $new_id ne $old_id) {
+			print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" received new channel ID!\n";
+		}
+		
 		print "$configname\n";
 		
-	# IF MATCH NOT FOUND: FIND CHANNEL NAME IN NEW CHANNEL LIST
-	} elsif( defined $new_id ) {
-		print "$configname\n";
-		print STDERR "[ INFO ] CHANNEL \"$configname\" received new Channel ID!\n";
+	# IF CHANNEL NAME WAS NOT FOUND IN NEW CHANNEL LIST: TRY TO FIND OLD ID IN NEW CHANNEL LIST
+	} elsif( defined $old_id ) {
+		
+		if( defined $new_id2name->{$old_id} ) {
+			my $renamed_channel = $new_id2name->{$old_id};
+			
+			if( defined $old_name2id->{$renamed_channel} ) {
+				print STDERR "[ CHLIST WARNING ] Renamed CHANNEL \"$renamed_channel\" (formerly known as \"$configname\") already exists in original channel list!\n";
+			} elsif( not defined $old_name2id->{$renamed_channel} ) {
+				print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" received new channel name \"$renamed_channel\"!\n";
+			
+				print "$renamed_channel\n";
+			}
+			
+		# IF OLD ID WAS NOT FOUND IN NEW CHANNEL LIST
+		} else {
+			print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in new channel list!\n";
+		}
+	
+	# IF CHANNEL WAS NOT FOUND IN ANY CHANNEL LIST
 	} else {
-		print STDERR "[ WARNING ] CHANNEL $configname not found in channel lists!\n";
+		print STDERR "[ CHLIST WARNING ] CHANNEL \"$configname\" not found in channel list!\n";
 	}
 }
