@@ -3,7 +3,7 @@
     $dir_path = dirname(__FILE__);
 	$type = $_GET['type'];
 				
-	$url = "https://web.magentatv.de/EPG/JSON/Login?&T=PC_firefox_75";
+	$url = "https://api.prod.sngtv.magentatv.de/EPG/JSON/Login?&T=PC_firefox_75";
 	$data = '{"userId":"Guest","mac":"00:00:00:00:00:00"}';
 	$ch = curl_init ($url);
 	curl_setopt ($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
@@ -29,7 +29,7 @@
     preg_match($pattern,$fileContent,$match);
     $xcsrf1 = $match[0];
 				
-	$url1 = "https://web.magentatv.de/EPG/JSON/Authenticate?SID=firstup&T=PC_firefox_75";
+	$url1 = "https://api.prod.sngtv.magentatv.de/EPG/JSON/Authenticate?SID=firstup&T=PC_firefox_75";
 	$data1 = '{"terminalid": "00:00:00:00:00:00", "mac": "00:00:00:00:00:00", "terminaltype": "WEBTV","utcEnable": "1", "timezone": "UTC", "userType": "3", "terminalvendor": "Unknown","preSharedKeyID": "PC01P00002", "cnonce": "5c6ff0b9e4e5efb1498e7eaa8f54d9fb"}';
 	$ch = curl_init ($url1);
 	curl_setopt ($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
@@ -62,7 +62,7 @@
         $stop = date("Ymd", strtotime("$start +$time days"));
         $channel = $_GET['channel'];
         $data2 = '{"channelid":"' . $channel . '","type":2,"offset":0,"count":-1,"isFillProgram":1,"properties":[{"name":"playbill","include":"ratingForeignsn,id,channelid,name,subName,starttime,endtime,cast,casts,country,producedate,ratingid,pictures,type,introduce,foreignsn,seriesID,genres,subNum,seasonNum"}],"endtime":"' . $stop . '235959","begintime":"' . $start . '000000"}';
-        $url2 = "https://web.magentatv.de/EPG/JSON/PlayBillList?userContentFilter=241221015&sessionArea=1&SID=ottall&T=PC_firefox_75";
+        $url2 = "https://api.prod.sngtv.magentatv.de/EPG/JSON/PlayBillList?userContentFilter=241221015&sessionArea=1&SID=ottall&T=PC_firefox_75";
         $ch = curl_init ($url2);
         curl_setopt ($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt ($ch, CURLOPT_POST, 1);
@@ -84,7 +84,7 @@
 
 	} elseif($type == '2') {
         $data3 = '{"properties": [{"name": "logicalChannel","include": "/channellist/logicalChannel/contentId,/channellist/logicalChannel/name,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href"}],"metaDataVer": "Channel/1.1", "channelNamespace": "2","filterlist": [{"key": "IsHide", "value": "-1"}], "returnSatChannel": "0"}';
-        $url3 = "https://web.magentatv.de/EPG/JSON/AllChannel?SID=first&T=PC_firefox_75";
+        $url3 = "https://api.prod.sngtv.magentatv.de/EPG/JSON/AllChannel?SID=first&T=PC_firefox_75";
         $ch = curl_init ($url3);
         curl_setopt ($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         curl_setopt ($ch, CURLOPT_POST, 1);
