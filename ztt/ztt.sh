@@ -60,7 +60,7 @@ printf "\rLoading cookie data..."
 
 export QT_QPA_PLATFORM=offscreen
 
-curl --silent "https://zattoo.com/token-46a1dfccbd4c3bdaf6182fea8f8aea3f.json" | sed 's/\(.*session_token": "\)\(.*\)\("}\)/\2/g' >/tmp/apptoken
+curl --silent "https://zattoo.com/token.json" | sed 's/\(.*session_token": "\)\(.*\)\("}\)/\2/g' >/tmp/apptoken
 curl --silent -i -X POST -H "Content-Type: application/x-www-form-urlencoded" -H "Accept: application/x-www-form-urlencoded" --data-urlencode "client_app_token=$(</tmp/apptoken)" --data-urlencode "uuid=d7512e98-38a0-4f01-b820-5a5cf98141fe" --data-urlencode "lang=en" --data-urlencode "format=json" https://zattoo.com/zapi/session/hello | grep "beaker.session.id" >/tmp/cookie_list
 														
 if grep -q "beaker.session.id" /tmp/cookie_list
