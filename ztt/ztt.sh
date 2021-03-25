@@ -45,7 +45,7 @@ then
 	exit 0
 fi
 
-if ! curl --write-out %{http_code} --silent --output /dev/null https://zattoo.com | grep -q "200"
+if ! curl --write-out %{http_code} --silent --output /dev/null https://zattoo.com/de | grep -q "200"
 then
 	printf "Service provider unavailable!\n\n"
 	exit 0

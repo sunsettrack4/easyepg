@@ -27,7 +27,7 @@ printf "\rLoading cookie data..."
 
 export QT_QPA_PLATFORM=offscreen
 
-if ! curl --write-out %{http_code} --silent --output /dev/null https://zattoo.com | grep -q "200"
+if ! curl --write-out %{http_code} --silent --output /dev/null https://zattoo.com/de | grep -q "200"
 then
 	printf "\rService provider unavailable!"
 	sleep 2s
