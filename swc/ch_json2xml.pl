@@ -34,15 +34,6 @@ use utf8;
  
 use JSON;
 
-# READ JSON INPUT FILE: CHLIST
-my $json;
-{
-    local $/; #Enable 'slurp' mode
-    open my $fh, "<", "chlist" or die;
-    $json = <$fh>;
-    close $fh;
-}
-
 # READ JSON INPUT FILE: SWC HARDCODED CHLIST
 my $chlist;
 {
@@ -56,7 +47,7 @@ my $chlist;
 my $chlist_config;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "channels.json" or die;
+    open my $fh, "<", "/tmp/compare.json" or die;
     $chlist_config = <$fh>;
     close $fh;
 }
@@ -80,7 +71,6 @@ my $settings;
 }
 
 # CONVERT JSON TO PERL STRUCTURES
-my $data        = decode_json($json);
 my $chdata      = decode_json($chlist);
 my $configdata  = decode_json($chlist_config);
 my $initdata    = decode_json($init);
@@ -89,60 +79,107 @@ my $setupdata   = decode_json($settings);
 # DEFINE COUNTRY VERSION
 my $countryVER =  $initdata->{'country'};
 
-my @attributes = @{ $data->{'attributes'} };
-foreach my $attributes ( @attributes ) {
+# ####################
+# DEFINE JSON VALUES #
+# ####################
+        
+# DEFINE LANGUAGE VERSION
+my $languageVER =  $initdata->{'language'};
+        
+# DEFINE RYTEC CHANNEL ID (language)
+my $rytec = $chdata->{'channels'}{$countryVER};
 		
-	# ####################
-    # DEFINE JSON VALUES #
-    # ####################
+# DEFINE SELECTED CHANNELS
+my @configdata = @{ $configdata->{'config'} };
+		
+# DEFINE COMPARE DATA
+my $new_name2id = $configdata->{'newname2id'};
+my $new_id2name = $configdata->{'newid2name'};
+my $old_name2id = $configdata->{'oldname2id'};
+my $old_id2name = $configdata->{'oldid2name'};
+my $new_name2logo = $configdata->{'newname2logo'};
+my $old_name2logo = $configdata->{'oldname2logo'};
+		
+# DEFINE SETTINGS
+my $setup_general  = $setupdata->{'settings'};
+my $setup_cid      = $setup_general->{'cid'};
         
-    # DEFINE CHANNEL ID + NAME
-	my $cname   = $attributes->{'Title'};
-	$cname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
-	my $cid		= $attributes->{'Identifier'};
+# DEFINE SETTINGS VALUES
+my $enabled  = "enabled";
+my $disabled = "disabled";
         
-    # DEFINE LANGUAGE VERSION
-    # my $languageVER =  $initdata->{'language'};
-    my $languageVER = $attributes->{'Languages'}[0];
         
-    # DEFINE RYTEC CHANNEL ID (language)
-	my $rytec = $chdata->{'channels'}{$countryVER};
+# ##################
+# PRINT XML OUTPUT #
+# ##################
+        
+foreach my $selected_channel ( @configdata ) {
+			
+	my $new_id    = $new_name2id->{$selected_channel};
+	my $old_id    = $old_name2id->{$selected_channel};
+
+	#
+	# CONDITION: OLD CHANNEL NAME CAN BE FOUND IN NEW CHANNEL LIST
+	#
 	
-	# DEFINE SELECTED CHANNELS
-	my @configdata = @{ $configdata->{'channels'} };
-		
-	# DEFINE SETTINGS
-    my $setup_general  = $setupdata->{'settings'};
-    my $setup_cid      = $setup_general->{'cid'};
-        
-    # DEFINE SETTINGS VALUES
-    my $enabled  = "enabled";
-    my $disabled = "disabled";
-        
-        
-    # ##################
-	# PRINT XML OUTPUT #
-	# ##################
-        
-	# CHANNEL ID (condition) (settings)
-	foreach my $selected_channel ( @configdata ) {
-		if( $cname eq $selected_channel ) { 
-			if( $setup_cid eq $enabled ) {
-				if( defined $rytec->{$cname} ) {
-					print "<channel id=\"" . $rytec->{$cname} . "\">";
-				} else {
-					print "<channel id=\"" . $cname . "\">";
-					print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $cname . "\n";
-				}
+	if( defined $new_id and $selected_channel ne "DUMMY" ) { 
+				
+		# CHANNEL ID (condition) (settings)
+		if( $setup_cid eq $enabled ) {
+			if( defined $rytec->{$selected_channel} ) {
+				print "<channel id=\"" . $rytec->{$selected_channel} . "\">";
 			} else {
-				print "<channel id=\"" . $cname . "\">";
+				print "<channel id=\"" . $selected_channel . "\">";
+				print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $selected_channel . "\n";
 			}
-			
-			# CHANNEL NAME (language)
-			print "<display-name lang=\"$languageVER\">" . $cname . "</display-name>";
-			
-			# CHANNEL LOGO
-			print "<icon src=\"https://services.sg1.etvp01.sctv.ch/content/images/tv/channel/" . $cid . "_w300.webp\" /></channel>\n"
+		} else {
+			print "<channel id=\"" . $selected_channel . "\">";
 		}
+		
+		# CHANNEL NAME + LOGO (language) (loop)
+		my $new_logo = $new_name2logo->{$selected_channel};
+		if( defined $new_logo ) {
+			print "<display-name lang=\"$languageVER\">" . $selected_channel . "</display-name>";
+			print "<icon src=\"$new_logo\" /></channel>\n";
+		} else {
+			print "<display-name lang=\"$languageVER\">" . $selected_channel . "</display-name></channel>\n";	
+		}	
+	
+			
+	#
+	# CONDITION: OLD CHANNEL ID CAN BE FOUND IN NEW CHANNEL LIST
+	#
+			
+	} elsif( defined $old_id and not defined $new_id and $selected_channel ne "DUMMY" ) {
+		
+		if( defined $new_id2name->{$old_id} ) {
+		
+			my $cname_new = $new_id2name->{$old_id};
+			my $cname_old = $old_id2name->{$old_id};
+			
+			if( defined $cname_new and not defined $old_name2id->{$cname_new} ) {
+						
+				# CHANNEL ID (condition) (settings)
+				if( $setup_cid eq $enabled ) {
+					if( defined $rytec->{$cname_old} ) {
+						print "<channel id=\"" . $rytec->{$cname_old} . "\">";
+					} else {
+						print "<channel id=\"" . $cname_old . "\">";
+						print STDERR "[ CHLIST WARNING ] Rytec ID not matched for: " . $cname_old . "\n";
+					}
+				} else {
+					print "<channel id=\"" . $cname_old . "\">";
+				}
+				
+				# CHANNEL NAME + LOGO (language) (loop)
+				my $old_logo = $old_name2logo->{$cname_old};
+				if( defined $old_logo ) {
+					print "<display-name lang=\"$languageVER\">" . $cname_old . "</display-name>";
+					print "<icon src=\"$old_logo\" /></channel>\n";
+				} else {
+					print "<display-name lang=\"$languageVER\">" . $cname_old . "</display-name></channel>\n";	
+				}	
+			}
+		}		
 	}
 }

@@ -49,7 +49,7 @@ my $json;
 my $chidlist;
 {
     local $/; #Enable 'slurp' mode
-    open my $fh, "<", "swc_cid.json" or die;
+    open my $fh, "<", "/tmp/compare.json" or die;
     $chidlist = <$fh>;
     close $fh;
 }
@@ -119,7 +119,10 @@ foreach my $attributes ( $data->{attributes} ) {
 		my $rytec = $chdata->{'channels'}{$countryVER};
         
         # DEFINE CHANNEL ID
-        my $cidEXT = $chiddata->{'cid'};
+        my $cidEXTold  = $chiddata->{'oldid2name'};
+        my $cidEXTnew  = $chiddata->{'newid2name'};
+        my $cname_old  = $chiddata->{'oldname2id'};
+        my @configdata = @{ $chiddata->{'config'} };
         
         # DEFINE EIT GENRES (language)
         my $eit = $genredata->{'categories'}{$countryVER};
@@ -201,21 +204,33 @@ foreach my $attributes ( $data->{attributes} ) {
 					# PRINT PROGRAMME STRING ONLY IF CERTAIN VALUES ARE DEFINED
 					if( defined $title and defined $start and defined $stop and defined $cid ) {
 					
-						# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition) (settings)
-						if( defined $cidEXT->{$cid} ) {
-							if( $setup_cid eq $enabled ) {
-								if( defined $rytec->{$cidEXT->{$cid}} ) {
-									print "<programme start=\"" . $start . " +0000\" stop=\"" . $stop . " +0000\" channel=\"" . $rytec->{$cidEXT->{$cid}} . "\">\n";
+						foreach my $selected_channel ( @configdata ) {
+							# BEGIN OF PROGRAMME: START / STOP / CHANNEL (condition) (settings)
+							if( $cidEXTnew->{$cid} eq $selected_channel ) {
+								if( $setup_cid eq $enabled ) {
+									if( defined $rytec->{$cidEXTnew->{$cid}} ) {
+										print "<programme start=\"$start\" stop=\"$stop\" channel=\"" . $rytec->{$cidEXTnew->{$cid}} . "\">\n";
+									} else {
+										print "<programme start=\"$start\" stop=\"$stop\" channel=\"" . $cidEXTnew->{$cid} . "\">\n";
+										print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXTnew->{$cid} . "\n";
+									}
 								} else {
-									print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"" . $cidEXT->{$cid} . "\">\n";
-									print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXT->{$cid} . "\n";
+									print "<programme start=\"$start\" stop=\"$stop\" channel=\"" . $cidEXTnew->{$cid} . "\">\n";
 								}
-							} else {
-								print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"" . $cidEXT->{$cid} . "\">\n";
+							} elsif( defined $cidEXTold->{$cid} and not defined $cname_old->{$cidEXTnew->{$cid}} ) {
+								if( $cidEXTold->{$cid} eq $selected_channel ) {
+									if( $setup_cid eq $enabled ) {
+										if( defined $rytec->{$cidEXTold->{$cid}} ) {
+											print "<programme start=\"$start\" stop=\"$stop\" channel=\"" . $rytec->{$cidEXTold->{$cid}} . "\">\n";
+										} else {
+											print "<programme start=\"$start\" stop=\"$stop\" channel=\"" . $cidEXTold->{$cid} . "\">\n";
+											print STDERR "[ EPG WARNING ] Rytec ID not matched for: " . $cidEXTold->{$cid} . "\n";
+										}
+									} else {
+										print "<programme start=\"$start\" stop=\"$stop\" channel=\"" . $cidEXTold->{$cid} . "\">\n";
+									}
+								}
 							}
-						} else {
-							print "<programme start=\"$start +0000\" stop=\"$stop +0000\" channel=\"$cid\">\n";
-							print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 						}
 				
 						# IMAGE (condition) (loop)
