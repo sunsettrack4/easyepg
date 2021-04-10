@@ -307,6 +307,17 @@ foreach my $attributes ( @attributes ) {
 				print "  <date>$date</date>\n";
 			}
 			
+			# GENRE FIX
+			if( defined $genre1 ) {
+				$genre1 =~ s/&/&amp;/g;
+			}
+			if( defined $genre2 ) {
+				$genre2 =~ s/&/&amp;/g;
+			}
+			if( defined $genre3 ) {
+				$genre3 =~ s/&/&amp;/g;
+			}
+			
 			# CATEGORIES (USE MOST DETAILLED CATEGORY) (condition) (language) (settings)
 			if( $setup_category eq $disabled ) {
 				if ( defined $genre2 ) {
