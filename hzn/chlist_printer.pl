@@ -487,6 +487,8 @@ foreach my $newchannels ( @newchannels_name2logo ) {
 					print "  \"" . $newcname . " (2)\":\"";
 				} elsif( $count{$_} == 3 ) {
 					print "  \"" . $newcname . " (3)\":\"";
+				} elsif( $count{$_} == 4 ) {
+					print "  \"" . $newcname . " (4)\":\"";
 				}
 			}
 		}
@@ -591,6 +593,8 @@ foreach my $oldchannels ( @oldchannels_name2logo ) {
 					print "  \"" . $oldcname . " (2)\":\"";
 				} elsif( $count{$_} == 3 ) {
 					print "  \"" . $oldcname . " (3)\":\"";
+				} elsif( $count{$_} == 4 ) {
+					print "  \"" . $oldcname . " (4)\":\"";
 				}
 			}
 		}
