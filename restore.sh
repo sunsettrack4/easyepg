@@ -110,7 +110,7 @@ then
 	cp hzn/epg_json2xml.pl		hzn/at/epg_json2xml.pl
 	cp hzn/hzn.sh				hzn/at/hzn.sh
 	cp hzn/settings.sh			hzn/at/settings.sh
-	sed 's/XX/AT/g;s/YYY/deu/g' hzn/url_printer.pl > hzn/at/url_printer.pl 2> /dev/null
+	sed 's/XX/AT/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/prod.oesp.magentatv.at/g' hzn/url_printer.pl > hzn/at/url_printer.pl 2> /dev/null
 	
 	cp easyepg_backup/hzn_at_init.json			hzn/at/init.json
 	cp easyepg_backup/hzn_at_chlist_old			hzn/at/chlist_old

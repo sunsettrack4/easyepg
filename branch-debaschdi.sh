@@ -38,7 +38,7 @@ echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/h
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/url_printer.pl 2> /dev/null
 
 sed 's/XX/DE/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/de/url_printer.pl
-sed 's/XX/AT/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/at/url_printer.pl
+sed 's/XX/AT/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/prod.oesp.magentatv.at/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/at/url_printer.pl
 sed 's/XX/CH/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ch/url_printer.pl
 sed 's/XX/NL/g;s/YYY/nld/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/nl/url_printer.pl
 sed 's/XX/PL/g;s/YYY/pol/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/pl/url_printer.pl

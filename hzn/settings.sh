@@ -33,8 +33,8 @@ then
 elif grep -q "AT" init.json 2> /dev/null
 then
 	COUNTRY='AT'
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/AT/deu/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/AT\/deu\/web'
+	baseurl='https://prod.oesp.magentatv.at/oesp/v2/AT/deu/web'
+	baseurl_sed='prod.oesp.magentatv.at\/oesp\/v2\/AT\/deu\/web'
 elif grep -q "CH" init.json 2> /dev/null
 then
 	COUNTRY='CH'

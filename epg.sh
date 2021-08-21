@@ -996,7 +996,7 @@ do
 				cp hzn/settings.sh hzn/at/
 				cp hzn/chlist_printer.pl hzn/at/
 				cp hzn/compare_menu.pl hzn/at/
-				sed 's/XX/AT/g;s/YYY/deu/g' hzn/url_printer.pl > hzn/at/url_printer.pl
+				sed 's/XX/AT/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/prod.oesp.magentatv.at/g' hzn/url_printer.pl > hzn/at/url_printer.pl
 				cd hzn/at && bash settings.sh
 				cd - > /dev/null
 				
