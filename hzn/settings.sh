@@ -38,23 +38,23 @@ then
 elif grep -q "CH" init.json 2> /dev/null
 then
 	COUNTRY='CH'
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/CH/deu/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/CH\/deu\/web'
+	baseurl='https://obo-prod.oesp.upctv.ch/oesp/v2/CH/deu/web'
+	baseurl_sed='obo-prod.oesp.upctv.ch\/oesp\/v2\/CH\/deu\/web'
 elif grep -q "NL" init.json 2> /dev/null
 then
 	COUNTRY='NL'
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/NL/nld/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/NL\/nld\/web'
+	baseurl='https://obo-prod.oesp.ziggogo.tv/oesp/v2/NL/nld/web'
+	baseurl_sed='obo-prod.oesp.ziggogo.tv\/oesp\/v2\/NL\/nld\/web'
 elif grep -q "PL" init.json 2> /dev/null
 then
 	COUNTRY='PL'
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/PL/pol/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/PL\/pol\/web'
+	baseurl='https://prod.oesp.upctv.pl/oesp/v2/PL/pol/web'
+	baseurl_sed='prod.oesp.upctv.pl\/oesp\/v2\/PL\/pol\/web'
 elif grep -q "IE" init.json 2> /dev/null
 then
 	COUNTRY='IE'
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/IE/eng/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/IE\/eng\/web'
+	baseurl='https://prod.oesp.virginmediatv.ie/oesp/v2/IE/eng/web'
+	baseurl_sed='prod.oesp.virginmediatv.ie\/oesp\/v2\/IE\/eng\/web'
 elif grep -q "SK" init.json 2> /dev/null
 then
 	COUNTRY='SK'
