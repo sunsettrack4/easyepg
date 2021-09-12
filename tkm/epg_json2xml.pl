@@ -194,51 +194,6 @@ foreach my $attributes ( @attributes ) {
 				print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 			}
 			
-			# IMAGE (condition) (loop)
-			if( exists $item->{'pictures'} ) {
-				my @image     = @{ $item->{'pictures'} };
-			
-				if ( @image ) {
-					while( my( $image_id, $image ) = each( @image ) ) {		# SEARCH FOR IMAGE WITH THE HIGHEST RESOLUTION
-						my @res = @{ $image->{'resolution'} };
-						my $img = $image->{'href'};
-						foreach my $res ( @res ) {
-							if( $res eq '1920' ) {			# FULL HD 16:9
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '1440' ) {		# FULL HD 4:3
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '1280' ) {		# HD 16:9
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '1280' ) {		# HD 16:9
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '960' ) {		# SD 16:9
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '720' ) {		# SD 4:3
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '480' ) {		# LOW SD 16:9
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '360' ) {		# LOW SD 4:3
-								$img_loc = $image_id;
-								last;
-							} elsif( $res eq '180' ) {		# JUST... WHY?!
-								$img_loc = $image_id;
-								last;
-							}
-						}
-					}
-					if( defined $img_loc ) {
-						print "  <icon src=\"" . $item->{'pictures'}[$img_loc]{'href'} . "\" />\n";
-					}
-				}
-			}
-			
 			# TITLE (language)
 			$title =~ s/\&/\&amp;/g;
 			$title =~ s/<[^>]*>//g;
@@ -316,11 +271,6 @@ foreach my $attributes ( @attributes ) {
 				print "  <date>$date</date>\n";
 			}
 			
-			# COUNTRY (condition)
-			if( defined $country ) {
-				print "  <country>" . uc($country) . "</country>\n";
-			}
-			
 			# CATEGORIES (USE ONE CATEGORY ONLY) (condition) (language) (settings)
 			if( $setup_category eq $disabled ) {
 				if ( defined $genre1 ) {
@@ -368,7 +318,57 @@ foreach my $attributes ( @attributes ) {
 					}
 				}
 			}
+
+			# IMAGE (condition) (loop)
+			if( exists $item->{'pictures'} ) {
+				my @image     = @{ $item->{'pictures'} };
 			
+				if ( @image ) {
+					while( my( $image_id, $image ) = each( @image ) ) {		# SEARCH FOR IMAGE WITH THE HIGHEST RESOLUTION
+						my @res = @{ $image->{'resolution'} };
+						my $img = $image->{'href'};
+						foreach my $res ( @res ) {
+							if( $res eq '1920' ) {			# FULL HD 16:9
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '1440' ) {		# FULL HD 4:3
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '1280' ) {		# HD 16:9
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '1280' ) {		# HD 16:9
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '960' ) {		# SD 16:9
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '720' ) {		# SD 4:3
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '480' ) {		# LOW SD 16:9
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '360' ) {		# LOW SD 4:3
+								$img_loc = $image_id;
+								last;
+							} elsif( $res eq '180' ) {		# JUST... WHY?!
+								$img_loc = $image_id;
+								last;
+							}
+						}
+					}
+					if( defined $img_loc ) {
+						print "  <icon src=\"" . $item->{'pictures'}[$img_loc]{'href'} . "\" />\n";
+					}
+				}
+			}
+
+			# COUNTRY (condition)
+			if( defined $country ) {
+				print "  <country>" . uc($country) . "</country>\n";
+			}
+
 			# SEASON/EPISODE (XMLTV_NS) (condition) (settings)
 			if( $setup_episode eq $xmltv_ns ) {
 				if( defined $series ) {
