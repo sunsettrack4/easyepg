@@ -217,11 +217,6 @@ foreach my $attributes ( @attributes ) {
 				print STDERR "[ EPG WARNING ] Channel ID unknown: " . $cid . "\n";
 			}
 			
-			# IMAGE (condition)
-			if( defined $broadcast->{'images'}[0]{'size4'} ) {
-				print "  <icon src=\"" . $broadcast->{'images'}[0]{'size4'} . "\" />\n";
-			}
-			
 			# TITLE (language)
 			$title =~ s/\&/\&amp;/g;
                         $title =~ s/<3/love/g;
@@ -269,11 +264,6 @@ foreach my $attributes ( @attributes ) {
 				print "  <date>$date</date>\n";
 			}
 			
-			# COUNTRY (condition)
-			if( defined $country ) {
-				print "  <country>" . uc($country) . "</country>\n";
-			}
-			
 			# CATEGORIES (USE ONE CATEGORY ONLY) (condition) (language) (settings)
 			if ( defined $genre ) {
 				$genre =~ s/\&/\&amp;/g;
@@ -289,6 +279,15 @@ foreach my $attributes ( @attributes ) {
 				}
 			}
 
+			# IMAGE (condition)
+			if( defined $broadcast->{'images'}[0]{'size4'} ) {
+				print "  <icon src=\"" . $broadcast->{'images'}[0]{'size4'} . "\" />\n";
+			}
+
+			# COUNTRY (condition)
+			if( defined $country ) {
+				print "  <country>" . uc($country) . "</country>\n";
+			}
 
 			# SEASON/EPISODE REQUIED TO READ XML CORRECTLY
 			if( defined $series ) {
