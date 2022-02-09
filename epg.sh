@@ -996,7 +996,7 @@ do
 				cp hzn/settings.sh hzn/at/
 				cp hzn/chlist_printer.pl hzn/at/
 				cp hzn/compare_menu.pl hzn/at/
-				sed 's/XX/AT/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/prod.oesp.magentatv.at/g' hzn/url_printer.pl > hzn/at/url_printer.pl
+				sed 's/XX/AT/g;s/YYY/deu/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.magentatv.at/g' hzn/url_printer.pl > hzn/at/url_printer.pl
 				cd hzn/at && bash settings.sh
 				cd - > /dev/null
 				
@@ -1024,7 +1024,7 @@ do
 				cp hzn/settings.sh hzn/ch/
 				cp hzn/chlist_printer.pl hzn/ch/
 				cp hzn/compare_menu.pl hzn/ch/
-				sed 's/XX/CH/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/obo-prod.oesp.upctv.ch/g' hzn/url_printer.pl > hzn/ch/url_printer.pl
+				sed 's/XX/CH/g;s/YYY/deu/g;s/legacy-dynamic.oesp.horizon.tv/obo-prod.oesp.upctv.ch/g' hzn/url_printer.pl > hzn/ch/url_printer.pl
 				cd hzn/ch && bash settings.sh
 				cd - > /dev/null
 				
@@ -1052,7 +1052,7 @@ do
 				cp hzn/settings.sh hzn/nl/
 				cp hzn/chlist_printer.pl hzn/nl/
 				cp hzn/compare_menu.pl hzn/nl/
-				sed 's/XX/NL/g;s/YYY/nld/g;s/web-api-pepper.horizon.tv/obo-prod.oesp.ziggogo.tv/g' hzn/url_printer.pl > hzn/nl/url_printer.pl
+				sed 's/XX/NL/g;s/YYY/nld/g;s/legacy-dynamic.oesp.horizon.tv/obo-prod.oesp.ziggogo.tv/g' hzn/url_printer.pl > hzn/nl/url_printer.pl
 				cd hzn/nl && bash settings.sh
 				cd - > /dev/null
 				
@@ -1080,7 +1080,7 @@ do
 				cp hzn/settings.sh hzn/pl/
 				cp hzn/chlist_printer.pl hzn/pl/
 				cp hzn/compare_menu.pl hzn/pl/
-				sed 's/XX/PL/g;s/YYY/pol/g;s/web-api-pepper.horizon.tv/prod.oesp.upctv.pl/g' hzn/url_printer.pl > hzn/pl/url_printer.pl
+				sed 's/XX/PL/g;s/YYY/pol/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.upctv.pl/g' hzn/url_printer.pl > hzn/pl/url_printer.pl
 				cd hzn/pl && bash settings.sh
 				cd - > /dev/null
 				
@@ -1108,7 +1108,7 @@ do
 				cp hzn/settings.sh hzn/ie/
 				cp hzn/chlist_printer.pl hzn/ie/
 				cp hzn/compare_menu.pl hzn/ie/
-				sed 's/XX/IE/g;s/YYY/eng/g;s/web-api-pepper.horizon.tv/prod.oesp.virginmediatv.ie/g' hzn/url_printer.pl > hzn/ie/url_printer.pl
+				sed 's/XX/IE/g;s/YYY/eng/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.virginmediatv.ie/g' hzn/url_printer.pl > hzn/ie/url_printer.pl
 				cd hzn/ie && bash settings.sh
 				cd - > /dev/null
 				

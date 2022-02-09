@@ -33,8 +33,8 @@ mkdir mani 2> /dev/null		# manifest files
 if grep -q "DE" init.json 2> /dev/null
 then
 	echo "+++ COUNTRY: GERMANY +++"
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/DE/deu/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/DE\/deu\/web'
+	baseurl='https://legacy-dynamic.oesp.horizon.tv/oesp/v2/DE/deu/web'
+	baseurl_sed='legacy-dynamic.oesp.horizon.tv\/oesp\/v2\/DE\/deu\/web'
 elif grep -q "AT" init.json 2> /dev/null
 then
 	echo "+++ COUNTRY: AUSTRIA +++"
@@ -63,23 +63,23 @@ then
 elif grep -q "SK" init.json 2> /dev/null
 then
 	echo "+++ COUNTRY: SLOVAKIA +++"
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/SK/slk/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/SK\/slk\/web'
+	baseurl='https://legacy-dynamic.oesp.horizon.tv/oesp/v2/SK/slk/web'
+	baseurl_sed='legacy-dynamic.oesp.horizon.tv\/oesp\/v2\/SK\/slk\/web'
 elif grep -q "CZ" init.json 2> /dev/null
 then
 	echo "+++ COUNTRY: CZECH REPUBLIC +++"
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/CZ/ces/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/CZ\/ces\/web'
+	baseurl='https://legacy-dynamic.oesp.horizon.tv/oesp/v2/CZ/ces/web'
+	baseurl_sed='legacy-dynamic.oesp.horizon.tv\/oesp\/v2\/CZ\/ces\/web'
 elif grep -q "HU" init.json 2> /dev/null
 then
 	echo "+++ COUNTRY: HUNGARY +++"
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/HU/hun/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/HU\/hun\/web'
+	baseurl='https://legacy-dynamic.oesp.horizon.tv/oesp/v2/HU/hun/web'
+	baseurl_sed='legacy-dynamic.oesp.horizon.tv\/oesp\/v2\/HU\/hun\/web'
 elif grep -q "RO" init.json 2> /dev/null
 then
 	echo "+++ COUNTRY: ROMANIA +++"
-	baseurl='https://web-api-pepper.horizon.tv/oesp/v2/RO/ron/web'
-	baseurl_sed='web-api-pepper.horizon.tv\/oesp\/v2\/RO\/ron\/web'
+	baseurl='https://legacy-dynamic.oesp.horizon.tv/oesp/v2/RO/ron/web'
+	baseurl_sed='legacy-dynamic.oesp.horizon.tv\/oesp\/v2\/RO\/ron\/web'
 else
 	echo "[ FATAL ERROR ] WRONG INIT INPUT DETECTED - Stop."
 	rm init.json 2> /dev/null

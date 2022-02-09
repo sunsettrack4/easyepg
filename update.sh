@@ -53,11 +53,11 @@ echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/h
 echo "hzn/ hzn/de/ hzn/at/ hzn/ch/ hzn/nl/ hzn/pl/ hzn/ie/ hzn/sk/ hzn/cz/ hzn/hu/ hzn/ro/" | xargs -n 1 cp -v easyepg/hzn/url_printer.pl 2> /dev/null
 
 sed 's/XX/DE/g;s/YYY/deu/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/de/url_printer.pl
-sed 's/XX/AT/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/prod.oesp.magentatv.at/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/at/url_printer.pl
-sed 's/XX/CH/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/obo-prod.oesp.upctv.ch/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ch/url_printer.pl
-sed 's/XX/NL/g;s/YYY/nld/g;s/web-api-pepper.horizon.tv/obo-prod.oesp.ziggogo.tv/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/nl/url_printer.pl
-sed 's/XX/PL/g;s/YYY/pol/g;s/web-api-pepper.horizon.tv/prod.oesp.upctv.pl/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/pl/url_printer.pl
-sed 's/XX/IE/g;s/YYY/eng/g;s/web-api-pepper.horizon.tv/prod.oesp.virginmediatv.ie/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ie/url_printer.pl
+sed 's/XX/AT/g;s/YYY/deu/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.magentatv.at/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/at/url_printer.pl
+sed 's/XX/CH/g;s/YYY/deu/g;s/legacy-dynamic.oesp.horizon.tv/obo-prod.oesp.upctv.ch/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ch/url_printer.pl
+sed 's/XX/NL/g;s/YYY/nld/g;s/legacy-dynamic.oesp.horizon.tv/obo-prod.oesp.ziggogo.tv/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/nl/url_printer.pl
+sed 's/XX/PL/g;s/YYY/pol/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.upctv.pl/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/pl/url_printer.pl
+sed 's/XX/IE/g;s/YYY/eng/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.virginmediatv.ie/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/ie/url_printer.pl
 sed 's/XX/SK/g;s/YYY/slk/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/sk/url_printer.pl
 sed 's/XX/CZ/g;s/YYY/ces/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/cz/url_printer.pl
 sed 's/XX/HU/g;s/YYY/hun/g' easyepg/hzn/url_printer.pl 2> /dev/null > hzn/hu/url_printer.pl

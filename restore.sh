@@ -110,7 +110,7 @@ then
 	cp hzn/epg_json2xml.pl		hzn/at/epg_json2xml.pl
 	cp hzn/hzn.sh				hzn/at/hzn.sh
 	cp hzn/settings.sh			hzn/at/settings.sh
-	sed 's/XX/AT/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/prod.oesp.magentatv.at/g' hzn/url_printer.pl > hzn/at/url_printer.pl 2> /dev/null
+	sed 's/XX/AT/g;s/YYY/deu/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.magentatv.at/g' hzn/url_printer.pl > hzn/at/url_printer.pl 2> /dev/null
 	
 	cp easyepg_backup/hzn_at_init.json			hzn/at/init.json
 	cp easyepg_backup/hzn_at_chlist_old			hzn/at/chlist_old
@@ -135,7 +135,7 @@ then
 	cp hzn/epg_json2xml.pl		hzn/ch/epg_json2xml.pl
 	cp hzn/hzn.sh				hzn/ch/hzn.sh
 	cp hzn/settings.sh			hzn/ch/settings.sh
-	sed 's/XX/CH/g;s/YYY/deu/g;s/web-api-pepper.horizon.tv/obo-prod.oesp.upctv.ch/g' hzn/url_printer.pl > hzn/ch/url_printer.pl 2> /dev/null
+	sed 's/XX/CH/g;s/YYY/deu/g;s/legacy-dynamic.oesp.horizon.tv/obo-prod.oesp.upctv.ch/g' hzn/url_printer.pl > hzn/ch/url_printer.pl 2> /dev/null
 	
 	cp easyepg_backup/hzn_ch_init.json			hzn/ch/init.json
 	cp easyepg_backup/hzn_ch_chlist_old			hzn/ch/chlist_old
@@ -160,7 +160,7 @@ then
 	cp hzn/epg_json2xml.pl		hzn/nl/epg_json2xml.pl
 	cp hzn/hzn.sh				hzn/nl/hzn.sh
 	cp hzn/settings.sh			hzn/nl/settings.sh
-	sed 's/XX/NL/g;s/YYY/nld/g;s/web-api-pepper.horizon.tv/obo-prod.oesp.ziggogo.tv/g' hzn/url_printer.pl > hzn/nl/url_printer.pl 2> /dev/null
+	sed 's/XX/NL/g;s/YYY/nld/g;s/legacy-dynamic.oesp.horizon.tv/obo-prod.oesp.ziggogo.tv/g' hzn/url_printer.pl > hzn/nl/url_printer.pl 2> /dev/null
 	
 	cp easyepg_backup/hzn_nl_init.json			hzn/nl/init.json
 	cp easyepg_backup/hzn_nl_chlist_old			hzn/nl/chlist_old
@@ -185,7 +185,7 @@ then
 	cp hzn/epg_json2xml.pl		hzn/pl/epg_json2xml.pl
 	cp hzn/hzn.sh				hzn/pl/hzn.sh
 	cp hzn/settings.sh			hzn/pl/settings.sh
-	sed 's/XX/PL/g;s/YYY/pol/g;s/web-api-pepper.horizon.tv/prod.oesp.upctv.pl/g' hzn/url_printer.pl > hzn/pl/url_printer.pl 2> /dev/null
+	sed 's/XX/PL/g;s/YYY/pol/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.upctv.pl/g' hzn/url_printer.pl > hzn/pl/url_printer.pl 2> /dev/null
 	
 	cp easyepg_backup/hzn_pl_init.json			hzn/pl/init.json
 	cp easyepg_backup/hzn_pl_chlist_old			hzn/pl/chlist_old
@@ -210,7 +210,7 @@ then
 	cp hzn/epg_json2xml.pl		hzn/ie/epg_json2xml.pl
 	cp hzn/hzn.sh				hzn/ie/hzn.sh
 	cp hzn/settings.sh			hzn/ie/settings.sh
-	sed 's/XX/IE/g;s/YYY/eng/g;s/web-api-pepper.horizon.tv/prod.oesp.virginmediatv.ie/g' hzn/url_printer.pl > hzn/ie/url_printer.pl 2> /dev/null
+	sed 's/XX/IE/g;s/YYY/eng/g;s/legacy-dynamic.oesp.horizon.tv/prod.oesp.virginmediatv.ie/g' hzn/url_printer.pl > hzn/ie/url_printer.pl 2> /dev/null
 	
 	cp easyepg_backup/hzn_ie_init.json			hzn/ie/init.json
 	cp easyepg_backup/hzn_ie_chlist_old			hzn/ie/chlist_old
