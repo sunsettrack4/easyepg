@@ -60,13 +60,13 @@ sudo cpanm install DateTime::Format::Strptime
 mkdir ~/easyepg
 
 # Download the .zip file and extract the files into your folder:
-wget https://github.com/sunsettrack4/easyepg/archive/v0.4.3.zip
+wget https://github.com/sunsettrack4/easyepg/archive/refs/heads/master.zip
 
 # Unzip the file:
-unzip v0.4.3.zip
+unzip easyepg-master.zip
 
 # Move all script files to the created folder
-mv ~/easyepg-0.4.3/* ~/easyepg/
+mv ~/easyepg-master/* ~/easyepg/
 
 # Set system-wide permissions to the folder and its related files
 sudo chmod 0777 ~/easyepg
