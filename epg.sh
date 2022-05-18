@@ -141,12 +141,6 @@ then
 	ERROR="true"
 fi
 
-if [ ! -e ztt/save_page.js ]
-then
-	printf "\nMissing file in Zattoo folder: ztt/save_page.js"
-	ERROR="true"
-fi
-
 if [ ! -e ztt/settings.sh ]
 then
 	printf "\nMissing file in Zattoo folder: ztt/settings.sh"
