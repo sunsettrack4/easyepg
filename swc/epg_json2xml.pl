@@ -245,7 +245,7 @@ foreach my $attributes ( $data->{attributes} ) {
 									}
 								}
 								if( defined $image_location) {
-									print "  <icon src=\"https://services.sg1.etvp01.sctv.ch/content/images" . $contentnodes->{'Items'}[$image_location]{'ContentPath'} . "_w1920.webp\" />\n";
+									print "  <icon src=\"https://services.sg101.prd.sctv.ch/content/images" . $contentnodes->{'Items'}[$image_location]{'ContentPath'} . "_w1920.webp\" />\n";
 								}
 							}	
 						}

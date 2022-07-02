@@ -394,7 +394,7 @@ foreach my $newchannels ( @newchannels_name2logo ) {
 	$newcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 
 	# DEFINE LOGO
-	my $logo	= 'https://services.sg1.etvp01.sctv.ch/content/images/tv/channel/' . $newchannels->{'Identifier'} . '_w300.webp';
+	my $logo	= 'https://services.sg101.prd.sctv.ch/content/images/tv/channel/' . $newchannels->{'Identifier'} . '_w300.webp';
 
 
 	# ########################################
@@ -477,7 +477,7 @@ foreach my $oldchannels ( @oldchannels_name2logo ) {
 	$oldcname =~ s/\&/\&amp;/g; # REQUIRED TO READ XML FILE CORRECTLY
 
 	# DEFINE LOGO
-	my $logo	= 'https://services.sg1.etvp01.sctv.ch/content/images/tv/channel/' . $oldchannels->{'Identifier'} . '_w300.webp';
+	my $logo	= 'https://services.sg101.prd.sctv.ch/content/images/tv/channel/' . $oldchannels->{'Identifier'} . '_w300.webp';
 
 
 	# ########################################
