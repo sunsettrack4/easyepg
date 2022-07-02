@@ -68,7 +68,7 @@ rm mani/* 2> /dev/null
 #
 
 printf "\rFetching channel list... "
-curl -s https://services.sg2.etvp01.sctv.ch/portfolio/tv/channels > /tmp/chlist
+curl -s https://services.sg101.prd.sctv.ch/portfolio/tv/channels > /tmp/chlist
 jq '.' /tmp/chlist > /tmp/workfile
 sed '1s/\[/{"attributes":[/g;$s/\]/]}/g' /tmp/workfile > /tmp/chlist
 
@@ -294,7 +294,7 @@ rm workfile chlist 2> /dev/null
 
 # DOWNLOAD CHANNEL LIST + RYTEC/EIT CONFIG FILES (JSON)
 printf "\rRetrieving channel list and config files...          "
-curl -s https://services.sg2.etvp01.sctv.ch/portfolio/tv/channels > chlist
+curl -s https://services.sg101.prd.sctv.ch/portfolio/tv/channels > chlist
 jq '.' chlist > /tmp/workfile
 sed '1s/\[/{"attributes":[/g;$s/\]/]}/g' /tmp/workfile > chlist
 curl -s https://raw.githubusercontent.com/sunsettrack4/config_files/master/swc_channels.json > swc_channels.json

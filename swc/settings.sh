@@ -173,7 +173,7 @@ do
 			exit 0
 		fi
 
-		curl -s https://services.sg2.etvp01.sctv.ch/portfolio/tv/channels > /tmp/chlist
+		curl -s https://services.sg101.prd.sctv.ch/portfolio/tv/channels > /tmp/chlist
 		jq '.' /tmp/chlist > /tmp/workfile
 		sed '1s/\[/{"attributes":[/g;$s/\]/]}/g' /tmp/workfile > /tmp/chlist
 
